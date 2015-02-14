@@ -3,6 +3,7 @@ package com.example.victor.lfm;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
@@ -22,6 +23,20 @@ import com.parse.*;
 import java.util.Calendar;
 import java.util.*;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.*;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -29,6 +44,8 @@ public class MainActivity extends ActionBarActivity {
     private static final int TIME_DIALOG_ID = 0;
     TextView timeView;
     Button timeBtn;
+    TextView dateView;
+    Button dateBtn;
     private TextView timeText;
 
     ArrayList<Events> events = new ArrayList<Events>();
@@ -54,6 +71,16 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 DialogFragment newFragment = new Mytimepicker(timeView);
                 newFragment.show(getFragmentManager(), "timePicker");
+            }
+        });
+
+        dateView = (TextView) findViewById(R.id.dateView);
+        dateBtn = (Button) findViewById(R.id.dateBtn);
+        dateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment newFragment = new DatePickerFragment(dateView);
+                newFragment.show(getFragmentManager(), "datePicker");
             }
         });
 
@@ -162,6 +189,39 @@ public class MainActivity extends ActionBarActivity {
                 am_pm = "PM";
             String strHrsToShow = (datetime.get(Calendar.HOUR) == 0) ? "12" : datetime.get(Calendar.HOUR) + "";
             timeTxt.setText(strHrsToShow + ":" + datetime.get(Calendar.MINUTE) + " " + am_pm);
+        }
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+        TextView dateText;
+
+        public DatePickerFragment(TextView tv) {
+            dateText = tv;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+            Calendar datetime = Calendar.getInstance();
+            datetime.set(Calendar.YEAR, year);
+            datetime.set(Calendar.MONTH, month);
+            datetime.set(Calendar.DAY_OF_MONTH, day);
+            String strDateToShow = (datetime.get(Calendar.MONTH)+1) + "/"
+                    + datetime.get(Calendar.DAY_OF_MONTH) + "/"
+                    + datetime.get(Calendar.YEAR);
+            dateText.setText(strDateToShow);
         }
     }
 

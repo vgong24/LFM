@@ -3,7 +3,7 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context="${relativePackage}.${activityClass}">
 
     <TabHost
         android:layout_width="wrap_content"
@@ -158,54 +158,30 @@
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content" >
 
-                            <LinearLayout
-                                android:orientation="horizontal"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content" >
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" >
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textAppearance="?android:attr/textAppearanceMedium"
-                                    android:text="Lat"
-                                    android:id="@+id/textView19" />
+                                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                                    android:id="@+id/map"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:name="com.google.android.gms.maps.MapFragment"/>
 
-                                <EditText
-                                    android:layout_width="85dp"
-                                    android:layout_height="wrap_content"
-                                    android:inputType="numberDecimal"
-                                    android:ems="10"
-                                    android:id="@+id/locationLatEdit" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textAppearance="?android:attr/textAppearanceMedium"
-                                    android:text="Long"
-                                    android:id="@+id/textView20" />
-
-                                <EditText
-                                    android:layout_width="84dp"
-                                    android:layout_height="wrap_content"
-                                    android:inputType="numberDecimal"
-                                    android:ems="10"
-                                    android:id="@+id/editText9" />
-
-                            </LinearLayout>
-                        </LinearLayout>
+                            </FrameLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Time"
+
                             android:id="@+id/textView21" />
 
                         <LinearLayout
                             android:orientation="horizontal"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:paddingTop="10dp" >
+                            android:paddingTop="5dp" >
 
                             <Button
                                 android:layout_width="wrap_content"
@@ -229,8 +205,31 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="Date"
                             android:id="@+id/textView23" />
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp" >
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Set Date"
+                                android:id="@+id/dateBtn"
+                                android:paddingRight="16dp"
+                                android:paddingLeft="16dp"
+                                android:layout_marginLeft="16dp" />
+
+                            <TextView
+                                android:layout_width="235dp"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceLarge"
+                                android:text="MM/DD/YYYY"
+                                android:id="@+id/dateView"
+                                android:paddingLeft="30dp" />
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -267,7 +266,7 @@
                             android:id="@+id/button3"
                             android:onClick="createEvent" />
                     </LinearLayout>
-
+                    </LinearLayout>
                 </LinearLayout>
 
 
@@ -307,6 +306,7 @@
                 </LinearLayout>
             </FrameLayout>
         </RelativeLayout>
+
     </TabHost>
 
 </RelativeLayout>
