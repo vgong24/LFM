@@ -70,18 +70,6 @@
                             android:layout_width="fill_parent"
                             android:layout_height="fill_parent" >
 
-                            <EditText
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/editText3"
-                                android:text="Enter an Activity" />
-
-                            <EditText
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/editText4"
-                                android:text="Enter a Location" />
-
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -97,12 +85,24 @@
                                 android:text="Activity"
                                 android:id="@+id/textView10" />
 
+                            <EditText
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/editText3"
+                                android:text="Enter an Activity" />
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceMedium"
                                 android:text="Location"
                                 android:id="@+id/textView11" />
+
+                            <EditText
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/editText4"
+                                android:text="Enter a Location" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -123,142 +123,151 @@
                     <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_alignParentBottom="true" >
+                        android:layout_height="wrap_content" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:text="Create an Event"
+                            android:id="@+id/textView8"
+                            android:paddingBottom="50dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Category"
+                            android:id="@+id/textView16" />
+
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/editText7"
+                            android:text="Enter a Category" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Location"
+                            android:id="@+id/textView18" />
 
                         <LinearLayout
                             android:orientation="vertical"
                             android:layout_width="fill_parent"
-                            android:layout_height="fill_parent" >
-
-                            <EditText
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/editText7"
-                                android:text="Enter a Category" />
-
-                            <LinearLayout
-                                android:orientation="vertical"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content" >
-
-                                <LinearLayout
-                                    android:orientation="horizontal"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content" >
-
-                                    <EditText
-                                        android:layout_width="85dp"
-                                        android:layout_height="wrap_content"
-                                        android:inputType="numberDecimal"
-                                        android:ems="10"
-                                        android:id="@+id/editText8" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textAppearance="?android:attr/textAppearanceMedium"
-                                        android:text="Lat"
-                                        android:id="@+id/textView22" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:textAppearance="?android:attr/textAppearanceMedium"
-                                        android:text="Long"
-                                        android:id="@+id/textView23" />
-
-                                    <EditText
-                                        android:layout_width="84dp"
-                                        android:layout_height="wrap_content"
-                                        android:inputType="numberDecimal"
-                                        android:ems="10"
-                                        android:id="@+id/editText9" />
-                                </LinearLayout>
-                            </LinearLayout>
+                            android:layout_height="wrap_content" >
 
                             <LinearLayout
                                 android:orientation="horizontal"
                                 android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:paddingTop="10dp" >
-
-                                <Button
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Set Time"
-                                    android:id="@+id/timeBtn"
-                                    android:paddingRight="16dp"
-                                    android:paddingLeft="16dp"
-                                    android:layout_marginLeft="16dp" />
+                                android:layout_height="wrap_content" >
 
                                 <TextView
-                                    android:layout_width="235dp"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textAppearance="?android:attr/textAppearanceLarge"
-                                    android:text="hh:mm a"
-                                    android:id="@+id/timeView"
-                                    android:paddingLeft="30dp" />
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:text="Lat"
+                                    android:id="@+id/textView19" />
+
+                                <EditText
+                                    android:layout_width="85dp"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="numberDecimal"
+                                    android:ems="10"
+                                    android:id="@+id/editText8" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textAppearance="?android:attr/textAppearanceMedium"
+                                    android:text="Long"
+                                    android:id="@+id/textView20" />
+
+                                <EditText
+                                    android:layout_width="84dp"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="numberDecimal"
+                                    android:ems="10"
+                                    android:id="@+id/editText9" />
+
                             </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Time"
+                            android:id="@+id/textView21" />
+
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="10dp" >
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Set Time"
+                                android:id="@+id/timeBtn"
+                                android:paddingRight="16dp"
+                                android:paddingLeft="16dp"
+                                android:layout_marginLeft="16dp" />
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="235dp"
                                 android:layout_height="wrap_content"
                                 android:textAppearance="?android:attr/textAppearanceLarge"
-                                android:text="Create an Event"
-                                android:id="@+id/textView16"
-                                android:paddingBottom="50dp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Category"
-                                android:id="@+id/textView20" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Location"
-                                android:id="@+id/textView21" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Date"
-                                android:id="@+id/textView24" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Time"
-                                android:id="@+id/textView25" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Members needed"
-                                android:id="@+id/textView26" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceMedium"
-                                android:text="Description"
-                                android:id="@+id/textView27" />
-
-                            <EditText
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/editText10"
-                                android:text="Info" />
+                                android:text="hh:mm a"
+                                android:id="@+id/timeView"
+                                android:paddingLeft="30dp" />
                         </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Date"
+                            android:id="@+id/textView23" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Members needed"
+                            android:id="@+id/textView24" />
+
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:ems="10"
+                            android:id="@+id/editText10" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Description"
+                            android:id="@+id/textView25" />
+
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/editText12"
+                            android:text="Info" />
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Create Event"
+                            android:id="@+id/button3" />
                     </LinearLayout>
+
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:orientation="vertical"
