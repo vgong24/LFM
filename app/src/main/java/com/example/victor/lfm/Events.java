@@ -17,7 +17,7 @@ public class Events extends ParseObject  {
         return getInt("host");
     }
     public Category getCat() {
-        return (Category) getParseObject("category");
+        return (Category) getParseObject("Category");
     }
     public void setCat(String cat) {
         put("category", cat);

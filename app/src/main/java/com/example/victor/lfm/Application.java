@@ -22,6 +22,11 @@ public class Application extends android.app.Application {
   @Override
   public void onCreate() {
     super.onCreate();
+    ParseObject.registerSubclass(Category.class);
+    ParseObject.registerSubclass(Events.class);
+    ParseObject.registerSubclass(Attendee.class);
+    ParseObject.registerSubclass(Interests.class);
+    ParseObject.registerSubclass(Reviews.class);
 
     Parse.initialize(this, "aTeqCcZ5KEMR72fG8kiZED2Rxeb2r7ruWtqBSVa6",
         "JPdPZXMcR4ESbXNly1vuP19EFoYK3upi8sopk282");

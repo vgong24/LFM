@@ -8,11 +8,11 @@ import com.parse.*;
 
 @ParseClassName("Category")
 public class Category extends ParseObject {
-    public void setCat(String activity) {
+    public void setName(String activity) {
         put("name", activity);
     }
-    public String getCat() {
-        return getString("name");
+    public String getName() {
+        return getString("Name");
     }
     public byte[] getImage() {
         return getBytes("image");

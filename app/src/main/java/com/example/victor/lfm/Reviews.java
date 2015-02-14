@@ -4,9 +4,9 @@ package com.example.victor.lfm;
  * Created by Victor on 2/14/2015.
  */
 
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.*;
 
+@ParseClassName("Reviews")
 public class Reviews extends ParseObject {
     public void setRating(int rate) {
         put("rating", rate);

@@ -4,9 +4,9 @@ package com.example.victor.lfm;
  * Created by Victor on 2/14/2015.
  */
 
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.*;
 
+@ParseClassName("Attendee")
 public class Attendee extends ParseObject {
     public void setAttend(boolean here) {
         put("attend", here);
