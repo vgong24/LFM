@@ -202,10 +202,35 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-
+    //Populates the Home upcoming events and sets up onItemClick event for each item that brings
+    //user to details of that selected event
     private void populateList(){
         eventListAdapter = new EventListAdapter(R.layout.event_list_view, events);
         eventListView.setAdapter(eventListAdapter);
+        readySelect();
+
+    }
+
+    private void readySelect(){
+        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(MainActivity.this, EventDetails.class);
+                i.putExtra("EventId", events.get(position).getObjectId());
+                if(events.size() != 0){
+                    Toast.makeText(getApplicationContext(), "position: "+position+" EventId of "+ events.get(position).getObjectId(), Toast.LENGTH_SHORT).show();
+
+                }else{
+                    Toast.makeText(getApplicationContext(), "Arraylist is empty", Toast.LENGTH_SHORT).show();
+
+                }
+
+                startActivity(i);
+
+                // Needs alan's single event page
+                //Toast.makeText(getApplicationContext(), "Clicked at position "+position, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public static class DatePickerFragment extends DialogFragment
@@ -257,9 +282,6 @@ public class MainActivity extends ActionBarActivity {
                         //event.get(i).fetchIfNeeded();
 
                         events.add(event.get(i));
-                        //Toast.makeText(getApplicationContext(), events.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
-
-                        Toast.makeText(getApplicationContext(), event.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
 
                     }
                 } else {

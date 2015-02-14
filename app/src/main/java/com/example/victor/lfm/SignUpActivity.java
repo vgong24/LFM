@@ -29,7 +29,7 @@ public class SignUpActivity extends Activity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_signup);
+      setContentView(R.layout.activity_signup);
 
     // Set up the signup form.
     usernameEditText = (EditText) findViewById(R.id.username_edit_text);

@@ -58,7 +58,15 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Time"
             android:id="@+id/textView22"
-            android:paddingLeft="50dp" />
+            android:paddingLeft="50dp"
+            android:paddingRight="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="totalPlayers"
+            android:id="@+id/attendeeTotalView" />
 
     </LinearLayout>
 
