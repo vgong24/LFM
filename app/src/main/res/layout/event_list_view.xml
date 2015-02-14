@@ -1,3 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:textSize="25sp">
+
+
+    </TextView>
+<!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -9,18 +19,26 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Category"
+                android:id="@+id/eventCategoryView"
+                android:paddingRight="10dp" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -38,14 +56,14 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Activity"
-                        android:id="@+id/textView" />
+                        android:id="@+id/eventActivityView" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Location"
-                        android:id="@+id/textView2" />
+                        android:id="@+id/eventLocationView" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -59,14 +77,14 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Capacity"
-                        android:id="@+id/textView3" />
+                        android:id="@+id/eventCapacityView" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Time"
-                        android:id="@+id/textView4" />
+                        android:id="@+id/eventTimeView" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -76,3 +94,4 @@
     </LinearLayout>
 
 </RelativeLayout>
+-->

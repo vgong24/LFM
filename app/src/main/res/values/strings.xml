@@ -12,6 +12,7 @@
     <string name="title_activity_settings">Settings</string>
     <string name="search_distance">Search Distance</string>
     <string name="facebook_app_id">1573408099566145</string>
+    <string name="eventCategoryView">Category</string>
 
 
 </resources>
