@@ -12,15 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TabHost;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
+
+import android.widget.*;
 
 import com.parse.Parse;
 import com.parse.ParseUser;
@@ -243,7 +236,24 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
+    public void createEvent(View view) {
 
+        EditText temp;
+        TextView blah;
+
+        temp = (EditText) findViewById(R.id.maxMembersInt);
+        int maxMember = Integer.parseInt(temp.getText().toString());
+
+        temp = (EditText) findViewById(R.id.createEventInfo);
+        String eventInfo = temp.getText().toString();
+
+        ParseObject gameScore = ParseObject.create("Events");
+
+        gameScore.put("Max", maxMember);
+        gameScore.put("Description", eventInfo);
+
+        gameScore.saveInBackground();
+    }
 
 
 }
