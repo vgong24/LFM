@@ -9,16 +9,21 @@ import com.parse.*;
 @ParseClassName("Category")
 public class Category extends ParseObject {
     public void setName(String activity) {
-        put("name", activity);
+        put("Name", activity);
     }
     public String getName() {
+        try {
+            this.fetchIfNeeded();
+        } catch (ParseException e) {
+
+        }
         return getString("Name");
     }
     public byte[] getImage() {
-        return getBytes("image");
+        return getBytes("Image");
     }
     public void setImage(byte [] image) {
-        put("image", image);
+        put("Image", image);
     }
     public static ParseQuery<Category> getQuery() {
         return ParseQuery.getQuery(Category.class);

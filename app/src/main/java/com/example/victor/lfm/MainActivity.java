@@ -164,19 +164,22 @@ public class MainActivity extends ActionBarActivity {
 
         ParseQuery<Events> query = e.getQuery();
         //query.
-        query.addDescendingOrder("date");
+        query.addAscendingOrder("Date");
         query.findInBackground(new FindCallback<Events>() {
 
             public void done(List<Events> event, ParseException e) {
+
                 if (e == null) {
                     for(int i = 0; i < event.size(); i++) {
-                        Toast.makeText(getApplicationContext(), event.get(i).getCat().getCat() + "", Toast.LENGTH_SHORT).show();
+                        //event.get(i).fetchIfNeeded();
+                        Toast.makeText(getApplicationContext(), event.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
                         categories.add(event.get(i).getCat());
                         dates.add(event.get(i).getDate());
                     }
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
+
             }
 
         });

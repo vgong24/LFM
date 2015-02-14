@@ -20,7 +20,7 @@ public class Events extends ParseObject  {
         return (Category) getParseObject("Category");
     }
     public void setCat(String cat) {
-        put("category", cat);
+        put("Category", cat);
     }
     public Date getDate() {
         return getDate("date");
