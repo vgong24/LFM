@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.parse.Parse;
 import com.parse.ParseUser;
@@ -31,6 +32,9 @@ public class MainActivity extends ActionBarActivity {
     TextView timeView;
     Button timeBtn;
     private TextView timeText;
+
+    ArrayList<Category> categories = new ArrayList<Category>();
+    ArrayList<Date> dates = new ArrayList<Date>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,14 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(new Intent(v.getContext(), DispatchActivity.class));
             }
         });
+
+        buttonMaker();
+        //Toast.makeText(getApplicationContext(), categories.get(1).getCat(), Toast.LENGTH_SHORT).show();
+        /*
+        for (Category c: categories) {
+            Toast.makeText(getApplicationContext(), c.getCat(), Toast.LENGTH_SHORT).show();
+
+        }*/
 
 
     }
@@ -145,26 +157,28 @@ public class MainActivity extends ActionBarActivity {
             timeTxt.setText(strHrsToShow + ":" + datetime.get(Calendar.MINUTE)+" " + am_pm);
         }
     }
-    public static class ButtonMaker {
-        ArrayList<String> categories = new ArrayList<String>();
-        ArrayList<Date> dates = new ArrayList<Date>();
+
+
+    public void buttonMaker() {
         Events event = new Events();
 
         ParseQuery<Events> query = event.getQuery();
         //query.
         query.addDescendingOrder("date");
         query.findInBackground(new FindCallback<Events>() {
-            public void done(ArrayList<Events> events, ParseException e) {
+
+            public void done(List<Events> event, ParseException e) {
                 if (e == null) {
-                    for(int i = 0; int < events.size(); i++) {
-                        categories.add(events.get(i).getCat());
-                        dates.add(events.get(i).getDate());
+                    for(int i = 0; i < event.size(); i++) {
+                        categories.add(event.get(i).getCat());
+                        dates.add(event.get(i).getDate());
                     }
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
             }
-        };
+
+        });
 
     }
 }

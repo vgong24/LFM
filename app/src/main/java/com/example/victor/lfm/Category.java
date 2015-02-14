@@ -4,9 +4,9 @@ package com.example.victor.lfm;
  * Created by Victor on 2/14/2015.
  */
 
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.*;
 
+@ParseClassName("Category")
 public class Category extends ParseObject {
     public void setCat(String activity) {
         put("name", activity);
