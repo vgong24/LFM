@@ -3,8 +3,8 @@ package com.example.victor.lfm;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
+import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import android.view.ViewGroup;
+
 import android.widget.*;
 
 import com.parse.Parse;
@@ -23,6 +24,20 @@ import com.parse.*;
 import java.util.Calendar;
 import java.util.*;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.*;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -30,7 +45,10 @@ public class MainActivity extends ActionBarActivity {
     private static final int TIME_DIALOG_ID = 0;
     TextView timeView;
     Button timeBtn;
+    TextView dateView;
+    Button dateBtn;
     private TextView timeText;
+
 
     ArrayList<Events> events = new ArrayList<Events>();
     ArrayAdapter<Events> adapter;
@@ -39,8 +57,15 @@ public class MainActivity extends ActionBarActivity {
 
     List<ParseObject> ob;
 
+    String cater;
+    Date date;
+
+
     ArrayList<Category> categories = new ArrayList<Category>();
     ArrayList<Date> dates = new ArrayList<Date>();
+    ArrayList<Category> searchCategories = new ArrayList<Category>();
+    ArrayList<Date> searchDates = new ArrayList<Date>();
+    ArrayList<Events> ev = new ArrayList<Events>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +84,16 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        dateView = (TextView) findViewById(R.id.dateView);
+        dateBtn = (Button) findViewById(R.id.dateBtn);
+        dateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment newFragment = new DatePickerFragment(dateView);
+                newFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
+
         logOut = (Button) findViewById(R.id.logout_btn);
         logOut.setOnClickListener(new View.OnClickListener() {
 
@@ -69,13 +104,12 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        buttonMaker();
-        //Toast.makeText(getApplicationContext(), categories.get(1).getCat(), Toast.LENGTH_SHORT).show();
-        /*
-        for (Category c: categories) {
-            Toast.makeText(getApplicationContext(), c.getCat(), Toast.LENGTH_SHORT).show();
 
-        }*/
+        buttonMaker();
+
+        searchEvents(null, "Study");
+        //Toast.makeText(getApplicationContext(), searchCategories.get(0).getName() + "", Toast.LENGTH_SHORT).show();
+
 
 
 
@@ -168,9 +202,43 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
     private void populateList(){
         eventListAdapter = new EventListAdapter(R.layout.event_list_view, events);
         eventListView.setAdapter(eventListAdapter);
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+        TextView dateText;
+
+        public DatePickerFragment(TextView tv) {
+            dateText = tv;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+            Calendar datetime = Calendar.getInstance();
+            datetime.set(Calendar.YEAR, year);
+            datetime.set(Calendar.MONTH, month);
+            datetime.set(Calendar.DAY_OF_MONTH, day);
+            String strDateToShow = (datetime.get(Calendar.MONTH)+1) + "/"
+                    + datetime.get(Calendar.DAY_OF_MONTH) + "/"
+                    + datetime.get(Calendar.YEAR);
+            dateText.setText(strDateToShow);
+        }
     }
 
 
@@ -184,21 +252,26 @@ public class MainActivity extends ActionBarActivity {
 
             public void done(List<Events> event, ParseException e) {
 
-
                 if (e == null) {
                     for (int i = 0; i < event.size(); i++) {
                         //event.get(i).fetchIfNeeded();
+
                         events.add(event.get(i));
                         //Toast.makeText(getApplicationContext(), events.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
-                    }
 
+                        Toast.makeText(getApplicationContext(), event.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
+
+                    }
                 } else {
                     Toast.makeText(getApplicationContext(), "Nope", Toast.LENGTH_SHORT).show();
                 }
+
                 populateList();
+
             }
 
         });
+
 
 
     }
@@ -269,9 +342,9 @@ public class MainActivity extends ActionBarActivity {
             });
 
         }
+
     }
     */
-
 
     public void createEvent(View view) {
 
@@ -292,6 +365,44 @@ public class MainActivity extends ActionBarActivity {
         gameScore.saveInBackground();
     }
 
+    public void searchEvents(Date d, String category) {
+        Events e = new Events();
+        date = d;
+        cater = category;
+
+        ParseQuery<Events> query = e.getQuery();
+        query.addAscendingOrder("Date");
+        query.findInBackground(new FindCallback<Events>() {
+
+            public void done(List<Events> event, ParseException e) {
+
+                if (e == null) {
+                    for (int i = 0; i < event.size(); i++) {
+                        //event.get(i).fetchIfNeeded();
+                        //Toast.makeText(getApplicationContext(), event.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
+                        if(date != null) {
+                            if(date.equals(event.get(i).getDate())) {
+                                ev.add(event.get(i));
+                            }
+                        }
+                        else if(cater != null) {
+                            if (cater.equals(event.get(i).getCat().getName())) {
+                                ev.add(event.get(i));
+                                //Toast.makeText(getApplicationContext(), searchCategories.size()+"", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    }
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+
+            }
+
+        });
+
+
+    }
 
 
 }
