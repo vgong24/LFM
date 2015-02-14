@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -11,7 +12,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -28,10 +33,17 @@ import java.util.*;
 public class MainActivity extends ActionBarActivity {
 
     Button logOut = null;
-    private static final int TIME_DIALOG_ID = 0 ;
+    private static final int TIME_DIALOG_ID = 0;
     TextView timeView;
     Button timeBtn;
     private TextView timeText;
+
+    ArrayList<Events> events = new ArrayList<Events>();
+    ArrayAdapter<Events> adapter;
+    //EventListAdapter eventListAdapter;
+    ListView eventListView;
+
+    List<ParseObject> ob;
 
     ArrayList<Category> categories = new ArrayList<Category>();
     ArrayList<Date> dates = new ArrayList<Date>();
@@ -44,7 +56,7 @@ public class MainActivity extends ActionBarActivity {
 
         timeView = (TextView) findViewById(R.id.timeView);
         timeBtn = (Button) findViewById(R.id.timeBtn);
-        timeBtn.setOnClickListener(new View.OnClickListener(){
+        timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment newFragment = new Mytimepicker(timeView);
@@ -53,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
         logOut = (Button) findViewById(R.id.logout_btn);
-        logOut.setOnClickListener(new View.OnClickListener(){
+        logOut.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -62,18 +74,19 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        buttonMaker();
+        //buttonMaker();
         //Toast.makeText(getApplicationContext(), categories.get(1).getCat(), Toast.LENGTH_SHORT).show();
         /*
         for (Category c: categories) {
             Toast.makeText(getApplicationContext(), c.getCat(), Toast.LENGTH_SHORT).show();
 
         }*/
+        new RemoteDataTask().execute();
 
 
     }
 
-    public void initFields(){
+    public void initFields() {
 
     }
 
@@ -100,7 +113,7 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initTabs(){
+    private void initTabs() {
         TabHost tabhost = (TabHost) findViewById(R.id.tabHost);
         tabhost.setup();
         TabHost.TabSpec tabSpec = tabhost.newTabSpec("home");
@@ -125,7 +138,7 @@ public class MainActivity extends ActionBarActivity {
     public static class Mytimepicker extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
         TextView timeTxt;
 
-        public Mytimepicker(TextView txtview){
+        public Mytimepicker(TextView txtview) {
             timeTxt = txtview;
         }
 
@@ -143,6 +156,7 @@ public class MainActivity extends ActionBarActivity {
             timeDialog.setTitle("Test");
             return timeDialog;
         }
+
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 // do something with the time chosen. http://stackoverflow.com/questions/2659954/timepickerdialog-and-am-or-pm/2660148#2660148
             String am_pm = "";
@@ -153,12 +167,12 @@ public class MainActivity extends ActionBarActivity {
                 am_pm = "AM";
             else if (datetime.get(Calendar.AM_PM) == Calendar.PM)
                 am_pm = "PM";
-            String strHrsToShow = (datetime.get(Calendar.HOUR) == 0) ?"12":datetime.get(Calendar.HOUR)+"";
-            timeTxt.setText(strHrsToShow + ":" + datetime.get(Calendar.MINUTE)+" " + am_pm);
+            String strHrsToShow = (datetime.get(Calendar.HOUR) == 0) ? "12" : datetime.get(Calendar.HOUR) + "";
+            timeTxt.setText(strHrsToShow + ":" + datetime.get(Calendar.MINUTE) + " " + am_pm);
         }
     }
 
-
+    /*
     public void buttonMaker() {
         Events e = new Events();
 
@@ -169,20 +183,67 @@ public class MainActivity extends ActionBarActivity {
 
             public void done(List<Events> event, ParseException e) {
 
+
                 if (e == null) {
-                    for(int i = 0; i < event.size(); i++) {
+                    for (int i = 0; i < event.size(); i++) {
                         //event.get(i).fetchIfNeeded();
-                        Toast.makeText(getApplicationContext(), event.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
+
                         categories.add(event.get(i).getCat());
                         dates.add(event.get(i).getDate());
+                        events.add(event.get(i));
+                        //Toast.makeText(getApplicationContext(), events.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
                     }
+
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
+
 
             }
 
         });
 
+
+    }*/
+    private class RemoteDataTask extends AsyncTask<Void, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Events");
+            query.orderByAscending("Date");
+            try{
+                ob = query.find();
+            }catch(ParseException e){
+
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result){
+            eventListView = (ListView) findViewById(R.id.listView);
+            adapter = new ArrayAdapter<Events>(MainActivity.this, R.layout.event_list_view);
+
+            for(ParseObject allEvents : ob){
+
+                adapter.add((Events) allEvents);//changed
+            }
+
+            eventListView.setAdapter(adapter);
+
+            eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    //Intent i = new Intent(MainActivity.this, ) Needs alan's single event page
+                   // Toast.makeText(getApplicationContext(), "Clicked at position "+position, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
     }
+
+
+
+
+
 }
