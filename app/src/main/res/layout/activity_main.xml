@@ -143,7 +143,7 @@
                         <EditText
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/editText7"
+                            android:id="@+id/editCreateCategoryText"
                             android:text="Enter a Category" />
 
                         <TextView
@@ -175,7 +175,7 @@
                                     android:layout_height="wrap_content"
                                     android:inputType="numberDecimal"
                                     android:ems="10"
-                                    android:id="@+id/editText8" />
+                                    android:id="@+id/locationLatEdit" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -244,7 +244,8 @@
                             android:layout_height="wrap_content"
                             android:inputType="number"
                             android:ems="10"
-                            android:id="@+id/editText10" />
+                            android:text="9999"
+                            android:id="@+id/maxMembersInt" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -256,14 +257,15 @@
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/editText12"
+                            android:id="@+id/createEventInfo"
                             android:text="Info" />
 
                         <Button
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Create Event"
-                            android:id="@+id/button3" />
+                            android:id="@+id/button3"
+                            android:onClick="createEvent" />
                     </LinearLayout>
 
                 </LinearLayout>
