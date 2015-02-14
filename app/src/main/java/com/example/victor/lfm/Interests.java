@@ -9,16 +9,16 @@ import com.parse.*;
 @ParseClassName("Interests")
 public class Interests extends ParseObject {
     public void setCat(String cat) {
-        put("category", cat);
+        put("Category", cat);
     }
     public int getCat() {
-        return getInt("category");
+        return getInt("Category");
     }
     public String getUser() {
-        return getString("userid");
+        return getString("User");
     }
     public void setUser(String id) {
-        put("userid", id);
+        put("User", id);
     }
     public static ParseQuery<Interests> getQuery() {
         return ParseQuery.getQuery(Interests.class);

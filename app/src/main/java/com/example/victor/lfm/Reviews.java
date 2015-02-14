@@ -9,22 +9,22 @@ import com.parse.*;
 @ParseClassName("Reviews")
 public class Reviews extends ParseObject {
     public void setRating(int rate) {
-        put("rating", rate);
+        put("Rating", rate);
     }
     public int getRating() {
         return getInt("rating");
     }
     public String getUser() {
-        return getString("userid");
+        return getString("User");
     }
     public void setUser(String id) {
-        put("userid", id);
+        put("User", id);
     }
     public String getReviewee() {
-        return getString("reviewee");
+        return getString("Reviewee");
     }
     public void setReviewee(String id) {
-        put("reviewee", id);
+        put("Reviewee", id);
     }
     public String getEventID() {
         return getString("event");
