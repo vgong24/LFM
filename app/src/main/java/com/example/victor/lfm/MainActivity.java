@@ -58,6 +58,10 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public void initFields(){
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
