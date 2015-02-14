@@ -107,7 +107,7 @@ public class MainActivity extends ActionBarActivity {
 
         buttonMaker();
 
-        searchEvents(null, "Study");
+        //searchEvents(null, "Study");
         //Toast.makeText(getApplicationContext(), searchCategories.get(0).getName() + "", Toast.LENGTH_SHORT).show();
 
 
@@ -205,6 +205,13 @@ public class MainActivity extends ActionBarActivity {
 
     private void populateList(){
         eventListAdapter = new EventListAdapter(R.layout.event_list_view, events);
+        eventListView.setAdapter(eventListAdapter);
+    }
+
+    private void testSearchList(ArrayList<Events> ev) {
+        eventListAdapter = new EventListAdapter(R.layout.event_list_view, ev);
+        eventListView = (ListView) findViewById(R.id.listView2);
+
         eventListView.setAdapter(eventListAdapter);
     }
 
@@ -378,6 +385,12 @@ public class MainActivity extends ActionBarActivity {
         String location = temp.getText().toString(); */
 
 
+        //Toast.makeText(getApplicationContext(), searchEvents(null, "Sports").size() + "", Toast.LENGTH_SHORT).show();
+        searchEvents(null, activity);
+        testSearchList(ev);
+
+        ev = new ArrayList<>();
+
     }
 
     public void searchEvents(Date d, String category) {
@@ -408,6 +421,7 @@ public class MainActivity extends ActionBarActivity {
                             }
                         }
                     }
+
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
@@ -415,7 +429,6 @@ public class MainActivity extends ActionBarActivity {
             }
 
         });
-
 
     }
 
