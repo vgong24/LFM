@@ -189,10 +189,11 @@
                                     android:text="Category"
                                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                                <Spinner
-                                    android:id="@+id/cat_spinner"
+                                <EditText
+                                    android:id="@+id/eventCreateCategory"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:text="Enter a Category" />
 
                             </LinearLayout>
 

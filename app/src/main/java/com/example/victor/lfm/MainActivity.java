@@ -20,9 +20,11 @@ import android.widget.*;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.*;
 
+import java.text.*;
 import java.util.Calendar;
 import java.util.*;
 
@@ -405,10 +407,28 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         temp = (EditText) findViewById(R.id.createEventInfo);
         String eventInfo = temp.getText().toString();
 
+        temp = (EditText) findViewById(R.id.eventCreateCategory);
+        String category = temp.getText().toString();
+        String catString = "";
+
         ParseObject gameScore = ParseObject.create("Events");
+
+        try {
+            ListIterator<Category> c = Category.getQuery().find().listIterator();
+            while(c.hasNext()) {
+                Category cat = c.next();
+                if(cat.getName().equals(category)) {
+                    catString = cat.getObjectId();
+                    gameScore.put("Category", Category.getQuery().get(catString));
+                }
+            }
+        } catch (com.parse.ParseException pe) {
+
+        }
 
         gameScore.put("Max", maxMember);
         gameScore.put("Description", eventInfo);
+        gameScore.put("Host", ParseUser.getCurrentUser());
 
         gameScore.saveInBackground();
     }
