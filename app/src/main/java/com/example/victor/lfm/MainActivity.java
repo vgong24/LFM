@@ -365,6 +365,21 @@ public class MainActivity extends ActionBarActivity {
         gameScore.saveInBackground();
     }
 
+    public void eventSearch(View view) {
+        EditText temp;
+
+        //Activity
+        temp = (EditText) findViewById(R.id.editText3);
+        String activity = temp.getText().toString();
+
+        /**
+        //Location
+        temp = (EditText) findViewById(R.id.editText4);
+        String location = temp.getText().toString(); */
+
+
+    }
+
     public void searchEvents(Date d, String category) {
         Events e = new Events();
         date = d;

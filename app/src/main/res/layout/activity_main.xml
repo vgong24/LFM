@@ -100,8 +100,9 @@
                             <Button
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="New Button"
+                                android:text="Search for Event"
                                 android:id="@+id/button4"
+                                android:onClick="eventSearch"
                                 android:layout_alignParentBottom="true"
                                 android:layout_alignParentLeft="true"
                                 android:layout_alignParentStart="true"
