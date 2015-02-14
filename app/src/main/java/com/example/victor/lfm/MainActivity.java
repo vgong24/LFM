@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 
 import android.widget.*;
 
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.parse.Parse;
 import com.parse.ParseUser;
 import com.parse.*;
@@ -31,15 +33,19 @@ import com.google.android.gms.location.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.SupportMapFragment;
+
+import android.location.*;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements OnCameraChangeListener, OnMapReadyCallback {
 
     Button logOut = null;
     private static final int TIME_DIALOG_ID = 0;
@@ -48,6 +54,11 @@ public class MainActivity extends ActionBarActivity {
     TextView dateView;
     Button dateBtn;
     private TextView timeText;
+
+    GoogleMap map;
+    TextView filterAddress;
+    Marker marker;
+
 
 
     ArrayList<Events> events = new ArrayList<Events>();
@@ -61,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
     Date date;
 
 
-    ArrayList<Category> categories = new ArrayList<Category>();
+    List<String> catNames = new ArrayList<String>();
     ArrayList<Date> dates = new ArrayList<Date>();
     ArrayList<Category> searchCategories = new ArrayList<Category>();
     ArrayList<Date> searchDates = new ArrayList<Date>();
@@ -73,6 +84,21 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         initTabs();
         initFields();
+
+        for (Events e: ev) {
+            Toast.makeText(getApplicationContext(), e.getCat().getName(), Toast.LENGTH_SHORT).show();
+            catNames.add(e.getCat().getName());
+        }
+
+        ArrayAdapter<String> adapt = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, catNames);
+
+
+        /*
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, catNames);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        catNames.setAdapter(dataAdapter);
+        catNames.setSelection(1);*/
 
         timeView = (TextView) findViewById(R.id.timeView);
         timeBtn = (Button) findViewById(R.id.timeBtn);
@@ -105,15 +131,49 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
+        MapFragment mapFrag=
+                (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+        mapFrag.getMapAsync(this);
+
+        map = mapFrag.getMap();
+        //map.setMyLocationEnabled(true);
+
+        filterAddress = (TextView) findViewById(R.id.addressText);
+
+
+
         buttonMaker();
 
-        searchEvents(null, "Study");
+        //searchEvents(null, "Study");
         //Toast.makeText(getApplicationContext(), searchCategories.get(0).getName() + "", Toast.LENGTH_SHORT).show();
 
 
 
 
     }
+
+    @Override
+    public void onCameraChange(CameraPosition position) {
+
+    }
+
+
+    public void onMapReady(GoogleMap map) {
+
+        LatLng loc = new LatLng(21.299816,-157.81757900000002 );
+
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 13));
+
+        map.addMarker(new MarkerOptions()
+                .title("Event Location")
+                .position(loc));
+
+        filterAddress.setText("My Location");
+    }
+
+
+
 
     public void initFields() {
         eventListView = (ListView) findViewById(R.id.listView);
@@ -233,6 +293,13 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
+    private void testSearchList(ArrayList<Events> ev) {
+        eventListAdapter = new EventListAdapter(R.layout.event_list_view, ev);
+        eventListView = (ListView) findViewById(R.id.listView2);
+
+        eventListView.setAdapter(eventListAdapter);
+    }
+
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
         TextView dateText;
@@ -282,7 +349,6 @@ public class MainActivity extends ActionBarActivity {
                         //event.get(i).fetchIfNeeded();
 
                         events.add(event.get(i));
-
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "Nope", Toast.LENGTH_SHORT).show();
@@ -328,46 +394,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    /*
-    private class RemoteDataTask extends AsyncTask<Void, Void, Void> {
-
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Events");
-            query.orderByAscending("Date");
-            try{
-                ob = query.find();
-            }catch(ParseException e){
-
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result){
-            eventListView = (ListView) findViewById(R.id.listView);
-            adapter = new ArrayAdapter<Events>(MainActivity.this, R.layout.event_list_view);
-
-            for(ParseObject allEvents : ob){
-
-                adapter.add((Events) allEvents);//changed
-            }
-
-            eventListView.setAdapter(adapter);
-
-            eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //Intent i = new Intent(MainActivity.this, ) Needs alan's single event page
-                   // Toast.makeText(getApplicationContext(), "Clicked at position "+position, Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-
-    }
-    */
-
     public void createEvent(View view) {
 
         EditText temp;
@@ -385,6 +411,27 @@ public class MainActivity extends ActionBarActivity {
         gameScore.put("Description", eventInfo);
 
         gameScore.saveInBackground();
+    }
+
+    public void eventSearch(View view) {
+        EditText temp;
+
+        //Activity
+        temp = (EditText) findViewById(R.id.editText3);
+        String activity = temp.getText().toString();
+
+        /**
+        //Location
+        temp = (EditText) findViewById(R.id.editText4);
+        String location = temp.getText().toString(); */
+
+
+        //Toast.makeText(getApplicationContext(), searchEvents(null, "Sports").size() + "", Toast.LENGTH_SHORT).show();
+        searchEvents(null, activity);
+        testSearchList(ev);
+
+        ev = new ArrayList<>();
+
     }
 
     public void searchEvents(Date d, String category) {
@@ -415,6 +462,7 @@ public class MainActivity extends ActionBarActivity {
                             }
                         }
                     }
+
                 } else {
                     Log.d("score", "Error: " + e.getMessage());
                 }
@@ -422,7 +470,6 @@ public class MainActivity extends ActionBarActivity {
             }
 
         });
-
 
     }
 
