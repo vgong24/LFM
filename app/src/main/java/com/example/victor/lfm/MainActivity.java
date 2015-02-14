@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.view.ViewGroup;
 import android.widget.*;
 
 import com.parse.Parse;
@@ -33,7 +34,7 @@ public class MainActivity extends ActionBarActivity {
 
     ArrayList<Events> events = new ArrayList<Events>();
     ArrayAdapter<Events> adapter;
-    //EventListAdapter eventListAdapter;
+    EventListAdapter eventListAdapter;
     ListView eventListView;
 
     List<ParseObject> ob;
@@ -46,6 +47,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initTabs();
+        initFields();
 
         timeView = (TextView) findViewById(R.id.timeView);
         timeBtn = (Button) findViewById(R.id.timeBtn);
@@ -67,19 +69,20 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        //buttonMaker();
+        buttonMaker();
         //Toast.makeText(getApplicationContext(), categories.get(1).getCat(), Toast.LENGTH_SHORT).show();
         /*
         for (Category c: categories) {
             Toast.makeText(getApplicationContext(), c.getCat(), Toast.LENGTH_SHORT).show();
 
         }*/
-        new RemoteDataTask().execute();
+
 
 
     }
 
     public void initFields() {
+        eventListView = (ListView) findViewById(R.id.listView);
 
     }
 
@@ -165,7 +168,12 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    /*
+    private void populateList(){
+        eventListAdapter = new EventListAdapter();
+        eventListView.setAdapter(eventListAdapter);
+    }
+
+
     public void buttonMaker() {
         Events e = new Events();
 
@@ -184,20 +192,42 @@ public class MainActivity extends ActionBarActivity {
                         categories.add(event.get(i).getCat());
                         dates.add(event.get(i).getDate());
                         events.add(event.get(i));
-                        //Toast.makeText(getApplicationContext(), events.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), events.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
-                    Log.d("score", "Error: " + e.getMessage());
+                    Toast.makeText(getApplicationContext(), "Nope", Toast.LENGTH_SHORT).show();
                 }
-
-
+                populateList();
             }
 
         });
 
 
-    }*/
+    }
+    private class EventListAdapter extends ArrayAdapter<Events> {
+        public EventListAdapter(){
+            super(MainActivity.this, R.layout.event_list_view, events);
+        }
+
+        @Override
+        public View getView(int position, View view, ViewGroup parent){
+            if(view == null)
+                view = getLayoutInflater().inflate(R.layout.event_list_view, parent, false);
+
+            Events currentEvent = events.get(position);
+            TextView category = (TextView) view.findViewById(R.id.eventCategoryView);
+            category.setText(currentEvent.getCat().getName());
+
+
+            return view;
+
+        }
+
+    }
+
+
+    /*
     private class RemoteDataTask extends AsyncTask<Void, Void, Void> {
 
 
@@ -254,6 +284,7 @@ public class MainActivity extends ActionBarActivity {
 
         gameScore.saveInBackground();
     }
+    */
 
 
 }

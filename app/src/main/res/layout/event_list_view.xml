@@ -1,13 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:textSize="25sp">
 
-
-    </TextView>
-<!--
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -19,7 +10,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_alignParentBottom="true">
 
         <LinearLayout
@@ -94,4 +85,3 @@
     </LinearLayout>
 
 </RelativeLayout>
--->
