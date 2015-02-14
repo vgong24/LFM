@@ -24,13 +24,18 @@ import java.util.*;
 public class MainActivity extends ActionBarActivity {
 
     Button logOut = null;
-    private static final int TIME_DIALOG_ID = 0 ;
+    private static final int TIME_DIALOG_ID = 0;
     TextView timeView;
     Button timeBtn;
     private TextView timeText;
+    String cater;
+    Date date;
 
     ArrayList<Category> categories = new ArrayList<Category>();
     ArrayList<Date> dates = new ArrayList<Date>();
+    ArrayList<Category> searchCategories = new ArrayList<Category>();
+    ArrayList<Date> searchDates = new ArrayList<Date>();
+    ArrayList<Events> ev = new ArrayList<Events>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +45,7 @@ public class MainActivity extends ActionBarActivity {
 
         timeView = (TextView) findViewById(R.id.timeView);
         timeBtn = (Button) findViewById(R.id.timeBtn);
-        timeBtn.setOnClickListener(new View.OnClickListener(){
+        timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment newFragment = new Mytimepicker(timeView);
@@ -49,7 +54,7 @@ public class MainActivity extends ActionBarActivity {
         });
 
         logOut = (Button) findViewById(R.id.logout_btn);
-        logOut.setOnClickListener(new View.OnClickListener(){
+        logOut.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -58,7 +63,14 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        buttonMaker();
+
+        searchEvents(null, "Study");
+        //Toast.makeText(getApplicationContext(), searchCategories.get(0).getName() + "", Toast.LENGTH_SHORT).show();
+
+
+
+        //buttonMaker();
+
         //Toast.makeText(getApplicationContext(), categories.get(1).getCat(), Toast.LENGTH_SHORT).show();
         /*
         for (Category c: categories) {
@@ -69,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    public void initFields(){
+    public void initFields() {
 
     }
 
@@ -96,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initTabs(){
+    private void initTabs() {
         TabHost tabhost = (TabHost) findViewById(R.id.tabHost);
         tabhost.setup();
         TabHost.TabSpec tabSpec = tabhost.newTabSpec("home");
@@ -121,7 +133,7 @@ public class MainActivity extends ActionBarActivity {
     public static class Mytimepicker extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
         TextView timeTxt;
 
-        public Mytimepicker(TextView txtview){
+        public Mytimepicker(TextView txtview) {
             timeTxt = txtview;
         }
 
@@ -139,6 +151,7 @@ public class MainActivity extends ActionBarActivity {
             timeDialog.setTitle("Test");
             return timeDialog;
         }
+
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 // do something with the time chosen. http://stackoverflow.com/questions/2659954/timepickerdialog-and-am-or-pm/2660148#2660148
             String am_pm = "";
@@ -149,8 +162,8 @@ public class MainActivity extends ActionBarActivity {
                 am_pm = "AM";
             else if (datetime.get(Calendar.AM_PM) == Calendar.PM)
                 am_pm = "PM";
-            String strHrsToShow = (datetime.get(Calendar.HOUR) == 0) ?"12":datetime.get(Calendar.HOUR)+"";
-            timeTxt.setText(strHrsToShow + ":" + datetime.get(Calendar.MINUTE)+" " + am_pm);
+            String strHrsToShow = (datetime.get(Calendar.HOUR) == 0) ? "12" : datetime.get(Calendar.HOUR) + "";
+            timeTxt.setText(strHrsToShow + ":" + datetime.get(Calendar.MINUTE) + " " + am_pm);
         }
     }
 
@@ -166,7 +179,7 @@ public class MainActivity extends ActionBarActivity {
             public void done(List<Events> event, ParseException e) {
 
                 if (e == null) {
-                    for(int i = 0; i < event.size(); i++) {
+                    for (int i = 0; i < event.size(); i++) {
                         //event.get(i).fetchIfNeeded();
                         Toast.makeText(getApplicationContext(), event.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
                         categories.add(event.get(i).getCat());
@@ -199,6 +212,45 @@ public class MainActivity extends ActionBarActivity {
         gameScore.put("Description", eventInfo);
 
         gameScore.saveInBackground();
+    }
+
+    public void searchEvents(Date d, String category) {
+        Events e = new Events();
+        date = d;
+        cater = category;
+
+        ParseQuery<Events> query = e.getQuery();
+        query.addAscendingOrder("Date");
+        query.findInBackground(new FindCallback<Events>() {
+
+            public void done(List<Events> event, ParseException e) {
+
+                if (e == null) {
+                    for (int i = 0; i < event.size(); i++) {
+                        //event.get(i).fetchIfNeeded();
+                        //Toast.makeText(getApplicationContext(), event.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
+                        if(date != null) {
+                            if(date.equals(event.get(i).getDate())) {
+                                ev.add(event.get(i));
+                            }
+                        }
+                        else if(cater != null) {
+                            if (cater.equals(event.get(i).getCat().getName())) {
+                                ev.add(event.get(i));
+                                //Toast.makeText(getApplicationContext(), searchCategories.size()+"", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }
+                    }
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+
+            }
+
+        });
+
+
     }
 
 }
