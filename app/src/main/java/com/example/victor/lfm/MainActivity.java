@@ -169,7 +169,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void populateList(){
-        eventListAdapter = new EventListAdapter();
+        eventListAdapter = new EventListAdapter(R.layout.event_list_view, events);
         eventListView.setAdapter(eventListAdapter);
     }
 
@@ -188,11 +188,8 @@ public class MainActivity extends ActionBarActivity {
                 if (e == null) {
                     for (int i = 0; i < event.size(); i++) {
                         //event.get(i).fetchIfNeeded();
-
-                        categories.add(event.get(i).getCat());
-                        dates.add(event.get(i).getDate());
                         events.add(event.get(i));
-                        Toast.makeText(getApplicationContext(), events.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), events.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
@@ -206,18 +203,27 @@ public class MainActivity extends ActionBarActivity {
 
     }
     private class EventListAdapter extends ArrayAdapter<Events> {
-        public EventListAdapter(){
-            super(MainActivity.this, R.layout.event_list_view, events);
+        int viewListXML;
+        ArrayList<Events> eventArray;
+
+        public EventListAdapter(int viewListXML, ArrayList<Events> eventArray){//Example R.layout.event_list_item, events
+            super(MainActivity.this, viewListXML, eventArray);
+            this.viewListXML = viewListXML;
+            this.eventArray = eventArray;
         }
 
         @Override
         public View getView(int position, View view, ViewGroup parent){
             if(view == null)
-                view = getLayoutInflater().inflate(R.layout.event_list_view, parent, false);
+                view = getLayoutInflater().inflate(viewListXML, parent, false);
 
-            Events currentEvent = events.get(position);
+            Events currentEvent = eventArray.get(position);
             TextView category = (TextView) view.findViewById(R.id.eventCategoryView);
             category.setText(currentEvent.getCat().getName());
+            TextView capacity = (TextView) view.findViewById(R.id.eventCapacityView);
+            capacity.setText(currentEvent.getMax()+"");
+
+
 
 
             return view;
@@ -264,6 +270,7 @@ public class MainActivity extends ActionBarActivity {
 
         }
     }
+    */
 
 
     public void createEvent(View view) {
@@ -284,7 +291,7 @@ public class MainActivity extends ActionBarActivity {
 
         gameScore.saveInBackground();
     }
-    */
+
 
 
 }

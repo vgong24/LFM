@@ -11,10 +11,10 @@ import java.util.Date;
 @ParseClassName("Events")
 public class Events extends ParseObject  {
     public void setHost(String user) {
-        put("host", user);
+        put("Host", user);
     }
     public int getHost() {
-        return getInt("host");
+        return getInt("Host");
     }
     public Category getCat() {
         return (Category) getParseObject("Category");
@@ -23,22 +23,22 @@ public class Events extends ParseObject  {
         put("Category", cat);
     }
     public Date getDate() {
-        return getDate("date");
+        return getDate("Date");
     }
     public void setDate(Date date) {
-        put("date", date);
+        put("Date", date);
     }
     public String getDescr() {
-        return getString("descr");
+        return getString("Description");
     }
     public void setDescr(String descr) {
-        put("descr", descr);
+        put("Description", descr);
     }
     public int getMax() {
-        return getInt("max");
+        return getInt("Max");
     }
     public void setMax(int max) {
-        put("max", max);
+        put("Max", max);
     }
     public static ParseQuery<Events> getQuery() {
         return ParseQuery.getQuery(Events.class);

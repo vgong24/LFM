@@ -61,7 +61,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
+            android:label="@string/upcoming"
             android:screenOrientation="portrait" />
 
 
