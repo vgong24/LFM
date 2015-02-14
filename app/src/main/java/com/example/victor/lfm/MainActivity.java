@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,8 +18,10 @@ import android.widget.TimePicker;
 
 import com.parse.Parse;
 import com.parse.ParseUser;
+import com.parse.*;
 
 import java.util.Calendar;
+import java.util.*;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -141,5 +144,27 @@ public class MainActivity extends ActionBarActivity {
             String strHrsToShow = (datetime.get(Calendar.HOUR) == 0) ?"12":datetime.get(Calendar.HOUR)+"";
             timeTxt.setText(strHrsToShow + ":" + datetime.get(Calendar.MINUTE)+" " + am_pm);
         }
+    }
+    public static class ButtonMaker {
+        ArrayList<String> categories = new ArrayList<String>();
+        ArrayList<Date> dates = new ArrayList<Date>();
+        Events event = new Events();
+
+        ParseQuery<Events> query = event.getQuery();
+        //query.
+        query.addDescendingOrder("date");
+        query.findInBackground(new FindCallback<Events>() {
+            public void done(ArrayList<Events> events, ParseException e) {
+                if (e == null) {
+                    for(int i = 0; int < events.size(); i++) {
+                        categories.add(events.get(i).getCat());
+                        dates.add(events.get(i).getDate());
+                    }
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        };
+
     }
 }

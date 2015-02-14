@@ -4,12 +4,12 @@ package com.example.victor.lfm;
  * Created by Victor on 2/14/2015.
  */
 
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.*;
+
 
 import java.util.Date;
-
-public class Events extends ParseObject {
+@ParseClassName("Events")
+public class Events extends ParseObject  {
     public void setHost(String user) {
         put("host", user);
     }
@@ -33,6 +33,12 @@ public class Events extends ParseObject {
     }
     public void setDescr(String descr) {
         put("descr", descr);
+    }
+    public int getMax() {
+        return getInt("max");
+    }
+    public void setMax(int max) {
+        put("max", max);
     }
     public static ParseQuery<Events> getQuery() {
         return ParseQuery.getQuery(Events.class);
