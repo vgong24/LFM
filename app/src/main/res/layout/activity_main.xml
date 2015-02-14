@@ -47,6 +47,11 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical">
 
+                    <ListView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/listView2" />
+
                     <LinearLayout
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
@@ -98,6 +103,19 @@
                                 android:layout_height="wrap_content"
                                 android:text="Select a Date"
                                 android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Search for Event"
+                                android:id="@+id/button4"
+                                android:onClick="eventSearch"
+                                android:layout_alignParentBottom="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginBottom="72dp" />
+
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
