@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 
 import android.widget.*;
 
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.parse.Parse;
 import com.parse.ParseUser;
 import com.parse.*;
@@ -31,15 +33,19 @@ import com.google.android.gms.location.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.SupportMapFragment;
+
+import android.location.*;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements OnCameraChangeListener, OnMapReadyCallback {
 
     Button logOut = null;
     private static final int TIME_DIALOG_ID = 0;
@@ -48,6 +54,11 @@ public class MainActivity extends ActionBarActivity {
     TextView dateView;
     Button dateBtn;
     private TextView timeText;
+
+    GoogleMap map;
+    TextView filterAddress;
+    Marker marker;
+
 
 
     ArrayList<Events> events = new ArrayList<Events>();
@@ -61,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
     Date date;
 
 
-    ArrayList<Category> categories = new ArrayList<Category>();
+    List<String> catNames = new ArrayList<String>();
     ArrayList<Date> dates = new ArrayList<Date>();
     ArrayList<Category> searchCategories = new ArrayList<Category>();
     ArrayList<Date> searchDates = new ArrayList<Date>();
@@ -73,6 +84,21 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         initTabs();
         initFields();
+
+        for (Events e: ev) {
+            Toast.makeText(getApplicationContext(), e.getCat().getName(), Toast.LENGTH_SHORT).show();
+            catNames.add(e.getCat().getName());
+        }
+
+        ArrayAdapter<String> adapt = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, catNames);
+
+
+        /*
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, catNames);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        catNames.setAdapter(dataAdapter);
+        catNames.setSelection(1);*/
 
         timeView = (TextView) findViewById(R.id.timeView);
         timeBtn = (Button) findViewById(R.id.timeBtn);
@@ -105,6 +131,17 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
+        MapFragment mapFrag=
+                (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+        mapFrag.getMapAsync(this);
+
+        map = mapFrag.getMap();
+        //map.setMyLocationEnabled(true);
+
+        filterAddress = (TextView) findViewById(R.id.addressText);
+
+
+
         buttonMaker();
 
         searchEvents(null, "Study");
@@ -114,6 +151,29 @@ public class MainActivity extends ActionBarActivity {
 
 
     }
+
+    @Override
+    public void onCameraChange(CameraPosition position) {
+
+    }
+
+
+    public void onMapReady(GoogleMap map) {
+
+        LatLng loc = new LatLng(21.299816,-157.81757900000002 );
+
+
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 13));
+
+        map.addMarker(new MarkerOptions()
+                .title("Event Location")
+                .position(loc));
+
+        filterAddress.setText("My Location");
+    }
+
+
+
 
     public void initFields() {
         eventListView = (ListView) findViewById(R.id.listView);
@@ -259,7 +319,7 @@ public class MainActivity extends ActionBarActivity {
                         events.add(event.get(i));
                         //Toast.makeText(getApplicationContext(), events.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
 
-                        Toast.makeText(getApplicationContext(), event.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), event.get(i).getCat().getName() + "", Toast.LENGTH_SHORT).show();
 
                     }
                 } else {
