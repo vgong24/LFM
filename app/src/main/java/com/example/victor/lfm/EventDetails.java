@@ -120,8 +120,7 @@ public class EventDetails extends Activity {
             ParseObject player = attendees.get(position);
 
             Events currentEvent = eventArray.get(position);
-            TextView category = (TextView) view.findViewById(R.id.eventCategoryView);
-            category.setText(currentEvent.getCat().getName());
+
             TextView capacity = (TextView) view.findViewById(R.id.eventCapacityView);
             capacity.setText(currentEvent.getMax()+"");
 
