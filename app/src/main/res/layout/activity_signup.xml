@@ -43,6 +43,24 @@
                 android:imeActionLabel="@string/signup"
                 android:imeOptions="actionUnspecified" />
 
+            <EditText
+                android:id="@+id/name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_name"
+                android:inputType="name"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/birthday_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_name"
+                android:inputType="name"
+                android:maxLines="1"
+                android:singleLine="true" />
+
             <Button
                 android:id="@+id/action_button"
                 android:layout_width="wrap_content"
