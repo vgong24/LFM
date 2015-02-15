@@ -19,11 +19,16 @@ public class Category extends ParseObject {
         }
         return getString("Name");
     }
-    public byte[] getImage() {
-        return getBytes("Image");
+    public ParseFile getImage() {
+        try {
+            this.fetchIfNeeded();
+        } catch (ParseException e) {
+
+        }
+        return getParseFile("Logo");
     }
     public void setImage(byte [] image) {
-        put("Image", image);
+        put("Logo", image);
     }
     public static ParseQuery<Category> getQuery() {
         return ParseQuery.getQuery(Category.class);

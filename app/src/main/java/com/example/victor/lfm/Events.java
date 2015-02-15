@@ -17,6 +17,11 @@ public class Events extends ParseObject  {
         return getInt("Host");
     }
     public Category getCat() {
+        try {
+            this.fetchIfNeeded();
+        } catch (ParseException e) {
+
+        }
         return (Category) getParseObject("Category");
     }
     public void setCat(String cat) {
