@@ -280,10 +280,10 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(MainActivity.this, EventDetails.class);
                 i.putExtra("EventId", events.get(position).getObjectId());
-                if(events.size() != 0){
-                    Toast.makeText(getApplicationContext(), "position: "+position+" EventId of "+ events.get(position).getObjectId(), Toast.LENGTH_SHORT).show();
+                if (events.size() != 0) {
+                    Toast.makeText(getApplicationContext(), "position: " + position + " EventId of " + events.get(position).getObjectId(), Toast.LENGTH_SHORT).show();
 
-                }else{
+                } else {
                     Toast.makeText(getApplicationContext(), "Arraylist is empty", Toast.LENGTH_SHORT).show();
 
                 }
@@ -413,53 +413,15 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
                 }
             });
 
-
-
-            /*
-            query.findInBackground(new FindCallback() {
-                                        @Override
-                                        public void done(List<T> object, ParseException e) {
-                                            if (object == null) {
-                                                Log.d("test", "The object was not found...");
-                                            } else {
-                                                Log.d("test", "Retrieved the object.");
-                                                ParseFile fileObject = (ParseFile) object.get("Logo");
-                                                fileObject.getDataInBackground(new GetDataCallback() {
-                                                    public void done(byte[] data, ParseException e) {
-                                                        if (e == null) {
-                                                            Log.d("test", "We've got data in data.");
-                                                            // use data for something
-                                                            ImageView imageView = (ImageView) findViewById(R.id.imageView);
-                                                            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                                            imageView.setImageBitmap(bmp);
-
-                                                        } else {
-                                                            Log.d("test", "There was a problem downloading the data.");
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    });*/
-
-
-
-
-            /*
-            byte[] ba = currentEvent.getCat().getImage();
-            Bitmap bmp = BitmapFactory.decodeByteArray(ba, 0, ba.length);
-            ParseImageView imageView = (ParseImageView) findViewById(R.id.evImageView);
-
-            imageView.setParseFile(fileObject);*/
-
-            //Toast.makeText(getApplicationContext(), currentEvent.getCat().getName(), Toast.LENGTH_SHORT).show();
-
-
-
-            //TextView category = (TextView) view.findViewById(R.id.eventCategoryView);
-            //category.setText(currentEvent.getCat().getName());
             TextView capacity = (TextView) view.findViewById(R.id.eventCapacityView);
             capacity.setText(currentEvent.getMax()+"");
+            TextView activity = (TextView) view.findViewById(R.id.eventActivityView);
+            activity.setText(currentEvent.getDescr());
+            TextView location = (TextView) view.findViewById(R.id.eventLocationView);
+            location.setText("Honolulu");
+            TextView date = (TextView) view.findViewById(R.id.eventTimeView);
+            SimpleDateFormat sdf = new SimpleDateFormat();
+            date.setText(sdf.format(currentEvent.getDate()));
 
 
 
