@@ -265,6 +265,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         }
     }
 
+
     //Populates the Home upcoming events and sets up onItemClick event for each item that brings
     //user to details of that selected event
     private void populateList(){
