@@ -16,6 +16,7 @@
     <string name="upcoming">Up Coming Events</string>
     <string name="prompt_name">First Name</string>
     <string name="birthdate">Birthdate</string>
+    <string name="action_reload">reload</string>
 
 
 </resources>
