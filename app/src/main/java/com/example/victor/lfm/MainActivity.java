@@ -50,44 +50,34 @@ import android.graphics.*;
 
 public class MainActivity extends ActionBarActivity implements OnCameraChangeListener, OnMapReadyCallback {
     //In create tab or search
-    Button logOut = null;
+    Button logOut, createEventBtn, timeBtn, dateBtn = null;
     private static final int TIME_DIALOG_ID = 0;
-    TextView timeView;
-    Button timeBtn;
-    TextView dateView;
-    Button dateBtn;
-    Button createEventBtn;
-    private TextView timeText;
+    TextView timeView, dateView, timeText, filterAddress;
+
     //In create tab
     GoogleMap map;
-    TextView filterAddress;
     Marker marker;
 
     //for category spinner
     Spinner categorySpin;
-    String selectedCategory;
+    String selectedCategory, cater;
     private ParseQueryAdapter<ParseObject> mainAdapter;
 
     //In home tab
-    ArrayList<Events> events = new ArrayList<Events>();
+    ArrayList<Events> events;
     ArrayAdapter<Events> adapter;
-    ArrayList<Category> categoryArray = new ArrayList<>();
+    ArrayList<Category> categoryArray;
     EventListAdapter eventListAdapter;
 
     ListView eventListView;
 
-
     List<ParseObject> ob;
-
-    String cater;
     Date date;
 
-
-    List<String> catNames = new ArrayList<String>();
-    ArrayList<Date> dates = new ArrayList<Date>();
-    ArrayList<Category> searchCategories = new ArrayList<Category>();
-    ArrayList<Date> searchDates = new ArrayList<Date>();
-    ArrayList<Events> ev = new ArrayList<Events>();
+    List<String> catNames;
+    ArrayList<Date> dates, searchDates;
+    ArrayList<Category> searchCategories;
+    ArrayList<Events> ev;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +102,6 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         catNames.setAdapter(dataAdapter);
         catNames.setSelection(1);*/
-
 
         timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,8 +150,6 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
             }
         });
 
-
-
         MapFragment mapFrag=
                 (MapFragment)getFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
@@ -171,22 +158,14 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         //map.setMyLocationEnabled(true);
 
         filterAddress = (TextView) findViewById(R.id.addressText);
-
-
-
         //searchEvents(null, "Study");
         //Toast.makeText(getApplicationContext(), searchCategories.get(0).getName() + "", Toast.LENGTH_SHORT).show();
-
-
-
-
     }
 
     @Override
     public void onCameraChange(CameraPosition position) {
 
     }
-
 
     public void onMapReady(GoogleMap map) {
 
@@ -202,9 +181,6 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         filterAddress.setText("My Location");
     }
 
-
-
-
     public void initFields() {
         timeView = (TextView) findViewById(R.id.timeView);
         timeBtn = (Button) findViewById(R.id.timeBtn);
@@ -218,8 +194,17 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         createEventBtn = (Button) findViewById(R.id.create_button);
         categorySpin = (Spinner) findViewById(R.id.category_spinner);
 
-    }
+        dates = new ArrayList<Date>();
+        searchDates = new ArrayList<Date>();
 
+        events = new ArrayList<Events>();
+        catNames = new ArrayList<String>();
+        searchCategories = new ArrayList<Category>();
+        ev = new ArrayList<Events>();
+        categoryArray = new ArrayList<>();
+
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -374,9 +359,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         }
     }
 
-    /**
-     * Gets all the events in database and populates home tab
-     */
+    //Gets all the events in database and populates home tab
     public void buttonMaker() {
         Events e = new Events();
         events.clear();
