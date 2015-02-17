@@ -49,25 +49,33 @@ import android.graphics.*;
 
 
 public class MainActivity extends ActionBarActivity implements OnCameraChangeListener, OnMapReadyCallback {
-
+    //In create tab or search
     Button logOut = null;
     private static final int TIME_DIALOG_ID = 0;
     TextView timeView;
     Button timeBtn;
     TextView dateView;
     Button dateBtn;
+    Button createEventBtn;
     private TextView timeText;
-
+    //In create tab
     GoogleMap map;
     TextView filterAddress;
     Marker marker;
 
+    //for category spinner
+    Spinner categorySpin;
+    String selectedCategory;
+    private ParseQueryAdapter<ParseObject> mainAdapter;
 
-
+    //In home tab
     ArrayList<Events> events = new ArrayList<Events>();
     ArrayAdapter<Events> adapter;
+    ArrayList<Category> categoryArray = new ArrayList<>();
     EventListAdapter eventListAdapter;
+
     ListView eventListView;
+
 
     List<ParseObject> ob;
 
@@ -87,6 +95,8 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         setContentView(R.layout.activity_main);
         initTabs();
         initFields();
+        buttonMaker();
+        fillCategorySpinner();
 
         for (Events e: ev) {
             Toast.makeText(getApplicationContext(), e.getCat().getName(), Toast.LENGTH_SHORT).show();
@@ -103,8 +113,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         catNames.setAdapter(dataAdapter);
         catNames.setSelection(1);*/
 
-        timeView = (TextView) findViewById(R.id.timeView);
-        timeBtn = (Button) findViewById(R.id.timeBtn);
+
         timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,8 +122,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
             }
         });
 
-        dateView = (TextView) findViewById(R.id.dateView);
-        dateBtn = (Button) findViewById(R.id.dateBtn);
+
         dateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +131,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
             }
         });
 
-        logOut = (Button) findViewById(R.id.logout_btn);
+
         logOut.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -132,6 +140,27 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
                 startActivity(new Intent(v.getContext(), DispatchActivity.class));
             }
         });
+
+        createEventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createEvent(v);
+            }
+        });
+        categorySpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedCategory = categoryArray.get(position).getName();
+
+                Toast.makeText(getApplicationContext(), selectedCategory, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
 
         MapFragment mapFrag=
@@ -144,8 +173,6 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         filterAddress = (TextView) findViewById(R.id.addressText);
 
 
-
-        buttonMaker();
 
         //searchEvents(null, "Study");
         //Toast.makeText(getApplicationContext(), searchCategories.get(0).getName() + "", Toast.LENGTH_SHORT).show();
@@ -179,7 +206,17 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
 
     public void initFields() {
+        timeView = (TextView) findViewById(R.id.timeView);
+        timeBtn = (Button) findViewById(R.id.timeBtn);
+
+        dateView = (TextView) findViewById(R.id.dateView);
+        dateBtn = (Button) findViewById(R.id.dateBtn);
+
+        logOut = (Button) findViewById(R.id.logout_btn);
+
         eventListView = (ListView) findViewById(R.id.listView);
+        createEventBtn = (Button) findViewById(R.id.create_button);
+        categorySpin = (Spinner) findViewById(R.id.category_spinner);
 
     }
 
@@ -337,10 +374,12 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         }
     }
 
-
+    /**
+     * Gets all the events in database and populates home tab
+     */
     public void buttonMaker() {
         Events e = new Events();
-
+        events.clear();
         ParseQuery<Events> query = e.getQuery();
         //query.
         query.addAscendingOrder("Date");
@@ -350,8 +389,6 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
                 if (e == null) {
                     for (int i = 0; i < event.size(); i++) {
-                        //event.get(i).fetchIfNeeded();
-
                         events.add(event.get(i));
                     }
                 } else {
@@ -363,8 +400,6 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
             }
 
         });
-
-
 
     }
     private class EventListAdapter extends ArrayAdapter<Events> {
@@ -422,7 +457,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
             location.setText("Honolulu");
             TextView date = (TextView) view.findViewById(R.id.eventTimeView);
             SimpleDateFormat sdf = new SimpleDateFormat();
-            date.setText(sdf.format(currentEvent.getDate()));
+            //date.setText(sdf.format(currentEvent.getDate()));
 
 
 
@@ -433,11 +468,41 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
     }
 
+    //Fill spinner with values from parse
+    private void fillCategorySpinner(){
+
+        ParseQueryAdapter.QueryFactory<ParseObject> factory =
+                new ParseQueryAdapter.QueryFactory<ParseObject>() {
+                    public ParseQuery create() {
+                        ParseQuery query = new ParseQuery("Category");
+                        return query;
+                    }
+                };
+
+        ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, factory);
+        adapter.setTextKey("Name");
+        categorySpin.setAdapter(adapter);
+        categorySpin.setSelection(1);
+
+        ParseQuery<Category> query = ParseQuery.getQuery("Category");
+        query.findInBackground(new FindCallback<Category>() {
+            @Override
+            public void done(List<Category> categories, ParseException e) {
+                if(e==null){
+                    for(int i = 0 ; i < categories.size(); i++){
+                        categoryArray.add(categories.get(i));
+                    }
+                }
+            }
+        });
+
+    }
+
 
     public void createEvent(View view) {
 
         EditText temp;
-        TextView blah;
+        Spinner tempSpin;
 
         temp = (EditText) findViewById(R.id.maxMembersInt);
         int maxMember = Integer.parseInt(temp.getText().toString());
@@ -445,30 +510,34 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         temp = (EditText) findViewById(R.id.createEventInfo);
         String eventInfo = temp.getText().toString();
 
-        temp = (EditText) findViewById(R.id.eventCreateCategory);
-        String category = temp.getText().toString();
-        String catString = "";
+        String category = selectedCategory;
 
-        ParseObject gameScore = ParseObject.create("Events");
+        Toast.makeText(getApplicationContext(), category, Toast.LENGTH_SHORT).show();
 
-        try {
-            ListIterator<Category> c = Category.getQuery().find().listIterator();
-            while(c.hasNext()) {
-                Category cat = c.next();
-                if(cat.getName().equals(category)) {
-                    catString = cat.getObjectId();
-                    gameScore.put("Category", Category.getQuery().get(catString));
-                }
+        ParseObject createEvent = ParseObject.create("Events");
+
+
+        createEvent.put("Max", maxMember);
+        createEvent.put("Description", eventInfo);
+        createEvent.put("Host", ParseUser.getCurrentUser());
+        //get id from category
+        //replace id with category id
+        String categoryID = getCategoryID(category);
+        createEvent.put("Category", ParseObject.createWithoutData("Category", categoryID));
+
+        createEvent.saveInBackground();
+    }
+
+    //getid based on category string
+    private String getCategoryID(String catStr){
+        String result = "";
+        for(Category cat : categoryArray){
+            if(cat.getName().equalsIgnoreCase(catStr)){
+                result = cat.getObjectId().toString();
+                return result;
             }
-        } catch (com.parse.ParseException pe) {
-
         }
-
-        gameScore.put("Max", maxMember);
-        gameScore.put("Description", eventInfo);
-        gameScore.put("Host", ParseUser.getCurrentUser());
-
-        gameScore.saveInBackground();
+        return result;
     }
 
     public void eventSearch(View view) {
@@ -515,7 +584,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
                         else if(cater != null) {
                             if (cater.equals(event.get(i).getCat().getName())) {
                                 ev.add(event.get(i));
-                                //Toast.makeText(getApplicationContext(), searchCategories.size()+"", Toast.LENGTH_SHORT).show();
+
 
                             }
                         }

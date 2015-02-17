@@ -151,11 +151,10 @@
                                     android:text="Category"
                                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                                <EditText
-                                    android:id="@+id/eventCreateCategory"
+                                <Spinner
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Enter a Category" />
+                                    android:id="@+id/category_spinner" />
 
                             </LinearLayout>
 
@@ -287,11 +286,11 @@
                                 </LinearLayout>
 
                                 <Button
-                                    android:id="@+id/button3"
+                                    android:id="@+id/create_button"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:onClick="createEvent"
-                                    android:text="Create Event" />
+                                    android:text="Create Event"
+                                    android:nestedScrollingEnabled="false" />
 
                             </LinearLayout>
 

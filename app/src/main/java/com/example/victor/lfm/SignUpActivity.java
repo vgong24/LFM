@@ -50,7 +50,7 @@ public class SignUpActivity extends Activity {
       }
     });
     firstName = (EditText) findViewById(R.id.name_edit_text);
-    bday = (EditText) findViewById(R.id.birthday_edit_text;)
+    bday = (EditText) findViewById(R.id.birthday_edit_text);
 
     // Set up the submit button click handler
     Button mActionButton = (Button) findViewById(R.id.action_button);
@@ -108,7 +108,7 @@ public class SignUpActivity extends Activity {
     ParseUser user = new ParseUser();
     user.setUsername(username);
     user.setPassword(password);
-    user.put("firstName", fn)
+    user.put("firstName", fn);
 
     // Call the Parse signup method
     user.signUpInBackground(new SignUpCallback() {
