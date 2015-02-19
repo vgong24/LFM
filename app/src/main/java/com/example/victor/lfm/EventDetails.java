@@ -91,13 +91,6 @@ public class EventDetails extends Activity {
                 attend.setEvent(evnt);
                 attend.setUser(ParseUser.getCurrentUser().getObjectId());
                 attend.saveInBackground();
-
-                //GET USER'S FIRSTNAME FROM USER THROUGH ATTENDEES! BUT HOW?!
-                //TODO:
-                //String fn = attend.getParseUser("User").getUsername();
-                //Toast.makeText(getApplicationContext(),fn, Toast.LENGTH_SHORT).show();
-
-
             }
         });
     }
@@ -118,9 +111,7 @@ public class EventDetails extends Activity {
                     attendees.add(attendeelist.get(i));
 
                 }
-                //Toast.makeText(getApplicationContext(), "Found "+attendees.size()+" attendees", Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), attendees.get(1).getParseObject("User").getObjectId(), Toast.LENGTH_SHORT).show();
-                //Collections.copy(attendees, attendeelist);
+
                 populateList(attendees);
             }
         });
@@ -154,10 +145,6 @@ public class EventDetails extends Activity {
             Attendee player = attendeeArrayList.get(position);
             String playerName = attendeeNames.get(position);
             attenderName = (TextView) view.findViewById(R.id.attendeeListViewName);
-
-
-
-            //Toast.makeText(getApplicationContext(),"test", Toast.LENGTH_SHORT).show();
             attenderName.setText(playerName);
 
             return view;
