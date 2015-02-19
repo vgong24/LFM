@@ -46,10 +46,8 @@ public class EventDetails extends Activity {
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_click);
-        attendeeTotal = (TextView) findViewById(R.id.attendeeTotalView);
-        join = (Button) findViewById(R.id.joinBtn);
-        attendeeListView = (ListView) findViewById(R.id.listView2);
 
+        initializeFields();
 
         Intent prevInfo = getIntent();
         objId = prevInfo.getExtras().getString("EventId");
@@ -60,6 +58,7 @@ public class EventDetails extends Activity {
                 if(e==null){
                     attendeeTotal.setText(events.getMax() + "");
                     evnt = events;
+                    initOnClicks();
 
                 }else{
                     //Toast.makeText(getApplicationContext(),"Did not find Event + "+objId, Toast.LENGTH_SHORT).show();
@@ -67,19 +66,29 @@ public class EventDetails extends Activity {
             }
         });
 
+
+
+    }
+
+    public void initializeFields(){
+        attendeeTotal = (TextView) findViewById(R.id.attendeeTotalView);
+        join = (Button) findViewById(R.id.joinBtn);
+        attendeeListView = (ListView) findViewById(R.id.listView2);
+    }
+
+    public void initOnClicks(){
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ParseObject attendee = ParseObject.create("Attendees");
                 attendee.put("Event", evnt);
-                attendee.put("User", ParseUser.getCurrentUser().getObjectId());
+                attendee.put("User", ParseObject.createWithoutData("_User",ParseUser.getCurrentUser().getObjectId()));
                 attendee.saveInBackground();
                 Toast.makeText(getApplicationContext(), "Joined Event", Toast.LENGTH_SHORT).show();
 
 
             }
         });
-
     }
     private void fillAttendeesList(){
         ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
