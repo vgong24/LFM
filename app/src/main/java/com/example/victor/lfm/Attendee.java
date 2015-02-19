@@ -6,7 +6,7 @@ package com.example.victor.lfm;
 
 import com.parse.*;
 
-@ParseClassName("Attendee")
+@ParseClassName("Attendees")
 public class Attendee extends ParseObject {
     public void setAttend(boolean here) {
         put("Attended", here);
@@ -17,14 +17,25 @@ public class Attendee extends ParseObject {
     public String getUser() {
         return getString("User");
     }
-    public void setUser(String id) {
-        put("User", id);
+    public String getUserFirstName(){
+        return getUser();
     }
+
+    public void setUser(String id) {
+        put("User", ParseObject.createWithoutData("_User",id));
+    }
+    public void setUser(_User user){
+        put("User", user);
+    }
+
     public String getEventID() {
         return getString("Event");
     }
     public void setEventID(String id) {
         put("Event", id);
+    }
+    public void setEvent(Events e){
+        put("Event", e);
     }
     public static ParseQuery<Attendee> getQuery() {
         return ParseQuery.getQuery(Attendee.class);

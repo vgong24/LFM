@@ -61,6 +61,7 @@ public class EventDetails extends Activity {
                     attendeeTotal.setText(events.getMax() + "");
                     evnt = events;
                     initOnClicks();
+
                     fillAttendeesList(evnt);
                 }else{
                     //Toast.makeText(getApplicationContext(),"Did not find Event + "+objId, Toast.LENGTH_SHORT).show();
@@ -83,11 +84,13 @@ public class EventDetails extends Activity {
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ParseObject attendee = ParseObject.create("Attendees");
-                attendee.put("Event", evnt);
-                attendee.put("User", ParseObject.createWithoutData("_User",ParseUser.getCurrentUser().getObjectId()));
-                attendee.saveInBackground();
-                Toast.makeText(getApplicationContext(), "Joined Event", Toast.LENGTH_SHORT).show();
+                Attendee attend = new Attendee();
+                attend.setEvent(evnt);
+                attend.setUser(ParseUser.getCurrentUser().getObjectId());
+                attend.saveInBackground();
+
+                //GET USERNAME FROM USER THROUGH ATTENDEES! BUT HOW?!
+                Toast.makeText(getApplicationContext(),attend.getUser()+"", Toast.LENGTH_SHORT).show();
 
 
             }
@@ -133,10 +136,10 @@ public class EventDetails extends Activity {
         public View getView(int position, View view, ViewGroup parent){
             if(view == null)
                 view = getLayoutInflater().inflate(viewListXML, parent, false);
-
-            //Attendee player = attendeeArrayList.get(position);
+            //Find a way to retrieve User's firstname by accessing the "User" column
+            Attendee player = attendeeArrayList.get(position);
             TextView attenderName = (TextView) view.findViewById(R.id.attendeeListViewName);
-            attenderName.setText("Player"+position);
+            attenderName.setText("Player "+position);
 
             return view;
 
