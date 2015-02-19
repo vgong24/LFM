@@ -19,6 +19,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class EventDetails extends Activity {
     ListView attendeeListView;
 
 
-    ArrayList<Attendee> attendees = new ArrayList<Attendee>();
+    ArrayList<Attendee> attendees;
     ArrayAdapter<Events> adapter;
     AttendeeListAdapter attendeeListAdapter;
     ListView eventListView;
@@ -56,10 +57,11 @@ public class EventDetails extends Activity {
             @Override
             public void done(Events events, ParseException e) {
                 if(e==null){
+                    Toast.makeText(getApplicationContext(),"Information gathered!", Toast.LENGTH_SHORT).show();
                     attendeeTotal.setText(events.getMax() + "");
                     evnt = events;
                     initOnClicks();
-
+                    fillAttendeesList(evnt);
                 }else{
                     //Toast.makeText(getApplicationContext(),"Did not find Event + "+objId, Toast.LENGTH_SHORT).show();
                 }
@@ -74,6 +76,7 @@ public class EventDetails extends Activity {
         attendeeTotal = (TextView) findViewById(R.id.attendeeTotalView);
         join = (Button) findViewById(R.id.joinBtn);
         attendeeListView = (ListView) findViewById(R.id.listView2);
+        attendees = new ArrayList<Attendee>();
     }
 
     public void initOnClicks(){
@@ -90,14 +93,18 @@ public class EventDetails extends Activity {
             }
         });
     }
-    private void fillAttendeesList(){
+    private void fillAttendeesList(Events eventID){
         ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
-        query.whereEqualTo("EventId", objId);
+        query.whereEqualTo("Event", eventID);
         query.findInBackground(new FindCallback<Attendee>() {
             @Override
             public void done(List<Attendee> attendeelist, ParseException e) {
-                attendees = (ArrayList<Attendee>) attendeelist;
-
+                for(int i = 0; i<attendeelist.size();i++){
+                    attendees.add(attendeelist.get(i));
+                }
+                Toast.makeText(getApplicationContext(), "Found "+attendees.size()+" attendees", Toast.LENGTH_SHORT).show();
+                //Collections.copy(attendees, attendeelist);
+                populateList(attendees);
             }
         });
 
@@ -105,19 +112,20 @@ public class EventDetails extends Activity {
     }
 
 
-    private void populateList(){
-        AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(R.layout.event_list_view, attendees);
+    private void populateList(ArrayList<Attendee> attArr){
+        AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(R.layout.attendee_list_view, attArr);
         attendeeListView.setAdapter(attendeeListAdapter);
 
 
     }
     private class AttendeeListAdapter extends ArrayAdapter<Attendee> {
         int viewListXML;
-        ArrayList<Events> eventArray;
+        ArrayList<Attendee> attendeeArrayList;
 
-        public AttendeeListAdapter(int viewListXML, ArrayList<Attendee> attendees){//Example R.layout.event_list_item, events
-            super(EventDetails.this, viewListXML, attendees);
+        public AttendeeListAdapter(int viewListXML, ArrayList<Attendee> attendeesArr){//Example R.layout.event_list_item, events
+            super(EventDetails.this, viewListXML, attendeesArr);
             this.viewListXML = viewListXML;
+            this.attendeeArrayList = attendeesArr;
 
         }
 
@@ -126,12 +134,9 @@ public class EventDetails extends Activity {
             if(view == null)
                 view = getLayoutInflater().inflate(viewListXML, parent, false);
 
-            ParseObject player = attendees.get(position);
-
-            Events currentEvent = eventArray.get(position);
-
-            TextView capacity = (TextView) view.findViewById(R.id.eventCapacityView);
-            capacity.setText(currentEvent.getMax()+"");
+            //Attendee player = attendeeArrayList.get(position);
+            TextView attenderName = (TextView) view.findViewById(R.id.attendeeListViewName);
+            attenderName.setText("Player"+position);
 
             return view;
 

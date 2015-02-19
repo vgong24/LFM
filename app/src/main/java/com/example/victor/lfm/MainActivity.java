@@ -296,7 +296,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         readySelect();
 
     }
-
+    //Select Event, take you to EventDetails Activity
     private void readySelect(){
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -304,7 +304,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
                 Intent i = new Intent(MainActivity.this, EventDetails.class);
                 i.putExtra("EventId", events.get(position).getObjectId());
                 if (events.size() != 0) {
-                    Toast.makeText(getApplicationContext(), "position: " + position + " EventId of " + events.get(position).getObjectId(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "position: " + position + " EventId of " + events.get(position).getObjectId(), Toast.LENGTH_SHORT).show();
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Arraylist is empty", Toast.LENGTH_SHORT).show();
