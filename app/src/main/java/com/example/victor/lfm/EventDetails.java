@@ -31,9 +31,11 @@ public class EventDetails extends Activity {
     Button join;
     Events evnt;
     ListView attendeeListView;
+    TextView attenderName;
 
 
     ArrayList<Attendee> attendees;
+    ArrayList<String> attendeeNames;
     ArrayAdapter<Events> adapter;
     AttendeeListAdapter attendeeListAdapter;
     ListView eventListView;
@@ -78,6 +80,7 @@ public class EventDetails extends Activity {
         join = (Button) findViewById(R.id.joinBtn);
         attendeeListView = (ListView) findViewById(R.id.listView2);
         attendees = new ArrayList<Attendee>();
+        attendeeNames = new ArrayList<String>();
     }
 
     public void initOnClicks(){
@@ -105,6 +108,13 @@ public class EventDetails extends Activity {
             @Override
             public void done(List<Attendee> attendeelist, ParseException e) {
                 for(int i = 0; i<attendeelist.size();i++){
+                    ParseUser user = (ParseUser) attendeelist.get(i).get("User");
+                    try {
+                        user.fetchIfNeeded();
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                    }
+                    attendeeNames.add(user.getString("firstName"));
                     attendees.add(attendeelist.get(i));
 
                 }
@@ -142,23 +152,13 @@ public class EventDetails extends Activity {
                 view = getLayoutInflater().inflate(viewListXML, parent, false);
             //Find a way to retrieve User's firstname by accessing the "User" column
             Attendee player = attendeeArrayList.get(position);
+            String playerName = attendeeNames.get(position);
+            attenderName = (TextView) view.findViewById(R.id.attendeeListViewName);
 
-            TextView attenderName = (TextView) view.findViewById(R.id.attendeeListViewName);
-            String userId = player.getParseObject("User").getObjectId();
-            String name = "";
-            ParseQuery query = ParseQuery.getQuery("_User");
-            query.getInBackground(userId, new GetCallback<ParseObject>() {
-                public void done(ParseObject object, ParseException e) {
-                    if (e == null) {
-                        Toast.makeText(getApplicationContext(), "Player: "+ object.getString("firstName"), Toast.LENGTH_SHORT).show();
-                    } else {
-                        // something went wrong
-                    }
-                }
-            });
+
 
             //Toast.makeText(getApplicationContext(),"test", Toast.LENGTH_SHORT).show();
-            attenderName.setText("Player "+name);
+            attenderName.setText(playerName);
 
             return view;
 

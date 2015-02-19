@@ -14,11 +14,11 @@ public class Attendee extends ParseObject {
     public boolean getAttend() {
         return getBoolean("Attended");
     }
-    public String getUser() {
+    public String getUserString() {
         return getString("User");
     }
     public String getUserFirstName(){
-        return getUser();
+        return getUserString();
     }
 
     public void setUser(String id) {
