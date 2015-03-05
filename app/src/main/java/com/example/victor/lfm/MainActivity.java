@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     //In create tab
     GoogleMap map;
     Marker marker;
+    Calendar cEventDateTime;
 
     //for category spinner
     Spinner categorySpin;
@@ -83,9 +84,17 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /**
+         * Initialize Fields Under "Home" tab
+         */
+
+
+
+
         initTabs();
         initFields();
-        buttonMaker();
+        fillEventList();
         fillCategorySpinner();
 
         for (Events e: ev) {
@@ -106,7 +115,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new Mytimepicker(timeView);
+                DialogFragment newFragment = new Mytimepicker(timeView, cEventDateTime);
                 newFragment.show(getFragmentManager(), "timePicker");
             }
         });
@@ -115,7 +124,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         dateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new DatePickerFragment(dateView);
+                DialogFragment newFragment = new DatePickerFragment(dateView, cEventDateTime);
                 newFragment.show(getFragmentManager(), "datePicker");
             }
         });
@@ -162,6 +171,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         //Toast.makeText(getApplicationContext(), searchCategories.get(0).getName() + "", Toast.LENGTH_SHORT).show();
     }
 
+
     @Override
     public void onCameraChange(CameraPosition position) {
 
@@ -203,6 +213,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         ev = new ArrayList<Events>();
         categoryArray = new ArrayList<>();
 
+        cEventDateTime = Calendar.getInstance();
 
     }
 
@@ -221,7 +232,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         int id = item.getItemId();
         switch(item.getItemId()){
             case R.id.action_reload:
-                buttonMaker();
+                fillEventList();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -252,9 +263,11 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
     public static class Mytimepicker extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
         TextView timeTxt;
+        Calendar datetime;
 
-        public Mytimepicker(TextView txtview) {
+        public Mytimepicker(TextView txtview, Calendar datetime) {
             timeTxt = txtview;
+            this.datetime = datetime;
         }
 
         public Mytimepicker() {
@@ -284,6 +297,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
                 am_pm = "PM";
             String strHrsToShow = (datetime.get(Calendar.HOUR) == 0) ? "12" : datetime.get(Calendar.HOUR) + "";
             timeTxt.setText(strHrsToShow + ":" + datetime.get(Calendar.MINUTE) + " " + am_pm);
+
         }
     }
 
@@ -329,9 +343,11 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
         TextView dateText;
+        Calendar datetime;
 
-        public DatePickerFragment(TextView tv) {
+        public DatePickerFragment(TextView tv, Calendar datetime) {
             dateText = tv;
+            this.datetime = datetime;
         }
 
         @Override
@@ -348,10 +364,11 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             // Do something with the date chosen by the user
-            Calendar datetime = Calendar.getInstance();
+            //Calendar datetime = Calendar.getInstance();
             datetime.set(Calendar.YEAR, year);
             datetime.set(Calendar.MONTH, month);
             datetime.set(Calendar.DAY_OF_MONTH, day);
+
             String strDateToShow = (datetime.get(Calendar.MONTH)+1) + "/"
                     + datetime.get(Calendar.DAY_OF_MONTH) + "/"
                     + datetime.get(Calendar.YEAR);
@@ -360,7 +377,8 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     }
 
     //Gets all the events in database and populates home tab
-    public void buttonMaker() {
+    //Should change name
+    public void fillEventList() {
         Events e = new Events();
         events.clear();
         ParseQuery<Events> query = e.getQuery();
@@ -485,13 +503,12 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     public void createEvent(View view) {
 
         EditText temp;
-        Spinner tempSpin;
-
         temp = (EditText) findViewById(R.id.maxMembersInt);
         int maxMember = Integer.parseInt(temp.getText().toString());
 
         temp = (EditText) findViewById(R.id.createEventInfo);
         String eventInfo = temp.getText().toString();
+
 
         String category = selectedCategory;
 
@@ -499,10 +516,11 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
         ParseObject createEvent = ParseObject.create("Events");
 
-
         createEvent.put("Max", maxMember);
         createEvent.put("Description", eventInfo);
         createEvent.put("Host", ParseUser.getCurrentUser());
+        createEvent.put("Date", cEventDateTime.getTime());
+
         //get id from category
         //replace id with category id
         String categoryID = getCategoryID(category);
