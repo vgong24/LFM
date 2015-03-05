@@ -95,6 +95,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         initTabs();
         initFields();
         fillEventList();
+        initCategories();
         fillCategorySpinner();
 
         for (Events e: ev) {
@@ -169,6 +170,25 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         filterAddress = (TextView) findViewById(R.id.addressText);
         //searchEvents(null, "Study");
         //Toast.makeText(getApplicationContext(), searchCategories.get(0).getName() + "", Toast.LENGTH_SHORT).show();
+    }
+
+    /** GRAB DATA FROM PARSE AND PUT THEM IN ARRAYLIST
+     * SO YOU DONT HAVE TO CONSTANTLY REQUEST INFORMATION ALREADY GOTTEN
+     *
+     *
+     */
+    public void initCategories(){
+        ParseQuery<Category> query = ParseQuery.getQuery("Category");
+        query.findInBackground(new FindCallback<Category>() {
+            @Override
+            public void done(List<Category> categories, ParseException e) {
+                if(e==null){
+                    for(int i = 0 ; i < categories.size(); i++){
+                        categoryArray.add(categories.get(i));
+                    }
+                }
+            }
+        });
     }
 
 
@@ -259,7 +279,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         tabSpec.setIndicator("Profile");
         tabhost.addTab(tabSpec);
     }
-
+//================Picker Classes====================================================
 
     public static class Mytimepicker extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
         TextView timeTxt;
@@ -301,6 +321,42 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         }
     }
 
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+        TextView dateText;
+        Calendar datetime;
+
+        public DatePickerFragment(TextView tv, Calendar datetime) {
+            dateText = tv;
+            this.datetime = datetime;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+            //Calendar datetime = Calendar.getInstance();
+            datetime.set(Calendar.YEAR, year);
+            datetime.set(Calendar.MONTH, month);
+            datetime.set(Calendar.DAY_OF_MONTH, day);
+
+            String strDateToShow = (datetime.get(Calendar.MONTH)+1) + "/"
+                    + datetime.get(Calendar.DAY_OF_MONTH) + "/"
+                    + datetime.get(Calendar.YEAR);
+            dateText.setText(strDateToShow);
+        }
+    }
+    //==============================================================================================
 
     //Populates the Home upcoming events and sets up onItemClick event for each item that brings
     //user to details of that selected event
@@ -340,41 +396,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         eventListView.setAdapter(eventListAdapter);
     }
 
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-        TextView dateText;
-        Calendar datetime;
 
-        public DatePickerFragment(TextView tv, Calendar datetime) {
-            dateText = tv;
-            this.datetime = datetime;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            // Do something with the date chosen by the user
-            //Calendar datetime = Calendar.getInstance();
-            datetime.set(Calendar.YEAR, year);
-            datetime.set(Calendar.MONTH, month);
-            datetime.set(Calendar.DAY_OF_MONTH, day);
-
-            String strDateToShow = (datetime.get(Calendar.MONTH)+1) + "/"
-                    + datetime.get(Calendar.DAY_OF_MONTH) + "/"
-                    + datetime.get(Calendar.YEAR);
-            dateText.setText(strDateToShow);
-        }
-    }
 
     //Gets all the events in database and populates home tab
     //Should change name
@@ -458,7 +480,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
             location.setText("Honolulu");
             TextView date = (TextView) view.findViewById(R.id.eventTimeView);
             SimpleDateFormat sdf = new SimpleDateFormat();
-            //date.setText(sdf.format(currentEvent.getDate()));
+            date.setText(sdf.format(currentEvent.getDate().getTime()));
 
 
 
@@ -485,6 +507,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         categorySpin.setAdapter(adapter);
         categorySpin.setSelection(1);
 
+        /**
         ParseQuery<Category> query = ParseQuery.getQuery("Category");
         query.findInBackground(new FindCallback<Category>() {
             @Override
@@ -496,6 +519,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
                 }
             }
         });
+         */
 
     }
 

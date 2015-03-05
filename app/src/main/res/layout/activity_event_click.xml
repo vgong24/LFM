@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Time"
-            android:id="@+id/textView22"
+            android:id="@+id/eventDetailTime"
             android:paddingLeft="50dp"
             android:paddingRight="20dp" />
 

@@ -18,6 +18,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.List;
  */
 public class EventDetails extends Activity {
     TextView attendeeTotal;
+    TextView eventDetailTime;
     String objId;
     Button join;
     Events evnt;
@@ -61,6 +63,9 @@ public class EventDetails extends Activity {
                 if(e==null){
                     Toast.makeText(getApplicationContext(),"Information gathered!", Toast.LENGTH_SHORT).show();
                     attendeeTotal.setText(events.getMax() + "");
+                    SimpleDateFormat sdf = new SimpleDateFormat();
+                    eventDetailTime.setText(sdf.format(events.getDate().getTime()));
+
                     evnt = events;
                     initOnClicks();
 
@@ -77,6 +82,8 @@ public class EventDetails extends Activity {
 
     public void initializeFields(){
         attendeeTotal = (TextView) findViewById(R.id.attendeeTotalView);
+        eventDetailTime = (TextView) findViewById(R.id.eventDetailTime);
+
         join = (Button) findViewById(R.id.joinBtn);
         attendeeListView = (ListView) findViewById(R.id.listView2);
         attendees = new ArrayList<Attendee>();
