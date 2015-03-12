@@ -6,6 +6,10 @@
         android:name="com.example.victor.lfm.googlemapsv2.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
+    <uses-sdk
+        android:minSdkVersion="19"
+        android:targetSdkVersion="19"/>
+
     <uses-permission android:name="com.example.victor.lfm.googlemapsv2.permission.MAPS_RECEIVE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
