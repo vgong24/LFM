@@ -28,27 +28,23 @@ import java.text.*;
 import java.util.Calendar;
 import java.util.*;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.*;
+import com.google.android.gms.common.api.GoogleApiClient.*;
+import com.google.android.gms.common.*;
 import com.google.android.gms.location.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
-import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
+import com.google.android.gms.maps.GoogleMap.*;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.*;
 import com.google.android.gms.maps.SupportMapFragment;
 
 import android.location.*;
 import android.graphics.*;
 
 
-public class MainActivity extends ActionBarActivity implements OnCameraChangeListener, OnMapReadyCallback {
+public class MainActivity extends ActionBarActivity implements OnCameraChangeListener, OnMapReadyCallback,
+        ConnectionCallbacks, OnConnectionFailedListener{
     //In create tab or search
     Button logOut, createEventBtn, timeBtn, dateBtn = null;
     private static final int TIME_DIALOG_ID = 0;
@@ -58,6 +54,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     GoogleMap map;
     Marker marker;
     Calendar cEventDateTime;
+    LatLng loc;
 
     //for category spinner
     Spinner categorySpin;
@@ -79,6 +76,10 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     ArrayList<Date> dates, searchDates;
     ArrayList<Category> searchCategories;
     ArrayList<Events> ev;
+
+    private GoogleApiClient mGoogleApiClient;
+    protected Location mLastLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +161,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
             }
         });
 
+        buildGoogleApiClient();
         MapFragment mapFrag=
                 (MapFragment)getFragmentManager().findFragmentById(R.id.map);
         mapFrag.getMapAsync(this);
@@ -197,9 +199,65 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
     }
 
-    public void onMapReady(GoogleMap map) {
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
 
-        LatLng loc = new LatLng(21.299816,-157.81757900000002 );
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
+        // onConnectionFailed.
+        //Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    }
+    @Override
+    public void onConnectionSuspended(int cause) {
+        // The connection to Google Play services was lost for some reason. We call connect() to
+        // attempt to re-establish the connection.
+        //Log.i(TAG, "Connection suspended");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        // Provides a simple way of getting a device's location and is well suited for
+        // applications that do not require a fine-grained location and that do not need location
+        // updates. Gets the best and most recent location currently available, which may be null
+        // in rare cases when a location is not available.
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            loc = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude() );
+        } else {
+            Toast.makeText(getApplicationContext(), "No location detected onConnected", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public void onMapReady(GoogleMap map) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            loc = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude() );
+        } else {
+            Toast.makeText(getApplicationContext(), "No location detected onMapReady", Toast.LENGTH_SHORT).show();
+            loc = new LatLng(21.4513314,-158.0152807);
+        }
 
 
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 13));
