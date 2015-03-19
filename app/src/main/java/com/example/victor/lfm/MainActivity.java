@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -337,89 +338,11 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         tabSpec.setIndicator("Profile");
         tabhost.addTab(tabSpec);
     }
-//================Picker Classes====================================================
-
-    public static class Mytimepicker extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
-        TextView timeTxt;
-        Calendar datetime;
-
-        public Mytimepicker(TextView txtview, Calendar datetime) {
-            timeTxt = txtview;
-            this.datetime = datetime;
-        }
-
-        public Mytimepicker() {
-
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Calendar c = Calendar.getInstance();
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-            TimePickerDialog timeDialog = new TimePickerDialog(getActivity(), this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
-            timeDialog.setTitle("Test");
-            return timeDialog;
-        }
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-// do something with the time chosen. http://stackoverflow.com/questions/2659954/timepickerdialog-and-am-or-pm/2660148#2660148
-            String am_pm = "";
-            Calendar datetime = Calendar.getInstance();
-            datetime.set(Calendar.HOUR_OF_DAY, hourOfDay);
-            datetime.set(Calendar.MINUTE, minute);
-            if (datetime.get(Calendar.AM_PM) == Calendar.AM)
-                am_pm = "AM";
-            else if (datetime.get(Calendar.AM_PM) == Calendar.PM)
-                am_pm = "PM";
-            String strHrsToShow = (datetime.get(Calendar.HOUR) == 0) ? "12" : datetime.get(Calendar.HOUR) + "";
-            timeTxt.setText(strHrsToShow + ":" + datetime.get(Calendar.MINUTE) + " " + am_pm);
-
-        }
-    }
-
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-        TextView dateText;
-        Calendar datetime;
-
-        public DatePickerFragment(TextView tv, Calendar datetime) {
-            dateText = tv;
-            this.datetime = datetime;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            // Do something with the date chosen by the user
-            //Calendar datetime = Calendar.getInstance();
-            datetime.set(Calendar.YEAR, year);
-            datetime.set(Calendar.MONTH, month);
-            datetime.set(Calendar.DAY_OF_MONTH, day);
-
-            String strDateToShow = (datetime.get(Calendar.MONTH)+1) + "/"
-                    + datetime.get(Calendar.DAY_OF_MONTH) + "/"
-                    + datetime.get(Calendar.YEAR);
-            dateText.setText(strDateToShow);
-        }
-    }
-    //==============================================================================================
 
     //Populates the Home upcoming events and sets up onItemClick event for each item that brings
     //user to details of that selected event
     private void populateList(){
-        eventListAdapter = new EventListAdapter(R.layout.event_list_view, events);
+        eventListAdapter = new EventListAdapter(MainActivity.this, R.layout.event_list_view, events);
         eventListView.setAdapter(eventListAdapter);
         readySelect();
 
@@ -448,7 +371,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     }
 
     private void testSearchList(ArrayList<Events> ev) {
-        eventListAdapter = new EventListAdapter(R.layout.event_list_view, ev);
+        eventListAdapter = new EventListAdapter(MainActivity.this, R.layout.event_list_view, ev);
         eventListView = (ListView) findViewById(R.id.listView2);
 
         eventListView.setAdapter(eventListAdapter);
@@ -483,71 +406,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         });
 
     }
-    private class EventListAdapter extends ArrayAdapter<Events> {
-        int viewListXML;
-        ArrayList<Events> eventArray;
 
-        public EventListAdapter(int viewListXML, ArrayList<Events> eventArray){//Example R.layout.event_list_item, events
-            super(MainActivity.this, viewListXML, eventArray);
-            this.viewListXML = viewListXML;
-            this.eventArray = eventArray;
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup parent){
-            if(view == null)
-                view = getLayoutInflater().inflate(viewListXML, parent, false);
-
-            Events currentEvent = eventArray.get(position);
-
-            ParseQuery<Category> query = ParseQuery.getQuery("Category");
-
-            query.findInBackground(new FindCallback<Category>() {
-                @Override
-                public void done(List<Category> categories, ParseException e) {
-                    if (categories == null) {
-                        Log.d("test", "The object was not found...");
-                    } else {
-                        Log.d("test", "Retrieved the object.");
-                        ParseFile fileObject = (ParseFile) categories.get(0).getImage();
-                        fileObject.getDataInBackground(new GetDataCallback() {
-                            public void done(byte[] data, ParseException e) {
-                                if (e == null) {
-                                    Log.d("test", "We've got data in data.");
-                                    // use data for something
-                                    ImageView imageView = (ImageView) findViewById(R.id.imageView);
-                                    Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                                    Bitmap resizedbitmap=Bitmap.createScaledBitmap(bmp, 100, 100, true);
-
-                                    imageView.setImageBitmap(resizedbitmap);
-
-                                } else {
-                                    Log.d("test", "There was a problem downloading the data.");
-                                }
-                            }
-                        });
-                    }
-                }
-            });
-
-            TextView capacity = (TextView) view.findViewById(R.id.eventCapacityView);
-            capacity.setText(currentEvent.getMax()+"");
-            TextView activity = (TextView) view.findViewById(R.id.eventActivityView);
-            activity.setText(currentEvent.getDescr());
-            TextView location = (TextView) view.findViewById(R.id.eventLocationView);
-            location.setText("Honolulu");
-            TextView date = (TextView) view.findViewById(R.id.eventTimeView);
-            SimpleDateFormat sdf = new SimpleDateFormat();
-            date.setText(sdf.format(currentEvent.getDate().getTime()));
-
-
-
-
-            return view;
-
-        }
-
-    }
 
     //Fill spinner with values from parse
     private void fillCategorySpinner(){
@@ -564,20 +423,6 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         adapter.setTextKey("Name");
         categorySpin.setAdapter(adapter);
         categorySpin.setSelection(1);
-
-        /**
-        ParseQuery<Category> query = ParseQuery.getQuery("Category");
-        query.findInBackground(new FindCallback<Category>() {
-            @Override
-            public void done(List<Category> categories, ParseException e) {
-                if(e==null){
-                    for(int i = 0 ; i < categories.size(); i++){
-                        categoryArray.add(categories.get(i));
-                    }
-                }
-            }
-        });
-         */
 
     }
 
