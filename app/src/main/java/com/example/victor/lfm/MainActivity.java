@@ -146,6 +146,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
             @Override
             public void onClick(View v) {
                 createEvent(v);
+
             }
         });
         categorySpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -454,6 +455,11 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         createEvent.put("Category", ParseObject.createWithoutData("Category", categoryID));
 
         createEvent.saveInBackground();
+
+        Attendee attend = new Attendee();
+        attend.setEvent((Events)createEvent);
+        attend.setUser(ParseUser.getCurrentUser().getObjectId());
+        attend.saveInBackground();
     }
 
     //getid based on category string
