@@ -20,6 +20,14 @@ public class Attendee extends ParseObject {
     public String getUserFirstName(){
         return getUserString();
     }
+    public _User getUserObject(){
+        try {
+            this.fetchIfNeeded();
+        } catch (ParseException e) {
+
+    }
+        return (_User) getParseObject("User");
+    }
 
     public void setUser(String id) {
         put("User", ParseObject.createWithoutData("_User",id));
