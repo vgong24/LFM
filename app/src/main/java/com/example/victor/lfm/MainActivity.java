@@ -47,37 +47,20 @@ import android.graphics.*;
 public class MainActivity extends ActionBarActivity implements OnCameraChangeListener, OnMapReadyCallback,
         ConnectionCallbacks, OnConnectionFailedListener{
     //In create tab or search
-    Button logOut, createEventBtn, timeBtn, dateBtn = null;
+    Button logOut = null;
     private static final int TIME_DIALOG_ID = 0;
-    TextView timeView, dateView, timeText, filterAddress;
+    TextView filterAddress;
 
     //In create tab
     GoogleMap map;
     Marker marker;
-    Calendar cEventDateTime;
     LatLng loc;
 
-    //for category spinner
-    Spinner categorySpin;
-    String selectedCategory, cater;
-    private ParseQueryAdapter<ParseObject> mainAdapter;
 
     //In home tab
     Home_TAB hometab;
-    // ArrayList<Events> events;
-   // ArrayAdapter<Events> adapter;
-    ArrayList<Category> categoryArray;
-   // EventListAdapter eventListAdapter;
+    Create_TAB createtab;
 
-    //ListView eventListView;
-
-    List<ParseObject> ob;
-    Date date;
-
-    List<String> catNames;
-    ArrayList<Date> dates, searchDates;
-    ArrayList<Category> searchCategories;
-    ArrayList<Events> ev;
 
     private GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation;
@@ -93,41 +76,6 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
         initTabs();
         initFields();
-        //fillEventList();
-        initCategories();
-        fillCategorySpinner();
-
-        for (Events e: ev) {
-            Toast.makeText(getApplicationContext(), e.getCat().getName(), Toast.LENGTH_SHORT).show();
-            catNames.add(e.getCat().getName());
-        }
-
-        ArrayAdapter<String> adapt = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, catNames);
-
-
-        /*
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, catNames);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        catNames.setAdapter(dataAdapter);
-        catNames.setSelection(1);*/
-
-        timeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment newFragment = new Mytimepicker(timeView, cEventDateTime);
-                newFragment.show(getFragmentManager(), "timePicker");
-            }
-        });
-
-
-        dateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment newFragment = new DatePickerFragment(dateView, cEventDateTime);
-                newFragment.show(getFragmentManager(), "datePicker");
-            }
-        });
 
 
         logOut.setOnClickListener(new View.OnClickListener() {
@@ -135,28 +83,9 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
             @Override
             public void onClick(View v) {
                 ParseUser.logOut();
-                startActivity(new Intent(v.getContext(), DispatchActivity.class));
-            }
-        });
-
-        createEventBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createEvent(v);
-
-            }
-        });
-        categorySpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedCategory = categoryArray.get(position).getName();
-
-                Toast.makeText(getApplicationContext(), selectedCategory, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+                Intent intent = new Intent(v.getContext(), DispatchActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
             }
         });
 
@@ -171,25 +100,6 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         filterAddress = (TextView) findViewById(R.id.addressText);
         //searchEvents(null, "Study");
         //Toast.makeText(getApplicationContext(), searchCategories.get(0).getName() + "", Toast.LENGTH_SHORT).show();
-    }
-
-    /** GRAB DATA FROM PARSE AND PUT THEM IN ARRAYLIST
-     * SO YOU DONT HAVE TO CONSTANTLY REQUEST INFORMATION ALREADY GOTTEN
-     *
-     *
-     */
-    public void initCategories(){
-        ParseQuery<Category> query = ParseQuery.getQuery("Category");
-        query.findInBackground(new FindCallback<Category>() {
-            @Override
-            public void done(List<Category> categories, ParseException e) {
-                if(e==null){
-                    for(int i = 0 ; i < categories.size(); i++){
-                        categoryArray.add(categories.get(i));
-                    }
-                }
-            }
-        });
     }
 
 
@@ -268,30 +178,10 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         filterAddress.setText("My Location");
     }
 
+    //Profile page tab
     public void initFields() {
-        timeView = (TextView) findViewById(R.id.timeView);
-        timeBtn = (Button) findViewById(R.id.timeBtn);
-
-        dateView = (TextView) findViewById(R.id.dateView);
-        dateBtn = (Button) findViewById(R.id.dateBtn);
-
         logOut = (Button) findViewById(R.id.logout_btn);
 
-        //eventListView = (ListView) findViewById(R.id.listView);
-        createEventBtn = (Button) findViewById(R.id.create_button);
-        categorySpin = (Spinner) findViewById(R.id.category_spinner);
-
-        dates = new ArrayList<Date>();
-        searchDates = new ArrayList<Date>();
-
-        //HomeTab stuff
-        //events = new ArrayList<Events>();
-        catNames = new ArrayList<String>();
-        searchCategories = new ArrayList<Category>();
-        ev = new ArrayList<Events>();
-        categoryArray = new ArrayList<>();
-
-        cEventDateTime = Calendar.getInstance();
 
     }
 
@@ -326,31 +216,21 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
         TabHost.TabSpec tabSpec;
 
-
         tabSpec = tabhost.newTabSpec("search");
         tabSpec.setContent(R.id.searchTab);
         tabSpec.setIndicator("Search");
         tabhost.addTab(tabSpec);
-        tabSpec = tabhost.newTabSpec("create");
-        tabSpec.setContent(R.id.createTab);
-        tabSpec.setIndicator("Create");
-        tabhost.addTab(tabSpec);
+
+
+        createtab = new Create_TAB(tabhost, MainActivity.this);
+        createtab.initialize();
+
+
         tabSpec = tabhost.newTabSpec("profile");
         tabSpec.setContent(R.id.profileTab);
         tabSpec.setIndicator("Profile");
         tabhost.addTab(tabSpec);
     }
-
-    /**
-     * Looking in Home_TAB.class
-     */
-    /*
-    //Populates the Home upcoming events and sets up onItemClick event for each item that brings
-    //user to details of that selected event
-    private void populateList();
-    private void readySelect();
-    public void fillEventList();
-
 
     /*
     private void testSearchList(ArrayList<Events> ev) {
@@ -359,71 +239,6 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
         eventListView.setAdapter(eventListAdapter);
     }*/
-
-    //Fill spinner with values from parse
-    private void fillCategorySpinner(){
-
-        ParseQueryAdapter.QueryFactory<ParseObject> factory =
-                new ParseQueryAdapter.QueryFactory<ParseObject>() {
-                    public ParseQuery create() {
-                        ParseQuery query = new ParseQuery("Category");
-                        return query;
-                    }
-                };
-
-        ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(this, factory);
-        adapter.setTextKey("Name");
-        categorySpin.setAdapter(adapter);
-        categorySpin.setSelection(1);
-
-    }
-
-
-    public void createEvent(View view) {
-
-        EditText temp;
-        temp = (EditText) findViewById(R.id.maxMembersInt);
-        int maxMember = Integer.parseInt(temp.getText().toString());
-
-        temp = (EditText) findViewById(R.id.createEventInfo);
-        String eventInfo = temp.getText().toString();
-
-
-        String category = selectedCategory;
-
-        Toast.makeText(getApplicationContext(), category, Toast.LENGTH_SHORT).show();
-
-        ParseObject createEvent = ParseObject.create("Events");
-
-        createEvent.put("Max", maxMember);
-        createEvent.put("Description", eventInfo);
-        createEvent.put("Host", ParseUser.getCurrentUser());
-        createEvent.put("Date", cEventDateTime.getTime());
-
-        //get id from category
-        //replace id with category id
-        String categoryID = getCategoryID(category);
-        createEvent.put("Category", ParseObject.createWithoutData("Category", categoryID));
-
-        createEvent.saveInBackground();
-
-        Attendee attend = new Attendee();
-        attend.setEvent((Events)createEvent);
-        attend.setUser(ParseUser.getCurrentUser().getObjectId());
-        attend.saveInBackground();
-    }
-
-    //getid based on category string
-    private String getCategoryID(String catStr){
-        String result = "";
-        for(Category cat : categoryArray){
-            if(cat.getName().equalsIgnoreCase(catStr)){
-                result = cat.getObjectId().toString();
-                return result;
-            }
-        }
-        return result;
-    }
 
     public void eventSearch(View view) {
         EditText temp;
@@ -439,13 +254,13 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
 
         //Toast.makeText(getApplicationContext(), searchEvents(null, "Sports").size() + "", Toast.LENGTH_SHORT).show();
-        searchEvents(null, activity);
+        //searchEvents(null, activity);
         //testSearchList(ev);
 
-        ev = new ArrayList<>();
+        //ev = new ArrayList<>();
 
     }
-
+/*
     public void searchEvents(Date d, String category) {
         Events e = new Events();
         date = d;
@@ -483,7 +298,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
         });
 
-    }
+    }*/
 
 
 }
