@@ -63,12 +63,13 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     private ParseQueryAdapter<ParseObject> mainAdapter;
 
     //In home tab
-    ArrayList<Events> events;
-    ArrayAdapter<Events> adapter;
+    Home_TAB hometab;
+    // ArrayList<Events> events;
+   // ArrayAdapter<Events> adapter;
     ArrayList<Category> categoryArray;
-    EventListAdapter eventListAdapter;
+   // EventListAdapter eventListAdapter;
 
-    ListView eventListView;
+    //ListView eventListView;
 
     List<ParseObject> ob;
     Date date;
@@ -86,17 +87,13 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         /**
          * Initialize Fields Under "Home" tab
          */
 
-
-
-
         initTabs();
         initFields();
-        fillEventList();
+        //fillEventList();
         initCategories();
         fillCategorySpinner();
 
@@ -280,14 +277,15 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
         logOut = (Button) findViewById(R.id.logout_btn);
 
-        eventListView = (ListView) findViewById(R.id.listView);
+        //eventListView = (ListView) findViewById(R.id.listView);
         createEventBtn = (Button) findViewById(R.id.create_button);
         categorySpin = (Spinner) findViewById(R.id.category_spinner);
 
         dates = new ArrayList<Date>();
         searchDates = new ArrayList<Date>();
 
-        events = new ArrayList<Events>();
+        //HomeTab stuff
+        //events = new ArrayList<Events>();
         catNames = new ArrayList<String>();
         searchCategories = new ArrayList<Category>();
         ev = new ArrayList<Events>();
@@ -312,20 +310,23 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         int id = item.getItemId();
         switch(item.getItemId()){
             case R.id.action_reload:
-                fillEventList();
+                hometab.fillEventList();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
+    //Intetion is to create all tabs in different classes
     private void initTabs() {
         TabHost tabhost = (TabHost) findViewById(R.id.tabHost);
         tabhost.setup();
-        TabHost.TabSpec tabSpec = tabhost.newTabSpec("home");
-        tabSpec.setContent(R.id.homeTab);
-        tabSpec.setIndicator("Home");
-        tabhost.addTab(tabSpec);
+
+        hometab = new Home_TAB(tabhost, MainActivity.this);
+        hometab.initialize();
+
+        TabHost.TabSpec tabSpec;
+
+
         tabSpec = tabhost.newTabSpec("search");
         tabSpec.setContent(R.id.searchTab);
         tabSpec.setIndicator("Search");
@@ -340,74 +341,24 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         tabhost.addTab(tabSpec);
     }
 
+    /**
+     * Looking in Home_TAB.class
+     */
+    /*
     //Populates the Home upcoming events and sets up onItemClick event for each item that brings
     //user to details of that selected event
-    private void populateList(){
-        eventListAdapter = new EventListAdapter(MainActivity.this, R.layout.event_list_view, events);
-        eventListView.setAdapter(eventListAdapter);
-        readySelect();
+    private void populateList();
+    private void readySelect();
+    public void fillEventList();
 
-    }
-    //Select Event, take you to EventDetails Activity
-    private void readySelect(){
-        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(MainActivity.this, EventDetails.class);
-                i.putExtra("EventId", events.get(position).getObjectId());
-                if (events.size() != 0) {
-                    //Toast.makeText(getApplicationContext(), "position: " + position + " EventId of " + events.get(position).getObjectId(), Toast.LENGTH_SHORT).show();
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "Arraylist is empty", Toast.LENGTH_SHORT).show();
-
-                }
-
-                startActivity(i);
-
-                // Needs alan's single event page
-                //Toast.makeText(getApplicationContext(), "Clicked at position "+position, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
+    /*
     private void testSearchList(ArrayList<Events> ev) {
         eventListAdapter = new EventListAdapter(MainActivity.this, R.layout.event_list_view, ev);
         eventListView = (ListView) findViewById(R.id.listView2);
 
         eventListView.setAdapter(eventListAdapter);
-    }
-
-
-
-    //Gets all the events in database and populates home tab
-    //Should change name
-    public void fillEventList() {
-        Events e = new Events();
-        events.clear();
-        ParseQuery<Events> query = e.getQuery();
-        //query.
-        query.addAscendingOrder("Date");
-        query.findInBackground(new FindCallback<Events>() {
-
-            public void done(List<Events> event, ParseException e) {
-
-                if (e == null) {
-                    for (int i = 0; i < event.size(); i++) {
-                        events.add(event.get(i));
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Nope", Toast.LENGTH_SHORT).show();
-                }
-
-                populateList();
-
-            }
-
-        });
-
-    }
-
+    }*/
 
     //Fill spinner with values from parse
     private void fillCategorySpinner(){
@@ -489,7 +440,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
 
         //Toast.makeText(getApplicationContext(), searchEvents(null, "Sports").size() + "", Toast.LENGTH_SHORT).show();
         searchEvents(null, activity);
-        testSearchList(ev);
+        //testSearchList(ev);
 
         ev = new ArrayList<>();
 

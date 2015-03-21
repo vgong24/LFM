@@ -66,6 +66,9 @@
             android:name=".EventDetails"
             android:label="Event Details"
             />
+        <activity android:name=".Home_TAB"
+            android:label="Home"
+            />
 
 
 
