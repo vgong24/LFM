@@ -208,7 +208,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
     }
     //Intetion is to create all tabs in different classes
     private void initTabs() {
-        TabHost tabhost = (TabHost) findViewById(R.id.tabHost);
+        final TabHost tabhost = (TabHost) findViewById(R.id.tabHost);
         tabhost.setup();
 
         hometab = new Home_TAB(tabhost, MainActivity.this);
@@ -230,6 +230,28 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         tabSpec.setContent(R.id.profileTab);
         tabSpec.setIndicator("Profile");
         tabhost.addTab(tabSpec);
+
+        tabhost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                int selectedTab = tabhost.getCurrentTab();
+                switch(selectedTab){
+                    case 0:
+                        getSupportActionBar().setTitle("Up coming Events");
+                        break;
+                    case 1:
+                        getSupportActionBar().setTitle("Search");
+                        break;
+                    case 2:
+                        getSupportActionBar().setTitle("Create Event");
+                        break;
+                    default:
+                        getSupportActionBar().setTitle("UNSET TITLE");
+                        break;
+
+                }
+            }
+        });
     }
 
     /*

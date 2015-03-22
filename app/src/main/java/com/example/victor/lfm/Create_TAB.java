@@ -74,6 +74,7 @@ public class Create_TAB {
         initCategories();
         fillCategorySpinner();
         initClickListeners();
+
     }
 
     public void initTab(){
