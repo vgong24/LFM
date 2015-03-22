@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Victor on 3/20/2015.
@@ -108,7 +109,9 @@ public class Create_TAB {
         timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new Mytimepicker(timeView, cEventDateTime);
+                Mytimepicker mtp = new Mytimepicker(timeView, cEventDateTime);
+                mtp.setContext(context);
+                DialogFragment newFragment = mtp;
                 newFragment.show(activity.getFragmentManager(), "timePicker");
             }
         });
@@ -192,13 +195,14 @@ public class Create_TAB {
 
         String category = selectedCategory;
 
-       // Toast.makeText(context.getApplicationContext(), category, Toast.LENGTH_SHORT).show();
-
         ParseObject createEvent = ParseObject.create("Events");
 
         createEvent.put("Max", maxMember);
         createEvent.put("Description", eventInfo);
         createEvent.put("Host", ParseUser.getCurrentUser());
+        //test
+        cEventDateTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+
         createEvent.put("Date", cEventDateTime.getTime());
 
         //get id from category
@@ -212,6 +216,8 @@ public class Create_TAB {
         attend.setEvent((Events)createEvent);
         attend.setUser(ParseUser.getCurrentUser().getObjectId());
         attend.saveInBackground();
+        String eventTime = cEventDateTime.getTime() + "";
+        Toast.makeText(context.getApplicationContext(), "Event Time: " + eventTime, Toast.LENGTH_SHORT).show();
     }
 
     private String getCategoryID(String catStr){

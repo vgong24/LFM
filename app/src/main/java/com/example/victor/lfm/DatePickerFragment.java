@@ -36,7 +36,6 @@ public class DatePickerFragment extends DialogFragment
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
         // Do something with the date chosen by the user
-        //Calendar datetime = Calendar.getInstance();
         datetime.set(Calendar.YEAR, year);
         datetime.set(Calendar.MONTH, month);
         datetime.set(Calendar.DAY_OF_MONTH, day);
