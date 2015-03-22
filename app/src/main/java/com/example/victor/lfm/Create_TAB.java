@@ -188,6 +188,10 @@ public class Create_TAB {
 
         EditText temp;
         temp = (EditText) activity.findViewById(R.id.maxMembersInt);
+        if(temp.getText().toString().equalsIgnoreCase("")){
+            temp.setText("0");
+        }
+
         int maxMember = Integer.parseInt(temp.getText().toString());
 
         temp = (EditText) activity.findViewById(R.id.createEventInfo);
