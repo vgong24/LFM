@@ -44,17 +44,11 @@ import android.location.*;
 import android.graphics.*;
 
 
-public class MainActivity extends ActionBarActivity implements OnCameraChangeListener, OnMapReadyCallback,
+public class MainActivity extends ActionBarActivity implements
         ConnectionCallbacks, OnConnectionFailedListener{
     //In create tab or search
     Button logOut = null;
     private static final int TIME_DIALOG_ID = 0;
-    TextView filterAddress;
-
-    //In create tab
-    GoogleMap map;
-    Marker marker;
-    LatLng loc;
 
 
     //In home tab
@@ -90,22 +84,10 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         });
 
         buildGoogleApiClient();
-        MapFragment mapFrag=
-                (MapFragment)getFragmentManager().findFragmentById(R.id.map);
-        mapFrag.getMapAsync(this);
 
-        map = mapFrag.getMap();
-        //map.setMyLocationEnabled(true);
 
-        filterAddress = (TextView) findViewById(R.id.addressText);
         //searchEvents(null, "Study");
         //Toast.makeText(getApplicationContext(), searchCategories.get(0).getName() + "", Toast.LENGTH_SHORT).show();
-    }
-
-
-    @Override
-    public void onCameraChange(CameraPosition position) {
-
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -136,6 +118,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         // onConnectionFailed.
         //Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
+
     @Override
     public void onConnectionSuspended(int cause) {
         // The connection to Google Play services was lost for some reason. We call connect() to
@@ -150,33 +133,16 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         // applications that do not require a fine-grained location and that do not need location
         // updates. Gets the best and most recent location currently available, which may be null
         // in rare cases when a location is not available.
+        /*
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         if (mLastLocation != null) {
             loc = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude() );
         } else {
             Toast.makeText(getApplicationContext(), "No location detected onConnected", Toast.LENGTH_SHORT).show();
         }
+        */
     }
 
-
-    public void onMapReady(GoogleMap map) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            loc = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude() );
-        } else {
-            Toast.makeText(getApplicationContext(), "No location detected onMapReady", Toast.LENGTH_SHORT).show();
-            loc = new LatLng(21.4513314,-158.0152807);
-        }
-
-
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 13));
-
-        map.addMarker(new MarkerOptions()
-                .title("Event Location")
-                .position(loc));
-
-        filterAddress.setText("My Location");
-    }
 
     //Profile page tab
     public void initFields() {
@@ -222,7 +188,7 @@ public class MainActivity extends ActionBarActivity implements OnCameraChangeLis
         tabhost.addTab(tabSpec);
 
 
-        createtab = new Create_TAB(tabhost, MainActivity.this);
+        createtab = new Create_TAB(tabhost, MainActivity.this, mGoogleApiClient);
         createtab.initialize();
 
 
