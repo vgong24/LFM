@@ -29,22 +29,26 @@
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/temp2">
+                android:id="@+id/temp2"
+                android:weightSum="1">
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="193dp"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="20dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Activity"
-                        android:id="@+id/eventActivityView" />
+                        android:id="@+id/eventActivityView"
+                        android:maxLines="2"
+                        android:longClickable="false" />
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Location"
@@ -53,9 +57,9 @@
 
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="100dp">
+                    android:layout_weight="0">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -69,7 +73,8 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:text="Time"
-                        android:id="@+id/eventTimeView" />
+                        android:id="@+id/eventTimeView"
+                        android:maxLines="3" />
                 </LinearLayout>
 
             </LinearLayout>

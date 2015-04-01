@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -12,7 +13,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -67,8 +72,6 @@ public class SignUpActivity extends Activity {
     String passwordAgain = passwordAgainEditText.getText().toString().trim();
     String fn = firstName.getText().toString();
 
-
-
     // Validate the sign up data
     boolean validationError = false;
     StringBuilder validationErrorMessage = new StringBuilder(getString(R.string.error_intro));
@@ -105,26 +108,26 @@ public class SignUpActivity extends Activity {
     dialog.show();
 
     // Set up a new Parse user
-    ParseUser user = new ParseUser();
+    final ParseUser user = new ParseUser();
     user.setUsername(username);
     user.setPassword(password);
     user.put("firstName", fn);
 
     // Call the Parse signup method
     user.signUpInBackground(new SignUpCallback() {
-      @Override
-      public void done(ParseException e) {
-        dialog.dismiss();
-        if (e != null) {
-          // Show the error message
-          Toast.makeText(SignUpActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-        } else {
-          // Start an intent for the dispatch activity
-          Intent intent = new Intent(SignUpActivity.this, DispatchActivity.class);
-          intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-          startActivity(intent);
+        @Override
+        public void done(ParseException e) {
+            dialog.dismiss();
+            if (e != null) {
+                // Show the error message
+                Toast.makeText(SignUpActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            } else {
+
+                Intent intent = new Intent(SignUpActivity.this, DispatchActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         }
-      }
     });
   }
 }
