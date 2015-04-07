@@ -66,6 +66,7 @@ public class HomeTab extends Fragment {
     private void populateList() {
         eventListAdapter = new EventListAdapter(context, R.layout.event_list_view, events);
         eventListView.setAdapter(eventListAdapter);
+        dialog.setVisibility(View.GONE);
         readySelect();
 
     }
@@ -112,9 +113,8 @@ public class HomeTab extends Fragment {
                 } else {
                     Toast.makeText(context.getApplicationContext(), "Nope", Toast.LENGTH_SHORT).show();
                 }
-
                 populateList();
-                dialog.setVisibility(View.GONE);
+
             }
 
         });

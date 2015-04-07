@@ -8,11 +8,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+
 /**
  * Created by hp1 on 21-01-2015.
  */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     Context context;
+    GoogleApiClient mGoogleApiClient;
     CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
 
@@ -31,22 +34,18 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         this.NumbOfTabs = mNumbOfTabsumb;
 
     }
+    public ViewPagerAdapter(FragmentManager fm,CharSequence mTitles[], int mNumbOfTabsumb, Context context, GoogleApiClient mGoogleApiClient) {
+        super(fm);
+        this.context = context;
+        this.Titles = mTitles;
+        this.NumbOfTabs = mNumbOfTabsumb;
+        this.mGoogleApiClient = mGoogleApiClient;
+    }
 
     //This method return the fragment for the every position in the View Pager
     @Override
     public Fragment getItem(int position) {
-/*
-        if(position == 0) // if the position is 0 we are returning the First tab
-        {
-            Tab1 tab1 = new Tab1();
-            return tab1;
-        }
-        else             // As we are having 2 tabs if the position is now 0 it must be 1 so we are returning second tab
-        {
-            Tab2 tab2 = new Tab2();
-            return tab2;
-        }
-*/
+
         switch(position){
             case 0:
                 HomeTab home = new HomeTab(context);
@@ -55,8 +54,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 Tab2 tab2 = new Tab2();
                 return tab2;
             case 2:
-                Tab1 tab1 = new Tab1();
-                return tab1;
+                CreateTab createTab = new CreateTab(context, mGoogleApiClient);
+                return createTab;
 
             default:
                 break;
