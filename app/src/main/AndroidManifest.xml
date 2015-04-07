@@ -77,6 +77,8 @@
             android:label="@string/upcoming"
 
             android:screenOrientation="portrait" />
+        <activity android:name=".MainActivity_v2"
+            />
 
 
 
