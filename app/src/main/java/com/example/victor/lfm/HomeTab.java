@@ -2,6 +2,7 @@ package com.example.victor.lfm;
 
 import android.app.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TabHost;
 import android.widget.Toast;
 
@@ -35,6 +37,8 @@ public class HomeTab extends Fragment {
 
     ListView eventListView;
 
+    ProgressBar dialog;
+
     public HomeTab(Context context) {
         this.context = context;
     }
@@ -42,7 +46,6 @@ public class HomeTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.home_tab, container, false);
-
         initialize();
         return v;
     }
@@ -50,12 +53,14 @@ public class HomeTab extends Fragment {
 
     public void initialize() {
         initField();
+        dialog.setVisibility(View.VISIBLE);
         fillEventList();
     }
 
     public void initField() {
         events = new ArrayList<Events>();
         eventListView = (ListView) v.findViewById(R.id.eventList);
+        dialog = (ProgressBar) v.findViewById(R.id.eventsProgressBar);
     }
 
     private void populateList() {
@@ -98,7 +103,7 @@ public class HomeTab extends Fragment {
         query.findInBackground(new FindCallback<Events>() {
 
             public void done(List<Events> event, ParseException e) {
-
+                //dialog.show();
                 if (e == null) {
                     for (int i = 0; i < event.size(); i++) {
                         events.add(event.get(i));
@@ -109,7 +114,7 @@ public class HomeTab extends Fragment {
                 }
 
                 populateList();
-
+                dialog.setVisibility(View.GONE);
             }
 
         });
