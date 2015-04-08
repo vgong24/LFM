@@ -7,6 +7,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -47,15 +48,12 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 
         switch(position){
-            case 0:
-                HomeTab home = new HomeTab(context);
-                return home;
-            case 1:
-                Tab2 tab2 = new Tab2();
-                return tab2;
-            case 2:
-                CreateTab createTab = new CreateTab(context, mGoogleApiClient);
-                return createTab;
+            case 0:return new HomeTab(context);
+
+            case 1:return new Tab2();
+
+            case 2:return new CreateTab(context);
+
 
             default:
                 break;
@@ -77,5 +75,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         return NumbOfTabs;
+    }
+
+    @Override
+    public int getItemPosition(Object object){
+        return POSITION_NONE;
     }
 }

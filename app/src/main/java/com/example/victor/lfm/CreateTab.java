@@ -7,6 +7,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +48,7 @@ import java.util.TimeZone;
 /**
  * Created by Victor on 4/6/2015.
  */
-public class CreateTab extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
+public class CreateTab extends Fragment /*implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener*/{
     TabHost tabhost;
     Context context;
     Activity activity;
@@ -74,54 +77,77 @@ public class CreateTab extends Fragment implements OnMapReadyCallback, GoogleApi
     Button createEventBtn, timeBtn, dateBtn;
 
     View view;
-
-    public CreateTab(Context context, GoogleApiClient mGoogleApiClient){
-
+    public CreateTab (Context context){
         this.context = context;
-        this.activity = (Activity) context;
-        this.mGoogleApiClient = mGoogleApiClient;
     }
     @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         view = inflater.inflate(R.layout.create_tab, container, false);
         initialize();
+        //Toast.makeText(this.getActivity(), "Created View", Toast.LENGTH_SHORT).show();
+
         return view;
     }
 
     public void initialize(){
-        initField();
-        initCategories();
-        fillCategorySpinner();
-        initClickListeners();
+
+            initField();
+            initCategories();
+            fillCategorySpinner();
+            initClickListeners();
+
 
     }
+/*
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser){
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            initialize();
+        }else{
+            Log.d("CreateTab", "Fragment is not visible");
+        }
 
+    }
+*/
     public void initField(){
 
-        timeView = (TextView) view.findViewById(R.id.cTabTimeView);
-        timeBtn = (Button) view.findViewById(R.id.cTabTimeBtn);
-        createEventBtn = (Button) view.findViewById(R.id.cTabCreateBtn);
-        categorySpin = (Spinner) view.findViewById(R.id.cTabCatSpin);
+            timeView = (TextView) view.findViewById(R.id.cTabTimeView);
+            timeBtn = (Button) view.findViewById(R.id.cTabTimeBtn);
+            createEventBtn = (Button) view.findViewById(R.id.cTabCreateBtn);
+            categorySpin = (Spinner) view.findViewById(R.id.cTabCatSpin);
 
-        dateView = (TextView) view.findViewById(R.id.cTabDateView);
-        dateBtn = (Button) view.findViewById(R.id.cTabDateBtn);
+            dateView = (TextView) view.findViewById(R.id.cTabDateView);
+            dateBtn = (Button) view.findViewById(R.id.cTabDateBtn);
 
-        dates = new ArrayList<Date>();
-        searchDates = new ArrayList<Date>();
+            dates = new ArrayList<Date>();
+            searchDates = new ArrayList<Date>();
 
-        catNames = new ArrayList<String>();
-        searchCategories = new ArrayList<Category>();
-        ev = new ArrayList<Events>();
-        categoryArray = new ArrayList<>();
-        cEventDateTime = Calendar.getInstance();
+            catNames = new ArrayList<String>();
+            searchCategories = new ArrayList<Category>();
+            ev = new ArrayList<Events>();
+            categoryArray = new ArrayList<>();
+            cEventDateTime = Calendar.getInstance();
 
-        ArrayAdapter<String> adapt = new ArrayAdapter<String>(context,
-                android.R.layout.simple_spinner_item, catNames);
+            ArrayAdapter<String> adapt = new ArrayAdapter<String>(context,
+                    android.R.layout.simple_spinner_item, catNames);
 
+        /*===================================================================
         MapFragment mapFrag= (MapFragment)activity.getFragmentManager().findFragmentById(R.id.map2);
         mapFrag.getMapAsync(this);
         map = mapFrag.getMap();
-        filterAddress = (TextView) view.findViewById(R.id.cTabMapAddrView);
+
+        */
+            filterAddress = (TextView) view.findViewById(R.id.cTabMapAddrView);
+
+
     }
 
     public void initClickListeners(){
@@ -254,6 +280,8 @@ public class CreateTab extends Fragment implements OnMapReadyCallback, GoogleApi
         return result;
     }
 
+
+/*
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
@@ -311,5 +339,7 @@ public class CreateTab extends Fragment implements OnMapReadyCallback, GoogleApi
 
         filterAddress.setText("My Location");
     }
+
+    */
 
 }

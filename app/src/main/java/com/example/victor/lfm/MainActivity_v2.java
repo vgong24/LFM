@@ -16,8 +16,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 
-public class MainActivity_v2 extends ActionBarActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity_v2 extends ActionBarActivity{
 
     // Declaring Your View and Variables
 
@@ -34,7 +33,7 @@ public class MainActivity_v2 extends ActionBarActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_v2);
-        buildGoogleApiClient();
+        //buildGoogleApiClient();
 
         // Creating The Toolbar and setting it as the Toolbar for the activity
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -42,7 +41,7 @@ public class MainActivity_v2 extends ActionBarActivity implements
 
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
-        adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs, MainActivity_v2.this, mGoogleApiClient);
+        adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs, MainActivity_v2.this);
 
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
@@ -87,11 +86,13 @@ public class MainActivity_v2 extends ActionBarActivity implements
 
         return super.onOptionsItemSelected(item);
     }
+
+    /*
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
                 .build();
     }
 
@@ -123,7 +124,7 @@ public class MainActivity_v2 extends ActionBarActivity implements
         // The connection to Google Play services was lost for some reason. We call connect() to
         // attempt to re-establish the connection.
         //Log.i(TAG, "Connection suspended");
-        mGoogleApiClient.connect();
+        //mGoogleApiClient.connect();
     }
 
     @Override
@@ -139,6 +140,6 @@ public class MainActivity_v2 extends ActionBarActivity implements
         } else {
             Toast.makeText(getApplicationContext(), "No location detected onConnected", Toast.LENGTH_SHORT).show();
         }
-        */
-    }
+
+    }*/
 }
