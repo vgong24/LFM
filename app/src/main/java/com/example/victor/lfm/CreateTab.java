@@ -157,15 +157,15 @@ public class CreateTab extends Fragment /*implements OnMapReadyCallback, GoogleA
                 Mytimepicker mtp = new Mytimepicker(timeView, cEventDateTime);
                 mtp.setContext(context);
                 DialogFragment newFragment = mtp;
-                newFragment.show(activity.getFragmentManager(), "timePicker");
+                newFragment.show(getActivity().getFragmentManager(), "timePicker");
             }
         });
 
         dateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogFragment newFragment = new DatePickerFragment(dateView, cEventDateTime);
-                newFragment.show(activity.getFragmentManager(), "datePicker");
+                DialogFragment newFragment = DatePickerFragment.newInstance(dateView, cEventDateTime);
+                newFragment.show(getActivity().getFragmentManager(), "datePicker");
             }
         });
 
@@ -180,8 +180,11 @@ public class CreateTab extends Fragment /*implements OnMapReadyCallback, GoogleA
         categorySpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedCategory = categoryArray.get(position).getName();
-
+                if(categoryArray.size() != 0)
+                    selectedCategory = categoryArray.get(position).getName();
+                else
+                    selectedCategory = "none";
+                //IF OUTOFBOUNDSEXCEPTION: MOST LIKELY NOT CONNECTED IN TIME
                 //Toast.makeText(context.getApplicationContext(), selectedCategory, Toast.LENGTH_SHORT).show();
             }
 
@@ -228,17 +231,17 @@ public class CreateTab extends Fragment /*implements OnMapReadyCallback, GoogleA
     }
 
 
-    public void createEvent(View view) {
+    public void createEvent(View v) {
 
         EditText temp;
-        temp = (EditText) activity.findViewById(R.id.maxMembersInt);
+        temp = (EditText) view.findViewById(R.id.cTabMemberEdit);
         if(temp.getText().toString().equalsIgnoreCase("")){
             temp.setText("0");
         }
 
         int maxMember = Integer.parseInt(temp.getText().toString());
 
-        temp = (EditText) activity.findViewById(R.id.createEventInfo);
+        temp = (EditText) view.findViewById(R.id.cTabDescEdit);
         String eventInfo = temp.getText().toString();
 
 

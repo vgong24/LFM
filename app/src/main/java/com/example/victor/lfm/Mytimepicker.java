@@ -27,6 +27,10 @@ public class Mytimepicker extends DialogFragment implements TimePickerDialog.OnT
     public Mytimepicker() {
 
     }
+    public static Mytimepicker newInstance(TextView tv, Calendar datetime){
+        Mytimepicker f = new Mytimepicker(tv, datetime);
+        return f;
+    }
     public void setContext(Context context){
         this.context = context;
     }

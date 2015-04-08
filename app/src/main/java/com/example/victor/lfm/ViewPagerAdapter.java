@@ -19,7 +19,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     GoogleApiClient mGoogleApiClient;
     CharSequence Titles[]; // This will Store the Titles of the Tabs which are Going to be passed when ViewPagerAdapter is created
     int NumbOfTabs; // Store the number of tabs, this will also be passed when the ViewPagerAdapter is created
-
+    //TABS
+    HomeTab home;
+    CreateTab create;
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
     public ViewPagerAdapter(FragmentManager fm,CharSequence mTitles[], int mNumbOfTabsumb, Context context) {
@@ -48,11 +50,19 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
 
         switch(position){
-            case 0:return new HomeTab(context);
+            case 0:
+                if(home == null){
+                    home = new HomeTab(context);
+                }
+                return home;
 
             case 1:return new Tab2();
 
-            case 2:return new CreateTab(context);
+            case 2:
+                if(create == null){
+                    create = new CreateTab(context);
+                }
+                return create;
 
 
             default:
