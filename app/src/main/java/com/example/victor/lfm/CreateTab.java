@@ -3,7 +3,9 @@ package com.example.victor.lfm;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,7 +32,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
@@ -80,6 +84,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     Button createEventBtn, timeBtn, dateBtn;
 
+    Marker centerMarker;
+
     View view;
     public CreateTab (Context context){
         this.context = context;
@@ -105,10 +111,41 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
         return view;
     }
+    /*
+    Google Maps stuff
+    Display the first map location the user sees when creating a new event.
+    Should be able to move around while keeping the marker centered (static).
+     */
     @Override
     public void onMapReady() {
         mMap = mMapFragment.getMap();
+        mMap.setMyLocationEnabled(true);
+
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
+        String provider = locationManager.getBestProvider(criteria, true);
+        Location myLocation = locationManager.getLastKnownLocation(provider);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+
+        double latitude = myLocation.getLatitude();
+        double longitude = myLocation.getLongitude();
+
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+        centerMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title("You are here").snippet("Consider yourself located"));
+        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(CameraPosition cameraPosition) {
+                //Gets coordinates of center
+                LatLng centerOfMap = mMap.getCameraPosition().target;
+                centerMarker.setPosition(centerOfMap);
+
+            }
+        });
     }
+
 
     public void initialize(){
 
@@ -119,18 +156,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
 
     }
-/*
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser){
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
-            initialize();
-        }else{
-            Log.d("CreateTab", "Fragment is not visible");
-        }
 
-    }
-*/
     public void initField(){
 
             timeView = (TextView) view.findViewById(R.id.cTabTimeView);
@@ -298,67 +324,5 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     }
 
 
-
-
-/*
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
-        // onConnectionFailed.
-        //Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        // The connection to Google Play services was lost for some reason. We call connect() to
-        // attempt to re-establish the connection.
-        //Log.i(TAG, "Connection suspended");
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        // Provides a simple way of getting a device's location and is well suited for
-        // applications that do not require a fine-grained location and that do not need location
-        // updates. Gets the best and most recent location currently available, which may be null
-        // in rare cases when a location is not available.
-
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            loc = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude() );
-        } else {
-            Toast.makeText(activity.getApplicationContext(), "No location detected onConnected", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(activity)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            loc = new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude() );
-        } else {
-            Toast.makeText(activity.getApplicationContext(), "No location detected onMapReady", Toast.LENGTH_SHORT).show();
-            loc = new LatLng(21.4513314,-158.0152807);
-        }
-
-
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 13));
-
-        map.addMarker(new MarkerOptions()
-                .title("Event Location")
-                .position(loc));
-
-        filterAddress.setText("My Location");
-    }
-
-    */
 
 }
