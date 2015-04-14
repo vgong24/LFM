@@ -29,6 +29,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -48,7 +49,7 @@ import java.util.TimeZone;
 /**
  * Created by Victor on 4/6/2015.
  */
-public class CreateTab extends Fragment /*implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener*/{
+public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyListener /*implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener*/{
     TabHost tabhost;
     Context context;
     Activity activity;
@@ -74,6 +75,9 @@ public class CreateTab extends Fragment /*implements OnMapReadyCallback, GoogleA
     private GoogleApiClient mGoogleApiClient;
     protected Location mLastLocation;
 
+    private GoogleMap mMap;
+    private SupportMapFragment mMapFragment;
+
     Button createEventBtn, timeBtn, dateBtn;
 
     View view;
@@ -93,7 +97,17 @@ public class CreateTab extends Fragment /*implements OnMapReadyCallback, GoogleA
         initialize();
         //Toast.makeText(this.getActivity(), "Created View", Toast.LENGTH_SHORT).show();
 
+        //Create child fragment (maps)
+
+        mMapFragment = CustomMapFragment.newInstance();
+        getChildFragmentManager().beginTransaction().replace(R.id.map2, mMapFragment).commit();
+
+
         return view;
+    }
+    @Override
+    public void onMapReady() {
+        mMap = mMapFragment.getMap();
     }
 
     public void initialize(){
@@ -282,6 +296,8 @@ public class CreateTab extends Fragment /*implements OnMapReadyCallback, GoogleA
         }
         return result;
     }
+
+
 
 
 /*
