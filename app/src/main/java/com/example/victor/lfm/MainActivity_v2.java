@@ -3,6 +3,8 @@ package com.example.victor.lfm;
 /**
  * Created by Victor on 4/6/2015.
  */
+
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ public class MainActivity_v2 extends ActionBarActivity{
     SlidingTabLayout tabs;
     CharSequence Titles[]={"Events","Messages", "Create"};
     int Numboftabs = Titles.length;
+    public static FragmentManager fragmentManager;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -34,6 +37,7 @@ public class MainActivity_v2 extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_v2);
         //buildGoogleApiClient();
+        fragmentManager = getSupportFragmentManager();
 
         // Creating The Toolbar and setting it as the Toolbar for the activity
         toolbar = (Toolbar) findViewById(R.id.tool_bar);

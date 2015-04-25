@@ -2,6 +2,7 @@ package com.example.victor.lfm;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
@@ -9,8 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.SwipeRefreshLayout;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -86,6 +86,10 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     Marker centerMarker;
 
+    //Setup map
+    LocationManager locationManager;
+    Criteria criteria;
+
     View view;
     public CreateTab (Context context){
         this.context = context;
@@ -101,28 +105,56 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
         view = inflater.inflate(R.layout.create_tab, container, false);
         initialize();
-        //Toast.makeText(this.getActivity(), "Created View", Toast.LENGTH_SHORT).show();
-
-        //Create child fragment (maps)
 
         mMapFragment = CustomMapFragment.newInstance();
         getChildFragmentManager().beginTransaction().replace(R.id.map2, mMapFragment).commit();
 
+        setUpMapIfNeeded();
 
         return view;
     }
-    /*
-    Google Maps stuff
-    Display the first map location the user sees when creating a new event.
-    Should be able to move around while keeping the marker centered (static).
-     */
     @Override
-    public void onMapReady() {
-        mMap = mMapFragment.getMap();
-        mMap.setMyLocationEnabled(true);
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        if(mMap != null){
+            setUpMap();
+        }
+        if(mMap == null){
+            mMap = mMapFragment.getMap();
+        }
+        if(mMap != null){
+            setUpMap();
+        }
+    }
 
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
+    private void setUpMapIfNeeded() {
+        if(mMapFragment == null){
+            mMapFragment = CustomMapFragment.newInstance();
+            getChildFragmentManager().beginTransaction().replace(R.id.map2, mMapFragment).commit();
+        }
+        if (mMap == null) {
+            //mMap = ((SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map2)).getMap();
+            mMap = mMapFragment.getMap();
+        }
+        if(mMap != null){
+            setUpMap();
+        }
+    }
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        if (mMap != null) {
+            MainActivity_v2.fragmentManager.beginTransaction()
+                    .remove(getChildFragmentManager().findFragmentById(R.id.map2)).commit();
+            mMap = null;
+            mMapFragment = null;
+        }
+    }
+
+    private void setUpMap(){
+        Toast.makeText(context.getApplicationContext(), "Setting up map", Toast.LENGTH_SHORT).show();
+        mMap.setMyLocationEnabled(true);
+        locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        criteria = new Criteria();
 
         String provider = locationManager.getBestProvider(criteria, true);
         Location myLocation = locationManager.getLastKnownLocation(provider);
@@ -144,6 +176,17 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
             }
         });
+    }
+
+    /*
+    Google Maps stuff
+    Display the first map location the user sees when creating a new event.
+    Should be able to move around while keeping the marker centered (static).
+     */
+    @Override
+    public void onMapReady() {
+       setUpMapIfNeeded();
+
     }
 
 
