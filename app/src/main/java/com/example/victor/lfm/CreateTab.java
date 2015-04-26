@@ -1,9 +1,12 @@
 package com.example.victor.lfm;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
@@ -109,7 +112,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         mMapFragment = CustomMapFragment.newInstance();
         getChildFragmentManager().beginTransaction().replace(R.id.map2, mMapFragment).commit();
 
-        setUpMapIfNeeded();
+        //setUpMapIfNeeded();
 
         return view;
     }
@@ -160,6 +163,10 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         Location myLocation = locationManager.getLastKnownLocation(provider);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        if(myLocation == null){
+            buildAlertMessageNoGps();
+            return;
+        }
         double latitude = myLocation.getLatitude();
         double longitude = myLocation.getLongitude();
 
@@ -176,6 +183,24 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
             }
         });
+    }
+    //alert
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     /*
