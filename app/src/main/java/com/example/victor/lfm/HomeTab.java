@@ -2,7 +2,7 @@ package com.example.victor.lfm;
 
 import android.app.Activity;
 
-import android.app.ProgressDialog;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TabHost;
+import android.widget.ProgressBar;;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -66,7 +65,7 @@ public class HomeTab extends Fragment {
     private void populateList() {
         eventListAdapter = new EventListAdapter(context, R.layout.event_list_view, events);
         eventListView.setAdapter(eventListAdapter);
-        dialog.setVisibility(View.GONE);
+
         readySelect();
 
     }
@@ -113,6 +112,7 @@ public class HomeTab extends Fragment {
                 } else {
                     Toast.makeText(context.getApplicationContext(), "Nope", Toast.LENGTH_SHORT).show();
                 }
+                dialog.setVisibility(View.GONE);
                 populateList();
 
             }
