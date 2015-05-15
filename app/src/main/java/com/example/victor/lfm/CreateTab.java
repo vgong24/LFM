@@ -47,6 +47,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -75,6 +76,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     Calendar cEventDateTime;
     LatLng loc;
 
+
+
     Spinner categorySpin;
     String selectedCategory, cater;
     private ParseQueryAdapter<ParseObject> mainAdapter;
@@ -96,12 +99,9 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     View view;
     public CreateTab (Context context){
         this.context = context;
+        activity = (Activity) context;
     }
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
 
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -110,7 +110,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         initialize();
 
         mMapFragment = CustomMapFragment.newInstance();
-        getChildFragmentManager().beginTransaction().replace(R.id.map2, mMapFragment).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.map2, mMapFragment).commitAllowingStateLoss();
 
         //setUpMapIfNeeded();
 
@@ -132,7 +132,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     private void setUpMapIfNeeded() {
         if(mMapFragment == null){
             mMapFragment = CustomMapFragment.newInstance();
-            getChildFragmentManager().beginTransaction().replace(R.id.map2, mMapFragment).commit();
+            getChildFragmentManager().beginTransaction().replace(R.id.map2, mMapFragment).commitAllowingStateLoss();
         }
         if (mMap == null) {
             //mMap = ((SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map2)).getMap();
@@ -145,13 +145,25 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     @Override
     public void onDestroyView(){
         super.onDestroyView();
-        if (mMap != null) {
-            MainActivity_v2.fragmentManager.beginTransaction()
-                    .remove(getChildFragmentManager().findFragmentById(R.id.map2)).commit();
-            mMap = null;
-            mMapFragment = null;
+
+        if(!activity.isFinishing()) {
+            if (mMap != null) {
+                MainActivity_v2.fragmentManager.beginTransaction().remove(getChildFragmentManager().findFragmentById(R.id.map2)).commitAllowingStateLoss();
+                mMap = null;
+                mMapFragment = null;
+            }
         }
+
     }
+
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        Toast.makeText(context, "destroyed", Toast.LENGTH_SHORT).show();
+
+    }
+
 
     private void setUpMap(){
         Toast.makeText(context.getApplicationContext(), "Setting up map", Toast.LENGTH_SHORT).show();
