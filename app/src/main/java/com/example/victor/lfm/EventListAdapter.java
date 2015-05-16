@@ -3,6 +3,9 @@ package com.example.victor.lfm;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.os.AsyncTask;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,26 +44,37 @@ public class EventListAdapter extends ArrayAdapter<Events> {
 
     @Override
     public View getView(int position, View view, ViewGroup parent){
+        ViewHolder holder;
+
         if(view == null) {
             LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = li.inflate(viewListXML, parent, false);
+            holder = new ViewHolder();
+            holder.capacity = (TextView) view.findViewById(R.id.eventCapacityView);
+            holder.description = (TextView) view.findViewById(R.id.eventActivityView);
+            holder.location = (TextView) view.findViewById(R.id.eventLocationView);
+            holder.date = (TextView) view.findViewById(R.id.eventTimeView);
+            holder.imageView = (ImageView) view.findViewById(R.id.imageView);
+            view.setTag(holder);
+
+        }else{
+            holder = (ViewHolder) view.getTag();
         }
         Events currentEvent = eventArray.get(position);
+        holder.capacity.setText(currentEvent.getMax()+"");
+        holder.description.setText(currentEvent.getDescr());
+        holder.location.setText("Honolulu");
 
-        TextView capacity = (TextView) view.findViewById(R.id.eventCapacityView);
-        capacity.setText(currentEvent.getMax()+"");
-
-        TextView activity = (TextView) view.findViewById(R.id.eventActivityView);
-        activity.setText(currentEvent.getDescr());
-
-        TextView location = (TextView) view.findViewById(R.id.eventLocationView);
-        location.setText("Honolulu");
-
-        TextView date = (TextView) view.findViewById(R.id.eventTimeView);
         SimpleDateFormat sdf = new SimpleDateFormat();
-        date.setText(sdf.format(currentEvent.getDate().getTime()));
+        holder.date.setText(sdf.format(currentEvent.getDate().getTime()));
 
-        final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+
+        if(holder.imageView != null){
+            new ImageDownloaderTask(holder.imageView).execute(currentEvent);
+        }
+        /*
+
+
         ParseFile thumbnail = null;
         if((thumbnail = currentEvent.getCat().getImage()) != null){
             thumbnail.getDataInBackground(new GetDataCallback() {
@@ -70,7 +85,7 @@ public class EventListAdapter extends ArrayAdapter<Events> {
 
                             if (bmp != null) {
                                 Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, 100, 100, true);
-                                imageView.setImageBitmap(resizedbitmap);
+                                holder.imageView.setImageBitmap(resizedbitmap);
                             }
                         } else {
                             Log.e("paser after download", "null");
@@ -81,12 +96,94 @@ public class EventListAdapter extends ArrayAdapter<Events> {
 
         }else {
             Log.e("parse file", " null");
-            imageView.setPadding(10,10,10,10);
+            holder.imageView.setPadding(10,10,10,10);
 
         }
-
+*/
         return view;
 
     }
+
+    static class ViewHolder {
+        TextView capacity;
+        TextView description;
+        TextView location;
+        TextView date;
+        ImageView imageView;
+
+    }
+
+    class ImageDownloaderTask extends AsyncTask<Events, Void, Bitmap>{
+        private final WeakReference<ImageView> imageViewWeakReference;
+
+        public ImageDownloaderTask(ImageView imageView){
+            imageViewWeakReference = new WeakReference<ImageView>(imageView);
+        }
+
+
+        @Override
+        protected Bitmap doInBackground(Events... params) {
+
+            ParseFile thumbnail = null;
+            if((thumbnail = params[0].getCat().getImage()) != null){
+                try {
+                    byte[] data = thumbnail.getData();
+                    Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    if (bmp != null) {
+                        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, 100, 100, true);
+                        return resizedbitmap;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+
+
+            }else {
+                Log.e("parse file", " null");
+                //imageView.setPadding(10,10,10,10);
+
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Bitmap bitmap){
+            if(isCancelled()){
+                bitmap = null;
+            }
+            if(imageViewWeakReference != null){
+                ImageView imageView = imageViewWeakReference.get();
+                if(imageView != null){
+                    if(bitmap != null){
+                        imageView.setImageBitmap(bitmap);
+                    }else{
+                        Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.reload);
+                        imageView.setImageDrawable(placeholder);
+                        imageView.setPadding(10,10,10,10);
+                    }
+                }
+            }
+        }
+
+    }
+    /*Previous Bitmap reference
+                thumbnail.getDataInBackground(new GetDataCallback() {
+                    @Override
+                    public void done(byte[] data, ParseException e) {
+                        if (e == null) {
+                            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+                            if (bmp != null) {
+                                Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, 100, 100, true);
+                                //imageView.setImageBitmap(resizedbitmap);
+                            }
+                        } else {
+                            Log.e("paser after download", "null");
+
+                        }
+                    }
+                });
+                */
+
 
 }

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import android.support.v4.app.Fragment;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class HomeTab extends Fragment {
     ListView eventListView;
 
     ProgressBar dialog;
+    boolean _areEventsLoaded = false;
 
     public HomeTab(Context context) {
         this.context = context;
@@ -102,9 +105,9 @@ public class HomeTab extends Fragment {
         query.addAscendingOrder("Date");
         query.findInBackground(new FindCallback<Events>() {
 
-            public void done(List<Events> event, ParseException e) {
+            public void done(List<Events> event, ParseException excep) {
                 //dialog.show();
-                if (e == null) {
+                if (excep == null) {
                     for (int i = 0; i < event.size(); i++) {
                         events.add(event.get(i));
                         //Toast.makeText(context, "events.size is: "+events.size() + " ObjectId : " + events.get(i).getObjectId(), Toast.LENGTH_SHORT).show();
@@ -119,6 +122,23 @@ public class HomeTab extends Fragment {
 
         });
 
-
     }
+
+
+    @Override
+    public void onDetach(){
+        super.onDetach();
+        try{
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        }catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

@@ -1,20 +1,24 @@
 package com.example.victor.lfm;
 
-/**
- * Created by Victor on 4/6/2015.
- */
+import android.support.v4.app.Fragment;import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 /**
- * Created by hp1 on 21-01-2015.
+ * Created by Victor on 5/15/2015.
  */
-public class Tab2 extends Fragment {
+public class ChatTab extends Fragment{
+    Context context;
+
+    public ChatTab(Context context){
+        this.context = context;
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -23,6 +27,5 @@ public class Tab2 extends Fragment {
         tv.setText("It worked!");
         return v;
     }
-
 
 }

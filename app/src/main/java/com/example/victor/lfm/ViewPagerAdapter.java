@@ -22,6 +22,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     //TABS
     HomeTab home;
     CreateTab create;
+    ChatTab chat;
 
     // Build a Constructor and assign the passed Values to appropriate values in the class
     public ViewPagerAdapter(FragmentManager fm,CharSequence mTitles[], int mNumbOfTabsumb, Context context) {
@@ -56,7 +57,12 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
                 }
                 return home;
 
-            case 1:return new Tab2();
+            case 1:
+                if(chat == null){
+                    chat = new ChatTab(context);
+                }
+                return chat;
+
 
             case 2:
                 if(create == null){
