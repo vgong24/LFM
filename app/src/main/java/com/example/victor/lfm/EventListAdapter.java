@@ -54,7 +54,7 @@ public class EventListAdapter extends ArrayAdapter<Events> {
             holder.description = (TextView) view.findViewById(R.id.eventActivityView);
             holder.location = (TextView) view.findViewById(R.id.eventLocationView);
             holder.date = (TextView) view.findViewById(R.id.eventTimeView);
-            holder.imageView = (ImageView) view.findViewById(R.id.imageView);
+            holder.imageView = (ImageView) view.findViewById(R.id.eventImageView);
             view.setTag(holder);
 
         }else{
