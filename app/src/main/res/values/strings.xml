@@ -17,6 +17,9 @@
     <string name="prompt_name">First Name</string>
     <string name="birthdate">Birthdate</string>
     <string name="action_reload">reload</string>
+    <string name="message_elipses">...</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
 
 
 </resources>
