@@ -126,6 +126,22 @@ public class MainActivity_v2 extends ActionBarActivity{
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.example.victor.lfm.MainActivity_v2"));
     }
 
+    //shut off sinch client
+    @Override
+    public void onDestroy(){
+        Toast.makeText(getApplicationContext(), "Destroying activity", Toast.LENGTH_SHORT).show();
+        stopService(new Intent(this, MessageService.class));
+        super.onDestroy();
+    }
+
+    @Override
+    public void onResume(){
+        Toast.makeText(getApplicationContext(), "Resuming activity", Toast.LENGTH_SHORT).show();
+        Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        startService(serviceIntent);
+        super.onResume();
+    }
+
 
 
 
