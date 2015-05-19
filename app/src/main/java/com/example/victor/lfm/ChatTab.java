@@ -50,7 +50,7 @@ public class ChatTab extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.chat_room_list,container,false);
-        showSpinner();
+        //showSpinner();
         //setConversationsList();
         return v;
     }

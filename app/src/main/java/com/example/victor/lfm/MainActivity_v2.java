@@ -4,7 +4,13 @@ package com.example.victor.lfm;
  * Created by Victor on 4/6/2015.
  */
 
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -14,7 +20,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-
+import com.parse.ParseUser;
 
 
 public class MainActivity_v2 extends ActionBarActivity{
@@ -28,6 +34,8 @@ public class MainActivity_v2 extends ActionBarActivity{
     CharSequence Titles[]={"Events","Messages", "Create"};
     int Numboftabs = Titles.length;
     public static FragmentManager fragmentManager;
+    private ProgressDialog progressDialog;
+    private BroadcastReceiver receiver = null;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -35,7 +43,10 @@ public class MainActivity_v2 extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_v2);
-        //buildGoogleApiClient();
+
+        //Connect with sinch services
+        showSpinner();
+
         fragmentManager = getSupportFragmentManager();
 
         // Creating The Toolbar and setting it as the Toolbar for the activity
@@ -84,10 +95,35 @@ public class MainActivity_v2 extends ActionBarActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            stopService(new Intent(getApplicationContext(), MessageService.class));
+            ParseUser.logOut();
+            Intent intent = new Intent(getApplicationContext(), LoginActivity_v2.class);
+            startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //show a loading spinner while the sinch client starts
+    private void showSpinner() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Loading");
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Boolean success = intent.getBooleanExtra("success", false);
+                progressDialog.dismiss();
+                if (!success) {
+                    Toast.makeText(getApplicationContext(), "Messaging service failed to start", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.example.victor.lfm.MainActivity_v2"));
     }
 
 

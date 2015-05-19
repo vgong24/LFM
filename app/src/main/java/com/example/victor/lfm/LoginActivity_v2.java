@@ -95,7 +95,7 @@ public class LoginActivity_v2 extends Activity {
 
     @Override
     public void onDestroy() {
-        stopService(new Intent(this, MessageService.class));
+        //stopService(new Intent(this, MessageService.class));
         super.onDestroy();
     }
 }
