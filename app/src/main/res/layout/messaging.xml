@@ -19,7 +19,7 @@
         android:id="@+id/divider"
         android:layout_width="fill_parent"
         android:layout_height="1dip"
-        android:background="@color/accent_material_light"
+        android:background="@color/off_white"
         android:layout_above="@+id/relSendMessage" />
 
     <RelativeLayout
@@ -51,7 +51,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_margin="4dp"
-            android:background="@drawable/reload" />
+            android:background="@drawable/button_send" />
     </RelativeLayout>
 
 
