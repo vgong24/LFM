@@ -46,19 +46,15 @@ public class ChatTab extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.chat_room_list,container,false);
-        initialize();
         setConversationList();
         return v;
     }
 
-    private void initialize(){
-        currentUserId = ParseUser.getCurrentUser().getObjectId();
-        names = new ArrayList<String>();
-    }
-
     //display clickable list of all users
     private void setConversationList(){
-        names.clear();
+        currentUserId = ParseUser.getCurrentUser().getObjectId();
+        names = new ArrayList<String>();
+        //names.clear();
 
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereNotEqualTo("objectId", currentUserId);
@@ -91,6 +87,7 @@ public class ChatTab extends Fragment{
     }
 
     public void openConversation(ArrayList<String> names, int pos){
+
 
     }
 

@@ -109,10 +109,9 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         view = inflater.inflate(R.layout.create_tab, container, false);
         initialize();
 
+        //Create the map interface and replaces it with the default fragment placeholder in xml
         mMapFragment = CustomMapFragment.newInstance();
         getChildFragmentManager().beginTransaction().replace(R.id.map2, mMapFragment).commitAllowingStateLoss();
-
-        //setUpMapIfNeeded();
 
         return view;
     }
@@ -164,7 +163,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     }
 
-
+    //Set up Map fragment
     private void setUpMap(){
         Toast.makeText(context.getApplicationContext(), "Setting up map", Toast.LENGTH_SHORT).show();
         mMap.setMyLocationEnabled(true);
@@ -196,7 +195,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             }
         });
     }
-    //alert
+    //Asks User to turn on GPS if it is turned off
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
