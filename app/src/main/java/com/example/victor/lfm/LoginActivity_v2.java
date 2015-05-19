@@ -25,6 +25,8 @@ public class LoginActivity_v2 extends Activity {
     private Intent intent;
     private Intent serviceIntent;
 
+    //TODO: Set up User's name when creating new profile
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
