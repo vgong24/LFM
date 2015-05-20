@@ -99,6 +99,7 @@ public class MainActivity_v2 extends ActionBarActivity{
             stopService(new Intent(getApplicationContext(), MessageService.class));
             ParseUser.logOut();
             Intent intent = new Intent(getApplicationContext(), LoginActivity_v2.class);
+            finish();
             startActivity(intent);
             return true;
         }
