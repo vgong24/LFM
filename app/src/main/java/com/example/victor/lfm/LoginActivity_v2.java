@@ -36,7 +36,7 @@ public class LoginActivity_v2 extends Activity {
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            startService(serviceIntent);
+            //startService(serviceIntent);
             startActivity(intent);
         }
 
@@ -56,7 +56,7 @@ public class LoginActivity_v2 extends Activity {
                 ParseUser.logInInBackground(username, password, new LogInCallback() {
                     public void done(ParseUser user, com.parse.ParseException e) {
                         if (user != null) {
-                            startService(serviceIntent);
+                            //startService(serviceIntent);
                             startActivity(intent);
                         } else {
                             Toast.makeText(getApplicationContext(),
@@ -75,28 +75,36 @@ public class LoginActivity_v2 extends Activity {
                 username = usernameField.getText().toString();
                 password = passwordField.getText().toString();
 
-                ParseUser user = new ParseUser();
-                user.setUsername(username);
-                user.setPassword(password);
+                if(username.equalsIgnoreCase("") || password.equalsIgnoreCase("")){
+                    Toast.makeText(getApplicationContext(),
+                            "Please enter a username and password"
+                            , Toast.LENGTH_LONG).show();
+                }else{
+                    ParseUser user = new ParseUser();
+                    user.setUsername(username);
+                    user.setPassword(password);
 
-                user.signUpInBackground(new SignUpCallback() {
-                    public void done(com.parse.ParseException e) {
-                        if (e == null) {
-                            startService(serviceIntent);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    "There was an error signing up."
-                                    , Toast.LENGTH_LONG).show();
+                    user.signUpInBackground(new SignUpCallback() {
+                        public void done(com.parse.ParseException e) {
+                            if (e == null) {
+                                //startService(serviceIntent);
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(getApplicationContext(),
+                                        "There was an error signing up."
+                                        , Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
             }
         });
     }
 
     @Override
     public void onDestroy() {
+
         //stopService(new Intent(this, MessageService.class));
         super.onDestroy();
     }

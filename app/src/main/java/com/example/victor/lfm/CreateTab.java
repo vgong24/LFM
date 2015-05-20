@@ -159,13 +159,13 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Toast.makeText(context, "destroyed", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "destroyed", Toast.LENGTH_SHORT).show();
 
     }
 
     //Set up Map fragment
     private void setUpMap(){
-        Toast.makeText(context.getApplicationContext(), "Setting up map", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context.getApplicationContext(), "Setting up map", Toast.LENGTH_SHORT).show();
         mMap.setMyLocationEnabled(true);
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         criteria = new Criteria();

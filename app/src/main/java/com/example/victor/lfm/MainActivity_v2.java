@@ -46,6 +46,7 @@ public class MainActivity_v2 extends ActionBarActivity{
 
         //Connect with sinch services
         showSpinner();
+        sinchConnect();
 
         fragmentManager = getSupportFragmentManager();
 
@@ -129,17 +130,24 @@ public class MainActivity_v2 extends ActionBarActivity{
     //shut off sinch client
     @Override
     public void onDestroy(){
+        super.onDestroy();
         Toast.makeText(getApplicationContext(), "Destroying activity", Toast.LENGTH_SHORT).show();
         stopService(new Intent(this, MessageService.class));
-        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+        receiver = null;
     }
 
     @Override
     public void onResume(){
-        Toast.makeText(getApplicationContext(), "Resuming activity", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Resuming activity", Toast.LENGTH_SHORT).show();
+        //Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        //startService(serviceIntent);
+        super.onResume();
+    }
+
+    public void sinchConnect(){
         Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
         startService(serviceIntent);
-        super.onResume();
     }
 
 

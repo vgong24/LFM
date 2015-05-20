@@ -71,6 +71,7 @@ public class MessageService extends Service implements SinchClientListener {
 
     @Override
     public void onClientStarted(SinchClient client) {
+        Toast.makeText(getApplicationContext(), "Broadcasting sinchClient", Toast.LENGTH_SHORT).show();
         broadcastIntent.putExtra("success", true);
         broadcaster.sendBroadcast(broadcastIntent);
 
@@ -117,6 +118,7 @@ public class MessageService extends Service implements SinchClientListener {
 
     @Override
     public void onDestroy() {
+        Toast.makeText(getApplicationContext(), "Stopping SinchClient", Toast.LENGTH_SHORT).show();
         sinchClient.stopListeningOnActiveConnection();
         sinchClient.terminate();
     }
