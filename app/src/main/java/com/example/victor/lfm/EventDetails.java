@@ -160,7 +160,7 @@ public class EventDetails extends Activity {
             if(view == null)
                 view = getLayoutInflater().inflate(viewListXML, parent, false);
             ParseUser player = attendeeUsers.get(position);
-            String playerName = player.getString("firstName");
+            String playerName = player.getString("username");
 
             final ImageView attendeePic = (ImageView) view.findViewById(R.id.attendeeProfilePic);
             //**=============================================Display profile pic in attendees list

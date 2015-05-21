@@ -72,31 +72,9 @@ public class LoginActivity_v2 extends Activity {
             @Override
             public void onClick(View view) {
 
-                username = usernameField.getText().toString();
-                password = passwordField.getText().toString();
-
-                if(username.equalsIgnoreCase("") || password.equalsIgnoreCase("")){
-                    Toast.makeText(getApplicationContext(),
-                            "Please enter a username and password"
-                            , Toast.LENGTH_LONG).show();
-                }else{
-                    ParseUser user = new ParseUser();
-                    user.setUsername(username);
-                    user.setPassword(password);
-
-                    user.signUpInBackground(new SignUpCallback() {
-                        public void done(com.parse.ParseException e) {
-                            if (e == null) {
-                                //startService(serviceIntent);
-                                startActivity(intent);
-                            } else {
-                                Toast.makeText(getApplicationContext(),
-                                        "There was an error signing up."
-                                        , Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
+                Intent intent = new Intent(LoginActivity_v2.this, SignUpActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
 
             }
         });
