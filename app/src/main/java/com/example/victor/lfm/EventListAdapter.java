@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.text.Layout;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,12 +79,26 @@ public class EventListAdapter extends ArrayAdapter<Events> {
         Events currentEvent = eventArray.get(position);
         holder.capacity.setText(currentEvent.getMax()+"");
         holder.description.setText(currentEvent.getDescr());
+        //Depending on layout
         if(holder.location != null)
             holder.location.setText("Honolulu");
 
-        SimpleDateFormat sdf = new SimpleDateFormat();
-        holder.date.setText(sdf.format(currentEvent.getDate().getTime()));
 
+        SimpleDateFormat sdf = new SimpleDateFormat();
+        long eventTime = currentEvent.getDate().getTime();
+        sdf.applyLocalizedPattern("M/d/yy");
+        String date = sdf.format(eventTime);
+        sdf.applyLocalizedPattern("h:mm a");
+        String time = sdf.format(eventTime);
+
+        //Check if time is today
+        if(DateUtils.isToday(eventTime)){
+            holder.date.setText("Today at "+ time);
+        }else {
+
+
+            holder.date.setText(date +" at "+time);
+        }
 
         if(holder.imageView != null){
             new ImageDownloaderTask(holder.imageView).execute(currentEvent);
