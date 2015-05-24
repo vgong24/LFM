@@ -41,6 +41,15 @@ public class HomeTab extends Fragment {
     ProgressBar dialog;
     boolean _areEventsLoaded = false;
 
+    /**
+     * Alternate viewlist layouts
+     * @param context
+     */
+    //R.layout.event_list_view , R.layout.event_item_reddit
+    private final int itemList_xml = R.layout.event_item_reddit;
+
+
+
     public HomeTab(Context context) {
         this.context = context;
     }
@@ -66,7 +75,7 @@ public class HomeTab extends Fragment {
     }
 
     private void populateList() {
-        eventListAdapter = new EventListAdapter(context, R.layout.event_list_view, events);
+        eventListAdapter = new EventListAdapter(context, itemList_xml, events);
         eventListView.setAdapter(eventListAdapter);
 
         readySelect();

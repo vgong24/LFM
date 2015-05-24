@@ -50,11 +50,26 @@ public class EventListAdapter extends ArrayAdapter<Events> {
             LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = li.inflate(viewListXML, parent, false);
             holder = new ViewHolder();
+            /*
             holder.capacity = (TextView) view.findViewById(R.id.eventCapacityView);
             holder.description = (TextView) view.findViewById(R.id.eventActivityView);
             holder.location = (TextView) view.findViewById(R.id.eventLocationView);
             holder.date = (TextView) view.findViewById(R.id.eventTimeView);
             holder.imageView = (ImageView) view.findViewById(R.id.eventImageView);
+*/
+
+
+            //TEST Second event item list reddit style
+
+            holder.capacity = (TextView) view.findViewById(R.id.event_item_capacity);
+            holder.description = (TextView) view.findViewById(R.id.event_item_title);
+            //holder.location = (TextView) view.findViewById(R.id.eventLocationView);
+            holder.date = (TextView) view.findViewById(R.id.event_item_time);
+            holder.imageView = (ImageView) view.findViewById(R.id.event_item_image);
+
+
+
+
             view.setTag(holder);
 
         }else{
@@ -63,7 +78,8 @@ public class EventListAdapter extends ArrayAdapter<Events> {
         Events currentEvent = eventArray.get(position);
         holder.capacity.setText(currentEvent.getMax()+"");
         holder.description.setText(currentEvent.getDescr());
-        holder.location.setText("Honolulu");
+        if(holder.location != null)
+            holder.location.setText("Honolulu");
 
         SimpleDateFormat sdf = new SimpleDateFormat();
         holder.date.setText(sdf.format(currentEvent.getDate().getTime()));
@@ -72,34 +88,6 @@ public class EventListAdapter extends ArrayAdapter<Events> {
         if(holder.imageView != null){
             new ImageDownloaderTask(holder.imageView).execute(currentEvent);
         }
-        /*
-
-
-        ParseFile thumbnail = null;
-        if((thumbnail = currentEvent.getCat().getImage()) != null){
-            thumbnail.getDataInBackground(new GetDataCallback() {
-                @Override
-                public void done(byte[] data, ParseException e) {
-                        if (e == null) {
-                            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-                            if (bmp != null) {
-                                Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, 100, 100, true);
-                                holder.imageView.setImageBitmap(resizedbitmap);
-                            }
-                        } else {
-                            Log.e("paser after download", "null");
-
-                        }
-                }
-            });
-
-        }else {
-            Log.e("parse file", " null");
-            holder.imageView.setPadding(10,10,10,10);
-
-        }
-*/
         return view;
 
     }
