@@ -5,7 +5,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -26,13 +32,14 @@ import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by Victor on 2/14/2015.
  */
-public class EventDetails extends Activity {
+public class EventDetails extends ActionBarActivity {
     TextView attendeeTotal;
     TextView eventDetailTime;
     String objId;
@@ -44,19 +51,73 @@ public class EventDetails extends Activity {
 
     ArrayList<Attendee> attendees;
     ArrayList<ParseUser> attendeeUsers;
-
+    Toolbar toolbar;
+    ActionBar ab;
+    SimpleDateFormat sdf;
 
     public EventDetails(){
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.details_toolbar, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_switch_chat) {
+            Toast.makeText(getApplicationContext(), "meep", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_click);
+        //setContentView(R.layout.activity_event_click);
+        setContentView(R.layout.event_details);
+        toolbar = (Toolbar)findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        ab = getSupportActionBar();
 
-        initializeFields();
+        Intent prevInfo = getIntent();
+        sdf = new SimpleDateFormat();
+        objId = prevInfo.getExtras().getString("EventId");
+        long eventtime = prevInfo.getExtras().getLong("EventDate");
 
+        sdf.applyLocalizedPattern("M/d/yy");
+        String date = sdf.format(eventtime);
+        sdf.applyLocalizedPattern("h:mm a");
+        String time = sdf.format(eventtime);
+        String relativeTime;
+        if(DateUtils.isToday(eventtime)) {
+
+            //If less than one hour
+            Calendar cal = Calendar.getInstance();
+            long currentTime = cal.getTimeInMillis();
+            if(currentTime > eventtime - DateUtils.HOUR_IN_MILLIS){
+                if(currentTime > eventtime){
+                    relativeTime = (String) DateUtils.getRelativeTimeSpanString(eventtime,currentTime, DateUtils.MINUTE_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL);
+                    ab.setTitle("Started " + relativeTime);
+                }else{
+                    relativeTime = (String) DateUtils.getRelativeTimeSpanString(eventtime,currentTime, DateUtils.MINUTE_IN_MILLIS);
+                    ab.setTitle("Starting "+ relativeTime);
+                }
+
+            }else
+                ab.setTitle("Today at " + time);
+
+        }else {
+            ab.setTitle(date + " at " + time);
+        }
+        //initializeFields();
+        /*
         Intent prevInfo = getIntent();
         objId = prevInfo.getExtras().getString("EventId");
         ParseQuery<Events> query = ParseQuery.getQuery("Events");
@@ -78,7 +139,7 @@ public class EventDetails extends Activity {
                 }
             }
         });
-
+        */
     }
 
     public void initializeFields(){

@@ -96,7 +96,6 @@ public class EventListAdapter extends ArrayAdapter<Events> {
             holder.date.setText("Today at "+ time);
         }else {
 
-
             holder.date.setText(date +" at "+time);
         }
 
