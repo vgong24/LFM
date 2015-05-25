@@ -44,9 +44,13 @@ public class EventDetails extends ActionBarActivity {
     TextView eventDetailTime;
     String objId;
     Button join, cancel;
+    TextView joinTxtView;
+
     Events evnt;
     ListView attendeeListView;
     TextView attenderName;
+    TextView event_description;
+    String eventDescription;
 
 
     ArrayList<Attendee> attendees;
@@ -86,10 +90,13 @@ public class EventDetails extends ActionBarActivity {
         setSupportActionBar(toolbar);
         ab = getSupportActionBar();
 
+
+        //Setting up Header
         Intent prevInfo = getIntent();
         sdf = new SimpleDateFormat();
         objId = prevInfo.getExtras().getString("EventId");
         long eventtime = prevInfo.getExtras().getLong("EventDate");
+        eventDescription = prevInfo.getExtras().getString("EventTitle");
 
         sdf.applyLocalizedPattern("M/d/yy");
         String date = sdf.format(eventtime);
@@ -116,22 +123,21 @@ public class EventDetails extends ActionBarActivity {
         }else {
             ab.setTitle(date + " at " + time);
         }
-        //initializeFields();
-        /*
-        Intent prevInfo = getIntent();
-        objId = prevInfo.getExtras().getString("EventId");
+        initializeFields();
+        fillContent();
+
         ParseQuery<Events> query = ParseQuery.getQuery("Events");
         query.getInBackground(objId, new GetCallback<Events>() {
             @Override
             public void done(Events events, ParseException e) {
                 if(e==null){
                     Toast.makeText(getApplicationContext(),"Information gathered!", Toast.LENGTH_SHORT).show();
-                    attendeeTotal.setText(events.getMax() + "");
-                    SimpleDateFormat sdf = new SimpleDateFormat();
-                    eventDetailTime.setText(sdf.format(events.getDate().getTime()));
+                    //attendeeTotal.setText(events.getMax() + "");
+                    //SimpleDateFormat sdf = new SimpleDateFormat();
+                    //eventDetailTime.setText(sdf.format(events.getDate().getTime()));
 
                     evnt = events;
-                    initOnClicks();
+                    //initOnClicks();
 
                     fillAttendeesList(evnt);
                 }else{
@@ -139,22 +145,33 @@ public class EventDetails extends ActionBarActivity {
                 }
             }
         });
-        */
+
     }
 
     public void initializeFields(){
+        /*
         attendeeTotal = (TextView) findViewById(R.id.attendeeTotalView);
         eventDetailTime = (TextView) findViewById(R.id.eventDetailTime);
 
         join = (Button) findViewById(R.id.joinBtn);
         cancel = (Button) findViewById(R.id.eventDetailCancelBtn);
         attendeeListView = (ListView) findViewById(R.id.listView2);
+
+        */
+        attendeeListView = (ListView)findViewById(R.id.detail_attendee_listview);
+        joinTxtView = (TextView)findViewById(R.id.join_view);
+        event_description = (TextView) findViewById(R.id.detail_description);
+
         attendees = new ArrayList<Attendee>();
         attendeeUsers = new ArrayList<>();
     }
 
+    public void fillContent(){
+        event_description.setText(eventDescription);
+    }
+
     public void initOnClicks(){
-        join.setOnClickListener(new View.OnClickListener() {
+        joinTxtView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Attendee attend = new Attendee();
@@ -163,7 +180,7 @@ public class EventDetails extends ActionBarActivity {
                 attend.saveInBackground();
             }
         });
-
+/*
         cancel.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -171,6 +188,7 @@ public class EventDetails extends ActionBarActivity {
                 finish();
             }
         });
+        */
     }
     private void fillAttendeesList(Events eventID){
         ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
@@ -201,6 +219,7 @@ public class EventDetails extends ActionBarActivity {
 
 
     private void populateList(ArrayList<Attendee> attArr){
+        //AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(R.layout.attendee_list_view, attArr);
         AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(R.layout.attendee_list_view, attArr);
         attendeeListView.setAdapter(attendeeListAdapter);
 

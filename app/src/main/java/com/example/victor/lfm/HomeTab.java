@@ -91,6 +91,8 @@ public class HomeTab extends Fragment {
                 Intent i = new Intent(context.getApplicationContext(), EventDetails.class);
                 i.putExtra("EventId", events.get(position).getObjectId());
                 i.putExtra("EventDate", events.get(position).getDate().getTime());
+                i.putExtra("EventTitle", events.get(position).getDescr());
+
                 if (events.size() != 0) {
                     //Toast.makeText(context, "position: " + position + " EventId of " + events.get(position).getObjectId(), Toast.LENGTH_SHORT).show();
 
