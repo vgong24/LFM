@@ -21,6 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
@@ -39,7 +41,7 @@ import java.util.List;
 /**
  * Created by Victor on 2/14/2015.
  */
-public class EventDetails extends ActionBarActivity {
+public class EventDetails extends ActionBarActivity implements CustomMapFragment.OnMapReadyListener {
     TextView attendeeTotal;
     TextView eventDetailTime;
     String objId;
@@ -58,6 +60,8 @@ public class EventDetails extends ActionBarActivity {
     Toolbar toolbar;
     ActionBar ab;
     SimpleDateFormat sdf;
+
+    private GoogleMap gmap;
 
     public EventDetails(){
 
@@ -86,6 +90,8 @@ public class EventDetails extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_event_click);
         setContentView(R.layout.event_details);
+        gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.details_map)).getMap();
+
         toolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ab = getSupportActionBar();
@@ -224,6 +230,12 @@ public class EventDetails extends ActionBarActivity {
         attendeeListView.setAdapter(attendeeListAdapter);
 
     }
+
+    @Override
+    public void onMapReady() {
+
+    }
+
     private class AttendeeListAdapter extends ArrayAdapter<Attendee> {
         int viewListXML;
         ArrayList<Attendee> attendeeArrayList;

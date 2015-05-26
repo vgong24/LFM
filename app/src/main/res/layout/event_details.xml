@@ -44,11 +44,12 @@
         android:layout_height="0dp"
         android:layout_weight="30"
         >
-        <FrameLayout xmlns:map="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/map2"
-            android:name="com.google.android.gms.maps.MapFragment"
+        <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/details_map"
+            class="com.google.android.gms.maps.MapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
 
 
         </LinearLayout>
