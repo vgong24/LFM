@@ -57,7 +57,7 @@ import java.util.TimeZone;
 /**
  * Created by Victor on 4/6/2015.
  */
-public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyListener /*implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener*/{
+public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyListener{
     TabHost tabhost;
     Context context;
     Activity activity;
