@@ -92,6 +92,9 @@ public class HomeTab extends Fragment {
                 i.putExtra("EventId", events.get(position).getObjectId());
                 i.putExtra("EventDate", events.get(position).getDate().getTime());
                 i.putExtra("EventTitle", events.get(position).getDescr());
+                i.putExtra("EventLat", events.get(position).getLocation().getLatitude());
+                i.putExtra("EventLong", events.get(position).getLocation().getLongitude());
+
 
                 if (events.size() != 0) {
                     //Toast.makeText(context, "position: " + position + " EventId of " + events.get(position).getObjectId(), Toast.LENGTH_SHORT).show();

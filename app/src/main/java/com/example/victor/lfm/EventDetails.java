@@ -21,8 +21,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
@@ -91,7 +95,10 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_event_click);
         setContentView(R.layout.event_details);
+        prevInfo = getIntent();
+
         gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.details_map)).getMap();
+        setupMap();
 
         toolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -125,14 +132,25 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         });
 
     }
+    //Setup Map
+    public void setupMap(){
+        if(gmap!=null){
+            double latitude = prevInfo.getExtras().getDouble("EventLat");
+            double longitude = prevInfo.getExtras().getDouble("EventLong");
+            LatLng eventLatLng = new LatLng(latitude, longitude);
+            Marker eventMarker = gmap.addMarker(new MarkerOptions().position(eventLatLng).title("Here"));
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(eventLatLng, 13));
+
+        }
+    }
 
     //Setup Header
     public void initializeToolBar(){
-        prevInfo = getIntent();
         sdf = new SimpleDateFormat();
         objId = prevInfo.getExtras().getString("EventId");
         long eventtime = prevInfo.getExtras().getLong("EventDate");
         eventDescription = prevInfo.getExtras().getString("EventTitle");
+
 
         sdf.applyLocalizedPattern("M/d/yy");
         String date = sdf.format(eventtime);
