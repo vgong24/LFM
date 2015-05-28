@@ -42,6 +42,7 @@ import java.util.List;
  * Created by Victor on 2/14/2015.
  */
 public class EventDetails extends ActionBarActivity implements CustomMapFragment.OnMapReadyListener {
+    Intent prevInfo;
     TextView attendeeTotal;
     TextView eventDetailTime;
     String objId;
@@ -98,7 +99,36 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
 
         //Setting up Header
-        Intent prevInfo = getIntent();
+        initializeToolBar();
+
+        initFields();
+        initEventDescription();
+
+        ParseQuery<Events> query = ParseQuery.getQuery("Events");
+        query.getInBackground(objId, new GetCallback<Events>() {
+            @Override
+            public void done(Events events, ParseException e) {
+                if(e==null){
+                    Toast.makeText(getApplicationContext(),"Information gathered!", Toast.LENGTH_SHORT).show();
+                    //attendeeTotal.setText(events.getMax() + "");
+                    //SimpleDateFormat sdf = new SimpleDateFormat();
+                    //eventDetailTime.setText(sdf.format(events.getDate().getTime()));
+
+                    evnt = events;
+                    //initOnClicks();
+
+                    fillAttendeesList(evnt);
+                }else{
+                    //Toast.makeText(getApplicationContext(),"Did not find Event + "+objId, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    //Setup Header
+    public void initializeToolBar(){
+        prevInfo = getIntent();
         sdf = new SimpleDateFormat();
         objId = prevInfo.getExtras().getString("EventId");
         long eventtime = prevInfo.getExtras().getLong("EventDate");
@@ -129,32 +159,10 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         }else {
             ab.setTitle(date + " at " + time);
         }
-        initializeFields();
-        fillContent();
-
-        ParseQuery<Events> query = ParseQuery.getQuery("Events");
-        query.getInBackground(objId, new GetCallback<Events>() {
-            @Override
-            public void done(Events events, ParseException e) {
-                if(e==null){
-                    Toast.makeText(getApplicationContext(),"Information gathered!", Toast.LENGTH_SHORT).show();
-                    //attendeeTotal.setText(events.getMax() + "");
-                    //SimpleDateFormat sdf = new SimpleDateFormat();
-                    //eventDetailTime.setText(sdf.format(events.getDate().getTime()));
-
-                    evnt = events;
-                    //initOnClicks();
-
-                    fillAttendeesList(evnt);
-                }else{
-                    //Toast.makeText(getApplicationContext(),"Did not find Event + "+objId, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
     }
 
-    public void initializeFields(){
+    public void initFields(){
         /*
         attendeeTotal = (TextView) findViewById(R.id.attendeeTotalView);
         eventDetailTime = (TextView) findViewById(R.id.eventDetailTime);
@@ -172,7 +180,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         attendeeUsers = new ArrayList<>();
     }
 
-    public void fillContent(){
+    public void initEventDescription(){
         event_description.setText(eventDescription);
     }
 
