@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
@@ -75,7 +76,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     Marker marker;
     Calendar cEventDateTime;
     LatLng loc;
-
+    Location myLocation;
+    LatLng centerOfMap;
 
 
     Spinner categorySpin;
@@ -171,7 +173,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         criteria = new Criteria();
 
         String provider = locationManager.getBestProvider(criteria, true);
-        Location myLocation = locationManager.getLastKnownLocation(provider);
+        myLocation = locationManager.getLastKnownLocation(provider);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         if(myLocation == null){
@@ -189,7 +191,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 //Gets coordinates of center
-                LatLng centerOfMap = mMap.getCameraPosition().target;
+                centerOfMap = mMap.getCameraPosition().target;
                 centerMarker.setPosition(centerOfMap);
 
             }
@@ -380,6 +382,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         //replace id with category id
         String categoryID = getCategoryID(category);
         createEvent.put("Category", ParseObject.createWithoutData("Category", categoryID));
+        ParseGeoPoint point = new ParseGeoPoint(centerOfMap.latitude, centerOfMap.longitude);
+        createEvent.put("Location", point);
 
         createEvent.saveInBackground();
 
