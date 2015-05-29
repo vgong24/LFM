@@ -80,6 +80,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         initEventDescription();
         setupMap();
         setupAttendees();
+        initOnClicks();
 
     }
 
@@ -172,9 +173,6 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         return super.onOptionsItemSelected(item);
     }
 
-
-
-
     public void initOnClicks(){
         joinTxtView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,24 +199,13 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     public void onMapReady() {
 
     }
+    //Make async
     public void setupAttendees(){
-        ParseQuery<Events> query = ParseQuery.getQuery("Events");
-        query.getInBackground(objId, new GetCallback<Events>() {
-            @Override
-            public void done(Events events, ParseException e) {
-                if (e == null) {
-                    Toast.makeText(getApplicationContext(), "Information gathered!", Toast.LENGTH_SHORT).show();
-
-                    evnt = events;
-                    initOnClicks();
-
-                    fillAttendeesList(evnt);
-                } else {
-                    //Toast.makeText(getApplicationContext(),"Did not find Event + "+objId, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        Events events = (Events) ParseObject.createWithoutData("Events", objId);
+        Toast.makeText(getApplicationContext(), "Information gathered!", Toast.LENGTH_SHORT).show();
+        fillAttendeesList(events);
     }
+
     private void fillAttendeesList(Events eventID){
         ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
         query.whereEqualTo("Event", eventID);
