@@ -53,7 +53,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
     Events evnt;
     ListView attendeeListView;
-    TextView attenderName;
+
     TextView event_description;
     String eventDescription;
 
@@ -89,6 +89,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         //Get data from previous Intent in HomeTab.java @ readySelect method
         prevInfo = getIntent();
         objId = prevInfo.getExtras().getString("EventId");
+        evnt = (Events) ParseObject.createWithoutData("Events", objId);
         //Setup header fields
         toolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
@@ -112,8 +113,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
         long eventtime = prevInfo.getExtras().getLong("EventDate");
         eventDescription = prevInfo.getExtras().getString("EventTitle");
-
-
+        
         sdf.applyLocalizedPattern("M/d/yy");
         String date = sdf.format(eventtime);
         sdf.applyLocalizedPattern("h:mm a");
@@ -231,64 +231,12 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
     }
     private void populateList(ArrayList<Attendee> attArr){
-        AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(R.layout.attendee_list_view, attArr);
+        AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(), R.layout.attendee_list_view, attArr);
         attendeeListView.setAdapter(attendeeListAdapter);
 
     }
 
-    private class AttendeeListAdapter extends ArrayAdapter<Attendee> {
-        int viewListXML;
-        ArrayList<Attendee> attendeeArrayList;
 
-        public AttendeeListAdapter(int viewListXML, ArrayList<Attendee> attendeesArr){//Example R.layout.event_list_item, events
-            super(EventDetails.this, viewListXML, attendeesArr);
-            this.viewListXML = viewListXML;
-            this.attendeeArrayList = attendeesArr;
 
-        }
-
-        @Override
-        public View getView(int position, View view, ViewGroup parent){
-            if(view == null)
-                view = getLayoutInflater().inflate(viewListXML, parent, false);
-            ParseUser player = attendeeUsers.get(position);
-            String playerName = player.getString("username");
-
-            final ImageView attendeePic = (ImageView) view.findViewById(R.id.attendeeProfilePic);
-            //**=============================================Display profile pic in attendees list
-
-            ParseFile thumbnail = null;
-            if((thumbnail = (player.getParseFile("profilePicture"))) != null){
-                thumbnail.getDataInBackground(new GetDataCallback() {
-                    @Override
-                    public void done(byte[] data, ParseException e) {
-                        if (e == null) {
-                            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-                            if (bmp != null) {
-                                Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, 100, 100, true);
-                                attendeePic.setImageBitmap(resizedbitmap);
-                            }
-                        } else {
-                            Log.e("paser after download", "null");
-
-                        }
-                    }
-                });
-
-            }else {
-                Log.e("parse file", " null");
-                attendeePic.setPadding(10,10,10,10);
-
-            }
-
-            attenderName = (TextView) view.findViewById(R.id.attendeeListViewName);
-            attenderName.setText(playerName);
-
-            return view;
-
-        }
-
-    }
 
 }
