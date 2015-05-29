@@ -51,25 +51,12 @@ public class EventListAdapter extends ArrayAdapter<Events> {
             LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = li.inflate(viewListXML, parent, false);
             holder = new ViewHolder();
-            /*
-            holder.capacity = (TextView) view.findViewById(R.id.eventCapacityView);
-            holder.description = (TextView) view.findViewById(R.id.eventActivityView);
-            holder.location = (TextView) view.findViewById(R.id.eventLocationView);
-            holder.date = (TextView) view.findViewById(R.id.eventTimeView);
-            holder.imageView = (ImageView) view.findViewById(R.id.eventImageView);
-*/
-
-
-            //TEST Second event item list reddit style
 
             holder.capacity = (TextView) view.findViewById(R.id.event_item_capacity);
             holder.description = (TextView) view.findViewById(R.id.event_item_title);
             //holder.location = (TextView) view.findViewById(R.id.eventLocationView);
             holder.date = (TextView) view.findViewById(R.id.event_item_time);
             holder.imageView = (ImageView) view.findViewById(R.id.event_item_image);
-
-
-
 
             view.setTag(holder);
 
