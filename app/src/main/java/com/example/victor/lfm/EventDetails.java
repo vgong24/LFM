@@ -43,14 +43,12 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * Methods organized by sections in event_details xml from top to bottom
  * Created by Victor on 2/14/2015.
  */
 public class EventDetails extends ActionBarActivity implements CustomMapFragment.OnMapReadyListener {
     Intent prevInfo;
-    TextView attendeeTotal;
-    TextView eventDetailTime;
     String objId;
-    Button join, cancel;
     TextView joinTxtView;
 
     Events evnt;
@@ -71,83 +69,46 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     public EventDetails(){
 
     }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.details_toolbar, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_switch_chat) {
-            Toast.makeText(getApplicationContext(), "meep", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_event_click);
         setContentView(R.layout.event_details);
-        prevInfo = getIntent();
-
-        gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.details_map)).getMap();
+        initFields();
+        initToolBar();
+        initEventDescription();
         setupMap();
+        setupAttendees();
 
+    }
+
+    //Initialize textviews, arraylists, Intent extras
+    public void initFields(){
+        //Get data from previous Intent in HomeTab.java @ readySelect method
+        prevInfo = getIntent();
+        objId = prevInfo.getExtras().getString("EventId");
+        //Setup header fields
         toolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ab = getSupportActionBar();
-
-
-        //Setting up Header
-        initializeToolBar();
-
-        initFields();
-        initEventDescription();
-
-        ParseQuery<Events> query = ParseQuery.getQuery("Events");
-        query.getInBackground(objId, new GetCallback<Events>() {
-            @Override
-            public void done(Events events, ParseException e) {
-                if(e==null){
-                    Toast.makeText(getApplicationContext(),"Information gathered!", Toast.LENGTH_SHORT).show();
-                    //attendeeTotal.setText(events.getMax() + "");
-                    //SimpleDateFormat sdf = new SimpleDateFormat();
-                    //eventDetailTime.setText(sdf.format(events.getDate().getTime()));
-
-                    evnt = events;
-                    //initOnClicks();
-
-                    fillAttendeesList(evnt);
-                }else{
-                    //Toast.makeText(getApplicationContext(),"Did not find Event + "+objId, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
+        //Map setup
+        gmap = ((MapFragment) getFragmentManager().findFragmentById(R.id.details_map)).getMap();
+        //Setup views
+        attendeeListView = (ListView)findViewById(R.id.detail_attendee_listview);
+        joinTxtView = (TextView)findViewById(R.id.join_view);
+        event_description = (TextView) findViewById(R.id.detail_description);
+        //Setup lists
+        attendees = new ArrayList<Attendee>();
+        attendeeUsers = new ArrayList<>();
     }
-    //Setup Map
-    public void setupMap(){
-        if(gmap!=null){
-            double latitude = prevInfo.getExtras().getDouble("EventLat");
-            double longitude = prevInfo.getExtras().getDouble("EventLong");
-            LatLng eventLatLng = new LatLng(latitude, longitude);
-            Marker eventMarker = gmap.addMarker(new MarkerOptions().position(eventLatLng).title("Here"));
-            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(eventLatLng, 13));
-
-        }
+    public void initEventDescription(){
+        event_description.setText(eventDescription);
     }
-
     //Setup Header
-    public void initializeToolBar(){
+    public void initToolBar(){
         sdf = new SimpleDateFormat();
-        objId = prevInfo.getExtras().getString("EventId");
+
         long eventtime = prevInfo.getExtras().getLong("EventDate");
         eventDescription = prevInfo.getExtras().getString("EventTitle");
 
@@ -180,32 +141,45 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
     }
 
-    public void initFields(){
-        /*
-        attendeeTotal = (TextView) findViewById(R.id.attendeeTotalView);
-        eventDetailTime = (TextView) findViewById(R.id.eventDetailTime);
+    //Setup Map Section
+    public void setupMap(){
+        if(gmap!=null){
+            double latitude = prevInfo.getExtras().getDouble("EventLat");
+            double longitude = prevInfo.getExtras().getDouble("EventLong");
+            LatLng eventLatLng = new LatLng(latitude, longitude);
+            Marker eventMarker = gmap.addMarker(new MarkerOptions().position(eventLatLng).title("Here"));
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(eventLatLng, 13));
 
-        join = (Button) findViewById(R.id.joinBtn);
-        cancel = (Button) findViewById(R.id.eventDetailCancelBtn);
-        attendeeListView = (ListView) findViewById(R.id.listView2);
-
-        */
-        attendeeListView = (ListView)findViewById(R.id.detail_attendee_listview);
-        joinTxtView = (TextView)findViewById(R.id.join_view);
-        event_description = (TextView) findViewById(R.id.detail_description);
-
-        attendees = new ArrayList<Attendee>();
-        attendeeUsers = new ArrayList<>();
+        }
     }
 
-    public void initEventDescription(){
-        event_description.setText(eventDescription);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.details_toolbar, menu);
+        return true;
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_switch_chat) {
+            Toast.makeText(getApplicationContext(), "meep", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
 
     public void initOnClicks(){
         joinTxtView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
                 Attendee attend = new Attendee();
                 attend.setEvent(evnt);
                 attend.setUser(ParseUser.getCurrentUser().getObjectId());
@@ -222,15 +196,36 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         });
         */
     }
+
+    @Override
+    public void onMapReady() {
+
+    }
+    public void setupAttendees(){
+        ParseQuery<Events> query = ParseQuery.getQuery("Events");
+        query.getInBackground(objId, new GetCallback<Events>() {
+            @Override
+            public void done(Events events, ParseException e) {
+                if (e == null) {
+                    Toast.makeText(getApplicationContext(), "Information gathered!", Toast.LENGTH_SHORT).show();
+
+                    evnt = events;
+                    initOnClicks();
+
+                    fillAttendeesList(evnt);
+                } else {
+                    //Toast.makeText(getApplicationContext(),"Did not find Event + "+objId, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
     private void fillAttendeesList(Events eventID){
         ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
         query.whereEqualTo("Event", eventID);
         query.findInBackground(new FindCallback<Attendee>() {
             @Override
             public void done(List<Attendee> attendeelist, ParseException e) {
-                for(int i = 0; i<attendeelist.size();i++){
-                    //ParseUser user = (ParseUser) attendeelist.get(i).get("User");
-                    //_User user = attendeelist.get(i).getUserObject();
+                for (int i = 0; i < attendeelist.size(); i++) {
                     ParseUser user = (ParseUser) attendeelist.get(i).get("User");
                     try {
                         user.fetchIfNeeded();
@@ -248,17 +243,9 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         });
 
     }
-
-
     private void populateList(ArrayList<Attendee> attArr){
-        //AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(R.layout.attendee_list_view, attArr);
         AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(R.layout.attendee_list_view, attArr);
         attendeeListView.setAdapter(attendeeListAdapter);
-
-    }
-
-    @Override
-    public void onMapReady() {
 
     }
 
