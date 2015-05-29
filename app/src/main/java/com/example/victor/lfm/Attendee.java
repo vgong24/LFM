@@ -25,8 +25,11 @@ public class Attendee extends ParseObject {
             this.fetchIfNeeded();
         } catch (ParseException e) {
 
-    }
+        }
         return (_User) getParseObject("User");
+    }
+    public ParseUser getUserID(){
+        return (ParseUser) getParseUser("User");
     }
 
     public void setUser(String id) {
