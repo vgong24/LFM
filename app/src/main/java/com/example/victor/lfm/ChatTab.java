@@ -35,7 +35,10 @@ public class ChatTab extends Fragment{
     Activity activity;
     private String currentUserId;
     private ArrayAdapter<String> namesArrayAdapter;
+    private ChatListAdapter eventsArrayAdapter;
+
     private ArrayList<String> names;
+    private ArrayList<Events> events;
     private ListView usersListView;
     private ProgressDialog progressDialog;
     private BroadcastReceiver receiver = null;
@@ -55,6 +58,42 @@ public class ChatTab extends Fragment{
         return v;
     }
 
+
+    /**
+     * Display clickable list of events you are currently participating
+     */
+    private void setChatList(){
+        currentUserId = ParseUser.getCurrentUser().getObjectId();
+        names = new ArrayList<String>();
+        events = new ArrayList<Events>();
+
+
+        ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
+        query.whereEqualTo("User", ParseUser.getCurrentUser());
+        query.findInBackground(new FindCallback<Attendee>() {
+            @Override
+            public void done(List<Attendee> list, ParseException e) {
+                if(e == null) {
+                    for (Attendee attend : list) {
+                        try {
+                            attend.getEventObject().fetchIfNeeded();
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+                        events.add(attend.getEventObject());
+                    }
+
+                    usersListView = (ListView) activity.findViewById(R.id.usersListView);
+                    eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, events);
+                    usersListView.setAdapter(eventsArrayAdapter);
+
+                }
+            }
+        });
+
+
+    }
+
     //display clickable list of all users
     private void setConversationsList(){
         currentUserId = ParseUser.getCurrentUser().getObjectId();
@@ -68,6 +107,7 @@ public class ChatTab extends Fragment{
             @Override
             public void done(List<ParseUser> userList, ParseException e) {
                 if(e == null){
+
                     for(int i = 0; i < userList.size(); i++){
                         names.add(userList.get(i).getUsername().toString());
                     }
@@ -75,11 +115,11 @@ public class ChatTab extends Fragment{
                     namesArrayAdapter = new ArrayAdapter<String>(context, R.layout.chat_list_item, names);
                     usersListView.setAdapter(namesArrayAdapter);
 
-                    usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                    usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            openConversation(names, position);
+                            //openConversation(names, position);
                         }
                     });
 
@@ -99,7 +139,11 @@ public class ChatTab extends Fragment{
             public void done(List<ParseUser> user, com.parse.ParseException e) {
                 if (e == null) {
                     Intent intent = new Intent(context, MessagingActivity.class);
-                    intent.putExtra("RECIPIENT_ID", user.get(0).getObjectId());
+                    for(int i = 0; i < user.size(); i++){
+                        intent.putExtra("RECIPIENT_ID" + i, user.get(i).getObjectId());
+                    }
+
+                    intent.putExtra("NUM_OF_RECIPIENT", user.size());
                     startActivity(intent);
                 } else {
                     Toast.makeText(context,
@@ -133,7 +177,8 @@ public class ChatTab extends Fragment{
 
     @Override
     public void onResume() {
-        setConversationsList();
+        //setConversationsList();
+        setChatList();
         super.onResume();
     }
 

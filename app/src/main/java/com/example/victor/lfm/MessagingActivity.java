@@ -22,12 +22,15 @@ import com.sinch.android.rtc.messaging.MessageDeliveryInfo;
 import com.sinch.android.rtc.messaging.MessageFailureInfo;
 import com.sinch.android.rtc.messaging.WritableMessage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MessagingActivity extends Activity {
 
     private String recipientId;
+    private ArrayList<String> recipientIDs;
+    private int recipientSize;
     private EditText messageBodyField;
     private String messageBody;
     private MessageService.MessageServiceInterface messageService;
@@ -45,7 +48,15 @@ public class MessagingActivity extends Activity {
         bindService(new Intent(this, MessageService.class), serviceConnection, BIND_AUTO_CREATE);
 
         Intent intent = getIntent();
-        recipientId = intent.getStringExtra("RECIPIENT_ID");
+        recipientId = intent.getStringExtra("RECIPIENT_ID0");
+
+        //For all the recipients
+        recipientIDs = new ArrayList<>();
+        recipientSize = intent.getIntExtra("NUM_OF_RECIPIENT", 0);
+        for(int i = 0 ; i < recipientSize; i++){
+            recipientIDs.add(intent.getStringExtra("RECIPIENT_ID"+ i));
+        }
+
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         messagesList = (ListView) findViewById(R.id.listMessages);
