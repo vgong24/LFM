@@ -81,11 +81,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         initToolBar();
         initEventDescription();
         setupMap();
-
-        //TODO fill attendees in async task so the user can exit the activity if they make a mistake
-        //setupAttendees();
         new SetUpBackground().execute(evnt);
-        //initOnClicks();
 
     }
 
@@ -109,6 +105,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         attendees = new ArrayList<Attendee>();
         attendeeUsers = new ArrayList<>();
     }
+    //Fill in the description/Title of the event
     public void initEventDescription(){
         event_description.setText(eventDescription);
     }
