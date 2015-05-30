@@ -37,6 +37,7 @@ public class MainActivity_v2 extends ActionBarActivity{
     public static FragmentManager fragmentManager;
     private ProgressDialog progressDialog;
     private BroadcastReceiver receiver = null;
+    Intent serviceIntent;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -98,7 +99,8 @@ public class MainActivity_v2 extends ActionBarActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            stopService(new Intent(getApplicationContext(), MessageService.class));
+            //stopService(new Intent(getApplicationContext(), MessageService.class));
+            stopService(serviceIntent);
             ParseUser.logOut();
             Intent intent = new Intent(getApplicationContext(), LoginActivity_v2.class);
             finish();
@@ -135,7 +137,7 @@ public class MainActivity_v2 extends ActionBarActivity{
     public void onDestroy(){
         super.onDestroy();
         Toast.makeText(getApplicationContext(), "Destroying activity", Toast.LENGTH_SHORT).show();
-        stopService(new Intent(this, MessageService.class));
+        stopService(serviceIntent);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         receiver = null;
     }
@@ -149,7 +151,7 @@ public class MainActivity_v2 extends ActionBarActivity{
     }
 
     public void sinchConnect(){
-        Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        serviceIntent = new Intent(getApplicationContext(), MessageService.class);
         startService(serviceIntent);
     }
 
