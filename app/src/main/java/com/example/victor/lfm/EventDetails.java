@@ -204,7 +204,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     public void onMapReady() {
 
     }
-    
+
     private void populateList(ArrayList<Attendee> attArr){
         AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(), R.layout.attendee_list_view, attArr);
         attendeeListView.setAdapter(attendeeListAdapter);
