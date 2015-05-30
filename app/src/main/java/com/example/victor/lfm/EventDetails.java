@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.GetDataCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -79,8 +81,11 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         initToolBar();
         initEventDescription();
         setupMap();
-        setupAttendees();
-        initOnClicks();
+
+        //TODO fill attendees in async task so the user can exit the activity if they make a mistake
+        //setupAttendees();
+        new SetUpBackground().execute(evnt);
+        //initOnClicks();
 
     }
 
@@ -113,7 +118,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
         long eventtime = prevInfo.getExtras().getLong("EventDate");
         eventDescription = prevInfo.getExtras().getString("EventTitle");
-        
+
         sdf.applyLocalizedPattern("M/d/yy");
         String date = sdf.format(eventtime);
         sdf.applyLocalizedPattern("h:mm a");
@@ -199,42 +204,61 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     public void onMapReady() {
 
     }
-    //Make async
-    public void setupAttendees(){
-        Events events = (Events) ParseObject.createWithoutData("Events", objId);
-        Toast.makeText(getApplicationContext(), "Information gathered!", Toast.LENGTH_SHORT).show();
-        fillAttendeesList(events);
-    }
-
-    private void fillAttendeesList(Events eventID){
-        ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
-        query.whereEqualTo("Event", eventID);
-        query.findInBackground(new FindCallback<Attendee>() {
-            @Override
-            public void done(List<Attendee> attendeelist, ParseException e) {
-                for (int i = 0; i < attendeelist.size(); i++) {
-                    ParseUser user = (ParseUser) attendeelist.get(i).get("User");
-                    try {
-                        user.fetchIfNeeded();
-                    } catch (ParseException e1) {
-                        e1.printStackTrace();
-                    }
-
-                    attendeeUsers.add(user);
-                    attendees.add(attendeelist.get(i));
-
-                }
-
-                populateList(attendees);
-            }
-        });
-
-    }
+    
     private void populateList(ArrayList<Attendee> attArr){
         AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(), R.layout.attendee_list_view, attArr);
         attendeeListView.setAdapter(attendeeListAdapter);
 
     }
+
+
+    @Override
+    public void onBackPressed(){
+        finish();
+    }
+
+    /**
+     * SEPARATE CLASS]
+     * Finds attendee data from database and fills the viewlist in a background thread
+     * Allows users to back out of the event details page without having to wait for the table to be filled
+     * Also gives more freedom to change the Join Textview depending on whether or not user has already joined or wants to leave
+     */
+    private class SetUpBackground extends AsyncTask<Events, Void, ArrayList<Attendee>>{
+        ArrayList<Attendee> attendeesArr;
+
+        @Override
+        protected ArrayList<Attendee> doInBackground(Events... params) {
+            attendeesArr = new ArrayList<>();
+            ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
+            query.whereEqualTo("Event", params[0]);
+            try {
+
+                List<Attendee> tempList = query.find();
+                for( Attendee attend : tempList){
+                    //Need to retrieve User data within the attend object
+                    ParseUser user = (ParseUser) attend.get("User");
+                    user.fetchIfNeeded();
+                    attendeesArr.add(attend);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return attendeesArr;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Attendee> attendees){
+
+            Log.d("Count", "Starting Debug");
+            for (int i = 0; i < attendees.size(); i++){
+                Log.d("Count", i + " " + attendees.get(i).getUserFirstName());
+                //Toast.makeText(getApplicationContext(), attendees.get(i).getUserFirstName(), Toast.LENGTH_SHORT).show();
+            }
+            populateList(attendees);
+            initOnClicks();
+        }
+    }
+
 
 
 

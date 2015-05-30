@@ -121,6 +121,7 @@ public class MessageService extends Service implements SinchClientListener {
         Toast.makeText(getApplicationContext(), "Stopping SinchClient", Toast.LENGTH_SHORT).show();
         sinchClient.stopListeningOnActiveConnection();
         sinchClient.terminate();
+
     }
 
     public class MessageServiceInterface extends Binder {
