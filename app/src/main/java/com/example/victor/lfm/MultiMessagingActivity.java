@@ -45,17 +45,10 @@ public class MultiMessagingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messaging);
 
-        bindService(new Intent(this, MessageService.class), serviceConnection, BIND_AUTO_CREATE);
+        bindService(new Intent(this, MessageServiceV2.class), serviceConnection, BIND_AUTO_CREATE);
 
         Intent intent = getIntent();
-        recipientId = intent.getStringExtra("RECIPIENT_ID0");
-
-        //For all the recipients
-        recipientIDs = new ArrayList<>();
-        recipientSize = intent.getIntExtra("NUM_OF_RECIPIENT", 0);
-        for(int i = 0 ; i < recipientSize; i++){
-            recipientIDs.add(intent.getStringExtra("RECIPIENT_ID"+ i));
-        }
+        recipientId = intent.getStringExtra("GROUP_ID");
 
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
@@ -78,8 +71,7 @@ public class MultiMessagingActivity extends Activity {
     private void populateMessageHistory() {
         String[] userIds = {currentUserId, recipientId};
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
-        query.whereContainedIn("senderId", Arrays.asList(userIds));
-        query.whereContainedIn("recipientId", Arrays.asList(userIds));
+        query.whereEqualTo("recipientId", recipientId);
         query.orderByAscending("createdAt");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -104,7 +96,8 @@ public class MultiMessagingActivity extends Activity {
             Toast.makeText(this, "Please enter a message", Toast.LENGTH_LONG).show();
             return;
         }
-
+        //HERE
+        Toast.makeText(getApplicationContext(),"Sending message", Toast.LENGTH_SHORT).show();
         messageService.sendMessage(recipientId, messageBody);
         messageBodyField.setText("");
     }
@@ -145,9 +138,10 @@ public class MultiMessagingActivity extends Activity {
         }
 
         @Override
-        public void onMessageSent(MessageClient client, Message message, String recipientId) {
-
-            final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
+        public void onMessageSent(MessageClient client, Message message, final String recipientIdextra) {
+            Toast.makeText(getApplicationContext(),"Sending message", Toast.LENGTH_SHORT).show();
+            //final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
+            final WritableMessage writableMessage = new WritableMessage(recipientId, message.getTextBody());
 
             //only add message to parse database if it doesn't already exist there
             ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
@@ -159,7 +153,9 @@ public class MultiMessagingActivity extends Activity {
                         if (messageList.size() == 0) {
                             ParseObject parseMessage = new ParseObject("ParseMessage");
                             parseMessage.put("senderId", currentUserId);
-                            parseMessage.put("recipientId", writableMessage.getRecipientIds().get(0));
+                            //CHANGE
+                            //parseMessage.put("recipientId", writableMessage.getRecipientIds().get(0));
+                            parseMessage.put("recipientId", recipientId);
                             parseMessage.put("messageText", writableMessage.getTextBody());
                             parseMessage.put("sinchId", writableMessage.getMessageId());
                             parseMessage.saveInBackground();
