@@ -52,7 +52,7 @@ public class ChatTab extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.chat_room_list,container,false);
+        View v = inflater.inflate(R.layout.chat_room_list, container, false);
         //showSpinner();
         //setConversationsList();
         return v;
@@ -77,10 +77,11 @@ public class ChatTab extends Fragment{
                     for (Attendee attend : list) {
                         try {
                             attend.getEventObject().fetchIfNeeded();
+                            events.add(attend.getEventObject());
                         } catch (ParseException e1) {
                             e1.printStackTrace();
                         }
-                        events.add(attend.getEventObject());
+
                     }
 
                     usersListView = (ListView) activity.findViewById(R.id.usersListView);
@@ -119,13 +120,44 @@ public class ChatTab extends Fragment{
 
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            //openConversation(names, position);
+                            openConversation(names, position);
                         }
                     });
 
 
                 }else{
                     Toast.makeText(context, "Error loading user list", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    //open a conversation with multiple people
+    public void openChatRoom(ArrayList<Events> eventsArrayList, int pos){
+        ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
+        query.whereEqualTo("Event", eventsArrayList.get(pos));
+        query.findInBackground(new FindCallback<Attendee>() {
+            @Override
+            public void done(List<Attendee> list, ParseException e) {
+                if(e == null){
+                    Intent intent = new Intent(context, MultiMessagingActivity.class);
+                    //Intent intent = new Intent(context, MessagingActivity.class);
+
+                    for(int i = 0; i < list.size(); i++){
+                        try {
+                            list.get(i).getUserObject().fetchIfNeeded();
+                            intent.putExtra("RECIPIENT_ID" + i, list.get(i).getUserString());
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+
+                    }
+                    intent.putExtra("NUM_OF_RECIPIENT", list.size());
+                     startActivity(intent);
+                } else {
+                    Toast.makeText(context,
+                            "Error finding that user",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -138,7 +170,9 @@ public class ChatTab extends Fragment{
         query.findInBackground(new FindCallback<ParseUser>() {
             public void done(List<ParseUser> user, com.parse.ParseException e) {
                 if (e == null) {
+                    //CHANGE
                     Intent intent = new Intent(context, MessagingActivity.class);
+                    //Intent intent = new Intent(context, MultiMessagingActivity.class);
                     for(int i = 0; i < user.size(); i++){
                         intent.putExtra("RECIPIENT_ID" + i, user.get(i).getObjectId());
                     }
@@ -177,8 +211,9 @@ public class ChatTab extends Fragment{
 
     @Override
     public void onResume() {
-        //setConversationsList();
-        setChatList();
+        //CHANGE
+        setConversationsList();
+        //setChatList();
         super.onResume();
     }
 
