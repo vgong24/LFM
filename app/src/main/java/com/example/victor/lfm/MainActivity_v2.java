@@ -99,7 +99,6 @@ public class MainActivity_v2 extends ActionBarActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            //stopService(new Intent(getApplicationContext(), MessageService.class));
             stopService(serviceIntent);
             ParseUser.logOut();
             Intent intent = new Intent(getApplicationContext(), LoginActivity_v2.class);
@@ -144,14 +143,13 @@ public class MainActivity_v2 extends ActionBarActivity{
 
     @Override
     public void onResume(){
-        //Toast.makeText(getApplicationContext(), "Resuming activity", Toast.LENGTH_SHORT).show();
-        //Intent serviceIntent = new Intent(getApplicationContext(), MessageService.class);
-        //startService(serviceIntent);
+
         super.onResume();
     }
 
     public void sinchConnect(){
-        serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
+        //serviceIntent = new Intent(getApplicationContext(), MessageService.class);
         startService(serviceIntent);
     }
 

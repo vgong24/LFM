@@ -76,6 +76,7 @@
         <activity android:name=".MainActivity_v2"
             />
         <service android:name=".MessageService"></service>
+        <service android:name=".MessageServiceV2"></service>
         <activity android:name=".MessagingActivity"
             android:screenOrientation="portrait">
         </activity>
