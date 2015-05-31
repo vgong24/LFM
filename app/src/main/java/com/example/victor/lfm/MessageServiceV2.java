@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.parse.ParseUser;
@@ -16,6 +17,9 @@ import com.sinch.android.rtc.SinchError;
 import com.sinch.android.rtc.messaging.MessageClient;
 import com.sinch.android.rtc.messaging.MessageClientListener;
 import com.sinch.android.rtc.messaging.WritableMessage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MessageServiceV2  extends Service implements SinchClientListener {
 
@@ -97,10 +101,15 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
     public void onRegistrationCredentialsRequired(SinchClient client, ClientRegistration clientRegistration) {
     }
 
-    public void sendMessage(String recipientUserId, String textBody) {
+    public void sendMessage(List<String> recipientUserId, String textBody) {
         if (messageClient != null) {
             WritableMessage message = new WritableMessage(recipientUserId, textBody);
+            for(int i = 0 ; i < recipientUserId.size(); i++){
+                Log.v("AAAAAAAAAAAAAAAAAAAAA", recipientUserId.get(i));
+            }
+            Log.v("BBBBBBBBBBBBBBBBB", textBody);
             messageClient.send(message);
+
         }
     }
 
@@ -125,7 +134,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
     }
 
     public class MessageServiceInterface extends Binder {
-        public void sendMessage(String recipientUserId, String textBody) {
+        public void sendMessage(List<String> recipientUserId, String textBody) {
             MessageServiceV2.this.sendMessage(recipientUserId, textBody);
         }
 
