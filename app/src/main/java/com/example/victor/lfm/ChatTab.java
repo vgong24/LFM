@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.support.v4.app.Fragment;import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,13 +111,13 @@ public class ChatTab extends Fragment{
 
         ParseQuery<ParseUser> query = ParseUser.getQuery();
         query.whereNotEqualTo("objectId", currentUserId);
-        query.findInBackground(new FindCallback<ParseUser>(){
+        query.findInBackground(new FindCallback<ParseUser>() {
 
             @Override
             public void done(List<ParseUser> userList, ParseException e) {
-                if(e == null){
+                if (e == null) {
 
-                    for(int i = 0; i < userList.size(); i++){
+                    for (int i = 0; i < userList.size(); i++) {
                         names.add(userList.get(i).getUsername().toString());
                     }
                     usersListView = (ListView) activity.findViewById(R.id.usersListView);
@@ -132,7 +133,7 @@ public class ChatTab extends Fragment{
                     });
 
 
-                }else{
+                } else {
                     Toast.makeText(context, "Error loading user list", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -142,11 +143,38 @@ public class ChatTab extends Fragment{
     //open a conversation with multiple people
     //Send the event object ID which will represent the universal recipient
     public void openChatRoom(ArrayList<Events> eventsArrayList, int pos){
-        Intent intent = new Intent(context, MultiMessagingActivity.class);
-        String eventIDString = eventsArrayList.get(pos).getObjectId();
-        intent.putExtra("GROUP_ID",eventIDString);
 
-        startActivity(intent);
+        final String eventIDString = eventsArrayList.get(pos).getObjectId();
+
+        //Experiment
+        ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
+        query.whereEqualTo("Event", eventsArrayList.get(pos));
+        query.findInBackground(new FindCallback<Attendee>() {
+            @Override
+            public void done(List<Attendee> list, ParseException e) {
+                if (e == null) {
+
+                    Intent intent = new Intent(context, MultiMessagingActivity.class);
+                    intent.putExtra("GROUP_ID", eventIDString);
+                    intent.putExtra("RECIPIENT_SIZE", list.size());
+                    Log.v("SIZE", "SIZE : "+ list.size());
+                    for(int i = 0 ; i < list.size(); i++){
+                        //add all the recipients to arraylist
+                        try {
+                            list.get(i).getUserID().fetchIfNeeded();
+                            intent.putExtra("RECIPIENT_ID" + i, list.get(i).getUserID().getObjectId());
+                        } catch (ParseException e1) {
+                            e1.printStackTrace();
+                        }
+
+                    }
+
+                    startActivity(intent);
+                }
+            }
+        });
+
+
     }
 
     //open a conversation with one person
