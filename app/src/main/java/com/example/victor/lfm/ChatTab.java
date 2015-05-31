@@ -88,6 +88,13 @@ public class ChatTab extends Fragment{
                     eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, events);
                     usersListView.setAdapter(eventsArrayAdapter);
 
+                    usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            openChatRoom(events, position);
+                        }
+                    });
                 }
             }
         });
@@ -133,34 +140,13 @@ public class ChatTab extends Fragment{
     }
 
     //open a conversation with multiple people
+    //Send the event object ID which will represent the universal recipient
     public void openChatRoom(ArrayList<Events> eventsArrayList, int pos){
-        ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
-        query.whereEqualTo("Event", eventsArrayList.get(pos));
-        query.findInBackground(new FindCallback<Attendee>() {
-            @Override
-            public void done(List<Attendee> list, ParseException e) {
-                if(e == null){
-                    Intent intent = new Intent(context, MultiMessagingActivity.class);
-                    //Intent intent = new Intent(context, MessagingActivity.class);
+        Intent intent = new Intent(context, MultiMessagingActivity.class);
+        String eventIDString = eventsArrayList.get(pos).getObjectId();
+        intent.putExtra("GROUP_ID",eventIDString);
 
-                    for(int i = 0; i < list.size(); i++){
-                        try {
-                            list.get(i).getUserObject().fetchIfNeeded();
-                            intent.putExtra("RECIPIENT_ID" + i, list.get(i).getUserString());
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
-                        }
-
-                    }
-                    intent.putExtra("NUM_OF_RECIPIENT", list.size());
-                     startActivity(intent);
-                } else {
-                    Toast.makeText(context,
-                            "Error finding that user",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        startActivity(intent);
     }
 
     //open a conversation with one person
@@ -172,8 +158,7 @@ public class ChatTab extends Fragment{
                 if (e == null) {
                     //CHANGE
                     Intent intent = new Intent(context, MessagingActivity.class);
-                    //Intent intent = new Intent(context, MultiMessagingActivity.class);
-                    for(int i = 0; i < user.size(); i++){
+                    for (int i = 0; i < user.size(); i++) {
                         intent.putExtra("RECIPIENT_ID" + i, user.get(i).getObjectId());
                     }
 
@@ -188,32 +173,11 @@ public class ChatTab extends Fragment{
         });
     }
 
-    //show a loading spinner while the sinch client starts
-    private void showSpinner() {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle("Loading");
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
-
-        receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Boolean success = intent.getBooleanExtra("success", false);
-                progressDialog.dismiss();
-                if (!success) {
-                    Toast.makeText(context, "Messaging service failed to start", Toast.LENGTH_LONG).show();
-                }
-            }
-        };
-
-        LocalBroadcastManager.getInstance(context).registerReceiver(receiver, new IntentFilter("com.example.victor.lfm.MainActivity_v2"));
-    }
-
     @Override
     public void onResume() {
         //CHANGE
-        setConversationsList();
-        //setChatList();
+        //setConversationsList();
+        setChatList();
         super.onResume();
     }
 

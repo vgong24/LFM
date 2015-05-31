@@ -75,6 +75,8 @@
 
         <activity android:name=".MainActivity_v2"
             />
+        <activity android:name=".MultiMessagingActivity"/>
+
         <service android:name=".MessageService"></service>
         <service android:name=".MessageServiceV2"></service>
         <activity android:name=".MessagingActivity"
