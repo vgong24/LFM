@@ -101,7 +101,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
     public void onRegistrationCredentialsRequired(SinchClient client, ClientRegistration clientRegistration) {
     }
 
-    public void sendMessage(String recipientUserId, String textBody) {
+    public void sendMessage(List<String> recipientUserId, String textBody) {
         if (messageClient != null) {
             WritableMessage message = new WritableMessage(recipientUserId, textBody);
             messageClient.send(message);
@@ -130,7 +130,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
     }
 
     public class MessageServiceInterface extends Binder {
-        public void sendMessage(String recipientUserId, String textBody) {
+        public void sendMessage(List<String> recipientUserId, String textBody) {
             MessageServiceV2.this.sendMessage(recipientUserId, textBody);
         }
 
