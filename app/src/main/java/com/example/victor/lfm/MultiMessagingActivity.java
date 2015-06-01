@@ -29,7 +29,7 @@ import java.util.List;
 
 public class MultiMessagingActivity extends Activity {
 
-    private String recipientId;
+    private String groupID;
     private List<String> recipientIDs;
     private int recipientSize;
     private EditText messageBodyField;
@@ -40,6 +40,7 @@ public class MultiMessagingActivity extends Activity {
     private String currentUserId;
     private ServiceConnection serviceConnection = new MyServiceConnection();
     private MessageClientListener messageClientListener = new MyMessageClientListener();
+    private boolean isSent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class MultiMessagingActivity extends Activity {
 
         Intent intent = getIntent();
         //Actually is group message id
-        recipientId = intent.getStringExtra("GROUP_ID");
+        groupID = intent.getStringExtra("GROUP_ID");
         recipientSize = intent.getIntExtra("RECIPIENT_SIZE", 0);
         for(int i = 0 ; i < recipientSize; i++){
             String rid = intent.getStringExtra("RECIPIENT_ID" + i);
@@ -61,7 +62,7 @@ public class MultiMessagingActivity extends Activity {
 
 
 
-        Log.d("AAAAAAAAAAAAAAAAAA", "Group ID: "+recipientId);
+        Log.d("AAAAAAAAAAAAAAAAAA", "Group ID: "+groupID);
 
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
@@ -82,9 +83,9 @@ public class MultiMessagingActivity extends Activity {
 
     //get previous messages from parse & display
     private void populateMessageHistory() {
-        String[] userIds = {currentUserId, recipientId};
+        String[] userIds = {currentUserId, groupID};
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
-        query.whereEqualTo("recipientId", recipientId);
+        query.whereEqualTo("recipientId", groupID);
         query.orderByAscending("createdAt");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -112,13 +113,21 @@ public class MultiMessagingActivity extends Activity {
         //CHANGE
         Log.d("BBBBBBBBBBBBBBB", "Sending message");
         Log.v("Check ID", "current: " + currentUserId + " sending " + recipientIDs.get(0));
+        //Before the message has been sent
+        //Send to all recipients (use list)
+        //But only post one time to parse
+        isSent = false;
         //If current user is the host
+        /*
         if(currentUserId.equalsIgnoreCase(recipientIDs.get(0))) {
-            messageService.sendMessage(recipientIDs.get(recipientSize - 1), messageBody);
+            //Using protocols within the message to check later
+            messageService.sendMessage(recipientIDs.get(recipientSize - 1), groupID+" "+messageBody);
         }else{
-            messageService.sendMessage(recipientIDs.get(0), messageBody);
+            messageService.sendMessage(recipientIDs.get(0), groupID+" "+messageBody);
         }
         //messageService.sendMessage(currentUserId, messageBody);
+        */
+        messageService.sendMessage(recipientIDs, groupID + " " + messageBody);
         messageBodyField.setText("");
     }
 
@@ -153,40 +162,53 @@ public class MultiMessagingActivity extends Activity {
 
         @Override
         public void onIncomingMessage(MessageClient client, Message message) {
-            if (message.getSenderId().equals(recipientId)) {
+            Log.v("onIncomingMessage", "Message Received from " + message.getSenderId());
+            //Break down message
+            //Check first token to see which recipient it is for
+            //If it is for currently opened Event activity, then post it
+
+            //if (message.getSenderId().equals(groupId)) {
                 WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
                 messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING);
-            }
+            //}
         }
 
         @Override
         public void onMessageSent(MessageClient client, Message message, final String recipientIdextra) {
             Toast.makeText(getApplicationContext(),"On sent message", Toast.LENGTH_SHORT).show();
             //CHANGE
-            final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
+            final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), message.getTextBody());
+            //final WritableMessage writableMessage2 = new WritableMessage(message.getRecipientIds().get(recipientSize-1), message.getTextBody());
 
-            //only add message to parse database if it doesn't already exist there
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
-            query.whereEqualTo("sinchId", message.getMessageId());
-            query.findInBackground(new FindCallback<ParseObject>() {
-                @Override
-                public void done(List<ParseObject> messageList, com.parse.ParseException e) {
-                    if (e == null) {
-                        if (messageList.size() == 0) {
-                            ParseObject parseMessage = new ParseObject("ParseMessage");
-                            parseMessage.put("senderId", currentUserId);
-                            //CHANGE
-                            //parseMessage.put("recipientId", writableMessage.getRecipientIds().get(0));
-                            parseMessage.put("recipientId", recipientId);
-                            parseMessage.put("messageText", writableMessage.getTextBody());
-                            parseMessage.put("sinchId", writableMessage.getMessageId());
-                            parseMessage.saveInBackground();
 
-                            messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
+
+            //If message has not been sent to parse yet
+            if(!isSent){
+                //only add message to parse database if it doesn't already exist there
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
+                query.whereEqualTo("sinchId", message.getMessageId());
+                query.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> messageList, com.parse.ParseException e) {
+                        if (e == null) {
+                            if (messageList.size() == 0 && !isSent) {
+                                ParseObject parseMessage = new ParseObject("ParseMessage");
+                                parseMessage.put("senderId", currentUserId);
+                                //CHANGE
+                                //parseMessage.put("recipientId", writableMessage.getRecipientIds().get(0));
+                                parseMessage.put("recipientId", groupID);
+                                parseMessage.put("messageText", writableMessage.getTextBody());
+                                parseMessage.put("sinchId", writableMessage.getMessageId());
+                                parseMessage.saveInBackground();
+
+                                messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
+                                //messageAdapter.addMessage(writableMessage2, MessageAdapter.DIRECTION_OUTGOING);
+                                isSent = true;
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
 
         @Override
