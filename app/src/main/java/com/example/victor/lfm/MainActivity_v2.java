@@ -99,7 +99,11 @@ public class MainActivity_v2 extends ActionBarActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //basically on destroy
             stopService(serviceIntent);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+            receiver = null;
+
             ParseUser.logOut();
             Intent intent = new Intent(getApplicationContext(), LoginActivity_v2.class);
             finish();

@@ -111,7 +111,8 @@ public class MultiMessagingActivity extends Activity {
         }
         //CHANGE
         Log.d("BBBBBBBBBBBBBBB", "Sending message");
-        messageService.sendMessage(recipientIDs, messageBody);
+        Log.v("Check ID", "current: "+currentUserId + " sending " + recipientIDs.get(0));
+        messageService.sendMessage(recipientIDs.get(0), messageBody);
         //messageService.sendMessage(currentUserId, messageBody);
         messageBodyField.setText("");
     }
@@ -158,7 +159,6 @@ public class MultiMessagingActivity extends Activity {
             Toast.makeText(getApplicationContext(),"On sent message", Toast.LENGTH_SHORT).show();
             //CHANGE
             final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
-            //final WritableMessage writableMessage = new WritableMessage(recipientId, message.getTextBody());
 
             //only add message to parse database if it doesn't already exist there
             ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
