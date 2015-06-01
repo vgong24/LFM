@@ -111,8 +111,13 @@ public class MultiMessagingActivity extends Activity {
         }
         //CHANGE
         Log.d("BBBBBBBBBBBBBBB", "Sending message");
-        Log.v("Check ID", "current: "+currentUserId + " sending " + recipientIDs.get(0));
-        messageService.sendMessage(recipientIDs.get(0), messageBody);
+        Log.v("Check ID", "current: " + currentUserId + " sending " + recipientIDs.get(0));
+        //If current user is the host
+        if(currentUserId.equalsIgnoreCase(recipientIDs.get(0))) {
+            messageService.sendMessage(recipientIDs.get(recipientSize - 1), messageBody);
+        }else{
+            messageService.sendMessage(recipientIDs.get(0), messageBody);
+        }
         //messageService.sendMessage(currentUserId, messageBody);
         messageBodyField.setText("");
     }
