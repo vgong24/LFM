@@ -168,7 +168,7 @@ public class MultiMessagingActivity extends Activity {
             //If it is for currently opened Event activity, then post it
 
             //if (message.getSenderId().equals(groupId)) {
-                WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
+                WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), message.getTextBody());
                 messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING);
             //}
         }
@@ -178,12 +178,7 @@ public class MultiMessagingActivity extends Activity {
             Toast.makeText(getApplicationContext(),"On sent message", Toast.LENGTH_SHORT).show();
             //CHANGE
             final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), message.getTextBody());
-            //final WritableMessage writableMessage2 = new WritableMessage(message.getRecipientIds().get(recipientSize-1), message.getTextBody());
-
-
-
-            //If message has not been sent to parse yet
-            if(!isSent){
+            if(!isSent) {
                 //only add message to parse database if it doesn't already exist there
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
                 query.whereEqualTo("sinchId", message.getMessageId());
@@ -191,20 +186,24 @@ public class MultiMessagingActivity extends Activity {
                     @Override
                     public void done(List<ParseObject> messageList, com.parse.ParseException e) {
                         if (e == null) {
-                            if (messageList.size() == 0 && !isSent) {
-                                ParseObject parseMessage = new ParseObject("ParseMessage");
-                                parseMessage.put("senderId", currentUserId);
-                                //CHANGE
-                                //parseMessage.put("recipientId", writableMessage.getRecipientIds().get(0));
-                                parseMessage.put("recipientId", groupID);
-                                parseMessage.put("messageText", writableMessage.getTextBody());
-                                parseMessage.put("sinchId", writableMessage.getMessageId());
-                                parseMessage.saveInBackground();
+                            if (messageList.size() == 0) {
+                                if (!isSent) {
+                                    ParseObject parseMessage = new ParseObject("ParseMessage");
+                                    parseMessage.put("senderId", currentUserId);
+                                    //CHANGE
+                                    //parseMessage.put("recipientId", writableMessage.getRecipientIds().get(0));
+                                    parseMessage.put("recipientId", groupID);
+                                    parseMessage.put("messageText", writableMessage.getTextBody());
+                                    parseMessage.put("sinchId", writableMessage.getMessageId());
+                                    parseMessage.saveInBackground();
 
-                                messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
-                                //messageAdapter.addMessage(writableMessage2, MessageAdapter.DIRECTION_OUTGOING);
-                                isSent = true;
+                                    messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
+                                    //messageAdapter.addMessage(writableMessage2, MessageAdapter.DIRECTION_OUTGOING);
+                                    isSent = true;
+                                }
+                                //messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
                             }
+
                         }
                     }
                 });
