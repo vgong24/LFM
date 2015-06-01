@@ -116,17 +116,8 @@ public class MultiMessagingActivity extends Activity {
         //Before the message has been sent
         //Send to all recipients (use list)
         //But only post one time to parse
+        //PROTOCOL: Send the chatroom name followed by a space
         isSent = false;
-        //If current user is the host
-        /*
-        if(currentUserId.equalsIgnoreCase(recipientIDs.get(0))) {
-            //Using protocols within the message to check later
-            messageService.sendMessage(recipientIDs.get(recipientSize - 1), groupID+" "+messageBody);
-        }else{
-            messageService.sendMessage(recipientIDs.get(0), groupID+" "+messageBody);
-        }
-        //messageService.sendMessage(currentUserId, messageBody);
-        */
         messageService.sendMessage(recipientIDs, groupID + " " + messageBody);
         messageBodyField.setText("");
     }
@@ -166,18 +157,27 @@ public class MultiMessagingActivity extends Activity {
             //Break down message
             //Check first token to see which recipient it is for
             //If it is for currently opened Event activity, then post it
+            //PROTOCOL TECHNIQUE
+            String messageTextBody = message.getTextBody();
+            String arr[] = messageTextBody.split(" ", 2);
+            String chatRoomID = arr[0];
+            String msgBody = arr[1];
 
-            //if (message.getSenderId().equals(groupId)) {
-                WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), message.getTextBody());
+            if (groupID.equals(chatRoomID)) {
+                WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), msgBody);
                 messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING);
-            //}
+            }
         }
 
         @Override
         public void onMessageSent(MessageClient client, Message message, final String recipientIdextra) {
             Toast.makeText(getApplicationContext(),"On sent message", Toast.LENGTH_SHORT).show();
+            //Strip the chatname in body
+            String arr[] = message.getTextBody().split(" ",2);
+            final String msgBody = arr[1];
             //CHANGE
-            final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), message.getTextBody());
+            final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), msgBody);
+
             if(!isSent) {
                 //only add message to parse database if it doesn't already exist there
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
@@ -190,18 +190,15 @@ public class MultiMessagingActivity extends Activity {
                                 if (!isSent) {
                                     ParseObject parseMessage = new ParseObject("ParseMessage");
                                     parseMessage.put("senderId", currentUserId);
-                                    //CHANGE
-                                    //parseMessage.put("recipientId", writableMessage.getRecipientIds().get(0));
+                                    //Make recipientID the EventID so chats can stay with their respective rooms
                                     parseMessage.put("recipientId", groupID);
                                     parseMessage.put("messageText", writableMessage.getTextBody());
                                     parseMessage.put("sinchId", writableMessage.getMessageId());
                                     parseMessage.saveInBackground();
 
                                     messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
-                                    //messageAdapter.addMessage(writableMessage2, MessageAdapter.DIRECTION_OUTGOING);
                                     isSent = true;
                                 }
-                                //messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
                             }
 
                         }
