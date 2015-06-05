@@ -64,7 +64,7 @@
 
         <ListView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:id="@+id/detail_attendee_listview" />
     </LinearLayout>
 
