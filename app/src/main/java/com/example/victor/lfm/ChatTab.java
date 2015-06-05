@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.support.v4.app.Fragment;import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,8 +43,9 @@ public class ChatTab extends Fragment{
     private ArrayList<String> names;
     private ArrayList<Events> events;
     private ListView usersListView;
-    private ProgressDialog progressDialog;
+    private ProgressBar progressBar;
     private BroadcastReceiver receiver = null;
+    private View v;
 
     public ChatTab(Context context){
         this.context = context;
@@ -53,10 +56,16 @@ public class ChatTab extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View v = inflater.inflate(R.layout.chat_room_list, container, false);
-        //showSpinner();
-        //setConversationsList();
+        v = inflater.inflate(R.layout.chat_room_list, container, false);
+        initialize();
+        //new SetUpChatList().execute();
+
         return v;
+    }
+
+    public void initialize(){
+        progressBar = (ProgressBar) v.findViewById(R.id.chatRoomProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
 
@@ -103,43 +112,6 @@ public class ChatTab extends Fragment{
 
     }
 
-    //display clickable list of all users
-    private void setConversationsList(){
-        currentUserId = ParseUser.getCurrentUser().getObjectId();
-        names = new ArrayList<String>();
-        //names.clear();
-
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereNotEqualTo("objectId", currentUserId);
-        query.findInBackground(new FindCallback<ParseUser>() {
-
-            @Override
-            public void done(List<ParseUser> userList, ParseException e) {
-                if (e == null) {
-
-                    for (int i = 0; i < userList.size(); i++) {
-                        names.add(userList.get(i).getUsername().toString());
-                    }
-                    usersListView = (ListView) activity.findViewById(R.id.usersListView);
-                    namesArrayAdapter = new ArrayAdapter<String>(context, R.layout.chat_list_item, names);
-                    usersListView.setAdapter(namesArrayAdapter);
-
-                    usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            openConversation(names, position);
-                        }
-                    });
-
-
-                } else {
-                    Toast.makeText(context, "Error loading user list", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     //open a conversation with multiple people
     //Send the event object ID which will represent the universal recipient
     public void openChatRoom(ArrayList<Events> eventsArrayList, int pos){
@@ -157,7 +129,7 @@ public class ChatTab extends Fragment{
                     Intent intent = new Intent(context, MultiMessagingActivity.class);
                     intent.putExtra("GROUP_ID", eventIDString);
                     intent.putExtra("RECIPIENT_SIZE", list.size());
-                    Log.v("SIZE", "SIZE : "+ list.size());
+                    Log.v("SIZE", "SIZE : " + list.size());
                     for(int i = 0 ; i < list.size(); i++){
                         //add all the recipients to arraylist
                         try {
@@ -169,7 +141,7 @@ public class ChatTab extends Fragment{
 
                     }
 
-                    startActivity(intent);
+                    context.startActivity(intent);
                 }
             }
         });
@@ -177,38 +149,64 @@ public class ChatTab extends Fragment{
 
     }
 
-    //open a conversation with one person
-    public void openConversation(ArrayList<String> names, int pos) {
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereEqualTo("username", names.get(pos));
-        query.findInBackground(new FindCallback<ParseUser>() {
-            public void done(List<ParseUser> user, com.parse.ParseException e) {
-                if (e == null) {
-                    //CHANGE
-                    Intent intent = new Intent(context, MessagingActivity.class);
-                    for (int i = 0; i < user.size(); i++) {
-                        intent.putExtra("RECIPIENT_ID" + i, user.get(i).getObjectId());
-                    }
+    public void populateList(){
+        progressBar.setVisibility(View.GONE);
+        eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, events);
+        usersListView = (ListView) activity.findViewById(R.id.usersListView);
+        usersListView.setAdapter(eventsArrayAdapter);
 
-                    intent.putExtra("NUM_OF_RECIPIENT", user.size());
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(context,
-                            "Error finding that user",
-                            Toast.LENGTH_SHORT).show();
-                }
+        usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                openChatRoom(events, position);
             }
         });
+
     }
 
     @Override
     public void onResume() {
-        //CHANGE
-        //setConversationsList();
-        setChatList();
+        //setChatList();
+        initialize();
+        new SetUpChatList().execute();
         super.onResume();
     }
 
+    private class SetUpChatList extends AsyncTask<Void, Void, ArrayList<Events>> {
 
+        @Override
+        protected void onPreExecute(){
+            currentUserId = ParseUser.getCurrentUser().getObjectId();
+            names = new ArrayList<String>();
+            events = new ArrayList<Events>();
+
+        }
+
+        @Override
+        protected ArrayList<Events> doInBackground(Void... params) {
+
+            ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
+            query.whereEqualTo("User", ParseUser.getCurrentUser());
+            try {
+
+                List<Attendee> tempList = query.find();
+                for (Attendee attend : tempList) {
+                    attend.getEventObject().fetchIfNeeded();
+                    events.add(attend.getEventObject());
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return events;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Events> events) {
+            populateList();
+
+        }
+
+    }
 
 }
