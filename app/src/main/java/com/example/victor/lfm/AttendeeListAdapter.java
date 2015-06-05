@@ -93,7 +93,7 @@ public class AttendeeListAdapter extends ArrayAdapter<Attendee> {
                     byte[] data = thumbnail.getData();
                     Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
                     if (bmp != null) {
-                        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, 100, 100, true);
+                        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, 200, 200, true);
                         return resizedbitmap;
                     }
                 } catch (ParseException e) {

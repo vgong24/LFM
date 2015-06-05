@@ -77,6 +77,10 @@ public class MessageAdapter extends BaseAdapter {
         TextView txtMessage = (TextView) convertView.findViewById(R.id.txtMessage);
         txtMessage.setText(message.getTextBody());
 
+        //Maybe implement a generic Pair class that also holds name
+        TextView txtSender = (TextView) convertView.findViewById(R.id.txtSender);
+        txtSender.setText(message.getRecipientIds().get(0));
+
         return convertView;
     }
 }

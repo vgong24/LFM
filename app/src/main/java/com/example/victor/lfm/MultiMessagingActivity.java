@@ -51,19 +51,14 @@ public class MultiMessagingActivity extends Activity {
         bindService(new Intent(this, MessageServiceV2.class), serviceConnection, BIND_AUTO_CREATE);
 
         Intent intent = getIntent();
-        //Actually is group message id
+        //ChatRoomID
         groupID = intent.getStringExtra("GROUP_ID");
         recipientSize = intent.getIntExtra("RECIPIENT_SIZE", 0);
+        //Add all recipients
         for(int i = 0 ; i < recipientSize; i++){
             String rid = intent.getStringExtra("RECIPIENT_ID" + i);
-            Log.v("RECIPIENT_IDDDDDDDDD", "RECIPIENT ID: "+rid);
             recipientIDs.add(rid);
         }
-
-
-
-        Log.d("AAAAAAAAAAAAAAAAAA", "Group ID: "+groupID);
-
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         messagesList = (ListView) findViewById(R.id.listMessages);
@@ -110,12 +105,8 @@ public class MultiMessagingActivity extends Activity {
             Toast.makeText(this, "Please enter a message", Toast.LENGTH_LONG).show();
             return;
         }
-        //CHANGE
-        Log.d("BBBBBBBBBBBBBBB", "Sending message");
-        Log.v("Check ID", "current: " + currentUserId + " sending " + recipientIDs.get(0));
         //Before the message has been sent
         //Send to all recipients (use list)
-        //But only post one time to parse
         //PROTOCOL: Send the chatroom name followed by a space
         isSent = false;
         messageService.sendMessage(recipientIDs, groupID + " " + messageBody);
