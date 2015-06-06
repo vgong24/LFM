@@ -75,12 +75,13 @@ public class MessageAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(res, viewGroup, false);
         }
 
+        //Display the sender and message in the Views
+
         WritableMessage message = messages.get(i).first;
 
         TextView txtMessage = (TextView) convertView.findViewById(R.id.txtMessage);
         txtMessage.setText(message.getTextBody());
 
-        //Maybe implement a generic Pair class that also holds name
         TextView txtSender = (TextView) convertView.findViewById(R.id.txtSender);
         txtSender.setText(messages.get(i).third);
 
