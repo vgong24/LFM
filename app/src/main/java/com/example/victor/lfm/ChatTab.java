@@ -180,6 +180,8 @@ public class ChatTab extends Fragment{
             currentUserId = ParseUser.getCurrentUser().getObjectId();
             names = new ArrayList<String>();
             events = new ArrayList<Events>();
+            usersListView = (ListView) activity.findViewById(R.id.usersListView);
+            usersListView.setVisibility(View.GONE);
 
         }
 
@@ -203,7 +205,9 @@ public class ChatTab extends Fragment{
 
         @Override
         protected void onPostExecute(ArrayList<Events> events) {
+
             populateList();
+            usersListView.setVisibility(View.VISIBLE);
 
         }
 
