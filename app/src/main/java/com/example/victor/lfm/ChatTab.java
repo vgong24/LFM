@@ -232,6 +232,7 @@ public class ChatTab extends Fragment{
         @Override
         protected void onPostExecute(ArrayList<Events> eventsArr) {
             Log.v("Array Length", "Array length: "+ eventsArr.size());
+ //           Log.v("current USer", "ID: " + ParseUser.getCurrentUser().getObjectId());
             //usersListView.setVisibility(View.VISIBLE);
             populateList(eventsArr);
 
