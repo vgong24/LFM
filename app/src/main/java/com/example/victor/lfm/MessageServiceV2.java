@@ -123,10 +123,11 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
 
     @Override
     public void onDestroy() {
-        Toast.makeText(getApplicationContext(), "Stopping SinchClient", Toast.LENGTH_SHORT).show();
-        sinchClient.stopListeningOnActiveConnection();
-        sinchClient.terminate();
-
+        if(sinchClient != null) {
+            Toast.makeText(getApplicationContext(), "Stopping SinchClient", Toast.LENGTH_SHORT).show();
+            sinchClient.stopListeningOnActiveConnection();
+            sinchClient.terminate();
+        }
     }
 
     public class MessageServiceInterface extends Binder {
