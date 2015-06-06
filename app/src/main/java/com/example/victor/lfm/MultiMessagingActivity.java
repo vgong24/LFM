@@ -52,7 +52,6 @@ public class MultiMessagingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messaging);
         recipientIDs = new ArrayList<>();
-        recipientInfo = new ArrayList<>();
 
         bindService(new Intent(this, MessageServiceV2.class), serviceConnection, BIND_AUTO_CREATE);
 
@@ -64,8 +63,6 @@ public class MultiMessagingActivity extends Activity {
         //Add all recipients
         for(int i = 0 ; i < recipientSize; i++){
             String rid = intent.getStringExtra("RECIPIENT_ID" + i);
-            String rName = intent.getStringExtra("RECIPIENT_NAME"+i);
-            recipientInfo.add(new Pair(rid, rName));
             recipientIDs.add(rid);
         }
         currentUserId = ParseUser.getCurrentUser().getObjectId();
@@ -99,7 +96,7 @@ public class MultiMessagingActivity extends Activity {
                     for (int i = 0; i < messageList.size(); i++) {
                         WritableMessage message = new WritableMessage(messageList.get(i).get("recipientId").toString(), messageList.get(i).get("messageText").toString());
                         String username = messageList.get(i).getString("senderName");
-
+                        //Check which direction the message came from. currentUser or other recipients
                         if (messageList.get(i).get("senderId").toString().equals(currentUserId)) {
                             //Pass current username
                             messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, username);
@@ -112,6 +109,11 @@ public class MultiMessagingActivity extends Activity {
             }
         });
     }
+
+    /*
+    Sends the message through Sinch services
+    Followed by onMessageSent in MyMessageClientListener
+     */
 
     private void sendMessage() {
         messageBody = messageBodyField.getText().toString();
@@ -153,7 +155,6 @@ public class MultiMessagingActivity extends Activity {
         public void onMessageFailed(MessageClient client, Message message,
                                     MessageFailureInfo failureInfo) {
             Toast.makeText(MultiMessagingActivity.this, "Message failed to send.", Toast.LENGTH_LONG).show();
-            Log.d("DDDDDDDDDDDDDDD", message.getRecipientIds().get(0));
             Log.d("FAILURE INFO", failureInfo.getSinchError().getMessage());
         }
 

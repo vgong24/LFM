@@ -137,8 +137,6 @@ public class ChatTab extends Fragment{
                             list.get(i).getUserID().fetchIfNeeded();
                             ParseUser userObj = list.get(i).getUserID();
                             intent.putExtra("RECIPIENT_ID" + i, userObj.getObjectId());
-                            intent.putExtra("RECIPIENT_NAME" + i, userObj.getUsername());
-                            //Make a pair
                         } catch (ParseException e1) {
                             e1.printStackTrace();
                         }
