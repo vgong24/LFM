@@ -6,6 +6,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -38,15 +39,20 @@ public class MultiMessagingActivity extends Activity {
     private MessageAdapter messageAdapter;
     private ListView messagesList;
     private String currentUserId;
+    private String currentName;
+
     private ServiceConnection serviceConnection = new MyServiceConnection();
     private MessageClientListener messageClientListener = new MyMessageClientListener();
     private boolean isSent;
+
+    private ArrayList<Pair<String, String>> recipientInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messaging);
         recipientIDs = new ArrayList<>();
+        recipientInfo = new ArrayList<>();
 
         bindService(new Intent(this, MessageServiceV2.class), serviceConnection, BIND_AUTO_CREATE);
 
@@ -54,12 +60,16 @@ public class MultiMessagingActivity extends Activity {
         //ChatRoomID
         groupID = intent.getStringExtra("GROUP_ID");
         recipientSize = intent.getIntExtra("RECIPIENT_SIZE", 0);
+
         //Add all recipients
         for(int i = 0 ; i < recipientSize; i++){
             String rid = intent.getStringExtra("RECIPIENT_ID" + i);
+            String rName = intent.getStringExtra("RECIPIENT_NAME"+i);
+            recipientInfo.add(new Pair(rid, rName));
             recipientIDs.add(rid);
         }
         currentUserId = ParseUser.getCurrentUser().getObjectId();
+        currentName = ParseUser.getCurrentUser().getUsername();
 
         messagesList = (ListView) findViewById(R.id.listMessages);
         messageAdapter = new MessageAdapter(this);
@@ -88,10 +98,14 @@ public class MultiMessagingActivity extends Activity {
                 if (e == null) {
                     for (int i = 0; i < messageList.size(); i++) {
                         WritableMessage message = new WritableMessage(messageList.get(i).get("recipientId").toString(), messageList.get(i).get("messageText").toString());
+                        String username = messageList.get(i).getString("senderName");
+
                         if (messageList.get(i).get("senderId").toString().equals(currentUserId)) {
-                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING);
+                            //Pass current username
+                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, username);
                         } else {
-                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING);
+                            //Pass sender username
+                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING, username);
                         }
                     }
                 }
@@ -107,9 +121,10 @@ public class MultiMessagingActivity extends Activity {
         }
         //Before the message has been sent
         //Send to all recipients (use list)
-        //PROTOCOL: Send the chatroom name followed by a space
+        //PROTOCOL: ChatRoom + " "  + senderName +" " + restOfMessage
+
         isSent = false;
-        messageService.sendMessage(recipientIDs, groupID + " " + messageBody);
+        messageService.sendMessage(recipientIDs, groupID + " " + currentName + " " + messageBody);
         messageBodyField.setText("");
     }
 
@@ -150,23 +165,23 @@ public class MultiMessagingActivity extends Activity {
             //If it is for currently opened Event activity, then post it
             //PROTOCOL TECHNIQUE
             String messageTextBody = message.getTextBody();
-            String arr[] = messageTextBody.split(" ", 2);
+            String arr[] = messageTextBody.split(" ", 3);
             String chatRoomID = arr[0];
-            String msgBody = arr[1];
+            String senderName = arr[1];
+            String msgBody = arr[2];
 
             if (groupID.equals(chatRoomID)) {
                 WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), msgBody);
-                messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING);
+                messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING, senderName);
             }
         }
 
         @Override
         public void onMessageSent(MessageClient client, Message message, final String recipientIdextra) {
             Toast.makeText(getApplicationContext(),"On sent message", Toast.LENGTH_SHORT).show();
-            //Strip the chatname in body
-            String arr[] = message.getTextBody().split(" ",2);
-            final String msgBody = arr[1];
-            //CHANGE
+            //PROTOCOL: Strip the chatname and senderName from body
+            String arr[] = message.getTextBody().split(" ",3);
+            final String msgBody = arr[2];
             final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), msgBody);
 
             if(!isSent) {
@@ -181,13 +196,14 @@ public class MultiMessagingActivity extends Activity {
                                 if (!isSent) {
                                     ParseObject parseMessage = new ParseObject("ParseMessage");
                                     parseMessage.put("senderId", currentUserId);
+                                    parseMessage.put("senderName", currentName);
                                     //Make recipientID the EventID so chats can stay with their respective rooms
                                     parseMessage.put("recipientId", groupID);
                                     parseMessage.put("messageText", writableMessage.getTextBody());
                                     parseMessage.put("sinchId", writableMessage.getMessageId());
                                     parseMessage.saveInBackground();
 
-                                    messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING);
+                                    messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
                                     isSent = true;
                                 }
                             }
