@@ -18,6 +18,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -123,6 +125,20 @@ public class MultiMessagingActivity extends ActionBarActivity {
     }
 
     public void startEventDetailActivity(String eventId){
+
+        ParseQuery<Events> query = ParseQuery.getQuery("Events");
+        query.getInBackground(eventId, new GetCallback<Events>() {
+            @Override
+            public void done(Events events, ParseException e) {
+                Intent i = new Intent(getApplicationContext(), EventDetails.class);
+                i.putExtra("EventId", events.getObjectId());
+                i.putExtra("EventDate", events.getDate().getTime());
+                i.putExtra("EventTitle", events.getDescr());
+                i.putExtra("EventLat", events.getLocation().getLatitude());
+                i.putExtra("EventLong", events.getLocation().getLongitude());
+                startActivity(i);
+            }
+        });
 
 
     }
