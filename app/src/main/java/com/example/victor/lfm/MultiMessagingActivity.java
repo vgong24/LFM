@@ -5,8 +5,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -28,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MultiMessagingActivity extends Activity {
+public class MultiMessagingActivity extends ActionBarActivity {
 
     private String groupID;
     private List<String> recipientIDs;
@@ -40,6 +45,8 @@ public class MultiMessagingActivity extends Activity {
     private ListView messagesList;
     private String currentUserId;
     private String currentName;
+    private Toolbar toolbar;
+    private ActionBar ab;
 
     private ServiceConnection serviceConnection = new MyServiceConnection();
     private MessageClientListener messageClientListener = new MyMessageClientListener();
@@ -51,10 +58,15 @@ public class MultiMessagingActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messaging);
+        initFields();
+        initialize();
+    }
+    public void initFields(){
+        toolbar = (Toolbar)findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        ab = getSupportActionBar();
+
         recipientIDs = new ArrayList<>();
-
-        bindService(new Intent(this, MessageServiceV2.class), serviceConnection, BIND_AUTO_CREATE);
-
         Intent intent = getIntent();
         //ChatRoomID
         groupID = intent.getStringExtra("GROUP_ID");
@@ -67,10 +79,15 @@ public class MultiMessagingActivity extends Activity {
         }
         currentUserId = ParseUser.getCurrentUser().getObjectId();
         currentName = ParseUser.getCurrentUser().getUsername();
-
         messagesList = (ListView) findViewById(R.id.listMessages);
         messageAdapter = new MessageAdapter(this);
         messagesList.setAdapter(messageAdapter);
+    }
+
+    public void initialize(){
+
+        bindService(new Intent(this, MessageServiceV2.class), serviceConnection, BIND_AUTO_CREATE);
+
         populateMessageHistory();
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
@@ -81,6 +98,33 @@ public class MultiMessagingActivity extends Activity {
                 sendMessage();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.chat_room_toolbar, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_switch_details) {
+            Toast.makeText(getApplicationContext(), "meep", Toast.LENGTH_SHORT).show();
+            //Activity EventDetails
+            startEventDetailActivity(groupID);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void startEventDetailActivity(String eventId){
+
+
     }
 
     //get previous messages from parse & display

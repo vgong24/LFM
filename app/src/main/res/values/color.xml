@@ -9,6 +9,11 @@
     <color name="ColorPrimaryDark">#006064</color>
     <color name="tabsScrollColor">#00b8d4</color>
 
+    <color name="ColorPrimaryDetail">#009688</color>
+    <color name="ColorPrimaryMessage">#FF1744</color>
+
+
+
     <color name="sinch_purple">#ff63029d</color>
     <color name="off_white">#fffafafa</color>
     <color name="dark_gray">#ffb3b3b3</color>
