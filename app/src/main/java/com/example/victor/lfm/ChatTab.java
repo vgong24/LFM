@@ -48,6 +48,9 @@ public class ChatTab extends Fragment{
     private BroadcastReceiver receiver = null;
     private View v;
 
+    private SetUpChatList chatList;
+
+
     public ChatTab(Context context){
         this.context = context;
         this.activity = (Activity) context;
@@ -58,7 +61,7 @@ public class ChatTab extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.chat_room_list, container, false);
-        initialize();
+        //initialize();
         //new SetUpChatList().execute();
 
         return v;
@@ -67,6 +70,10 @@ public class ChatTab extends Fragment{
     public void initialize(){
         progressBar = (ProgressBar) v.findViewById(R.id.chatRoomProgressBar);
         progressBar.setVisibility(View.VISIBLE);
+        if(events == null){
+            events = new ArrayList<Events>();
+        }
+
     }
 
 
@@ -84,7 +91,7 @@ public class ChatTab extends Fragment{
         query.findInBackground(new FindCallback<Attendee>() {
             @Override
             public void done(List<Attendee> list, ParseException e) {
-                if(e == null) {
+                if (e == null) {
                     for (Attendee attend : list) {
                         try {
                             attend.getEventObject().fetchIfNeeded();
@@ -151,9 +158,9 @@ public class ChatTab extends Fragment{
 
     }
 
-    public void populateList(){
+    public void populateList(ArrayList<Events> eventsArrayList){
         progressBar.setVisibility(View.GONE);
-        eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, events);
+        eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, eventsArrayList);
         usersListView = (ListView) activity.findViewById(R.id.usersListView);
         usersListView.setAdapter(eventsArrayAdapter);
 
@@ -169,10 +176,19 @@ public class ChatTab extends Fragment{
 
     @Override
     public void onResume() {
+        super.onResume();
+
         //setChatList();
         initialize();
         new SetUpChatList().execute();
-        super.onResume();
+
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
+
     }
 
     private class SetUpChatList extends AsyncTask<Void, Void, ArrayList<Events>> {
@@ -180,10 +196,9 @@ public class ChatTab extends Fragment{
         @Override
         protected void onPreExecute(){
             currentUserId = ParseUser.getCurrentUser().getObjectId();
-            names = new ArrayList<String>();
-            events = new ArrayList<Events>();
-            usersListView = (ListView) activity.findViewById(R.id.usersListView);
-            usersListView.setVisibility(View.GONE);
+            //usersListView = (ListView) activity.findViewById(R.id.usersListView);
+            //usersListView.setVisibility(View.GONE);
+            events.clear();
 
         }
 
@@ -191,14 +206,23 @@ public class ChatTab extends Fragment{
         protected ArrayList<Events> doInBackground(Void... params) {
 
             ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
+            ParseObject userObject = ParseObject.createWithoutData("User", ParseUser.getCurrentUser().getObjectId());
+            //CHANGE
+            //query.whereEqualTo("User", userObject);
             query.whereEqualTo("User", ParseUser.getCurrentUser());
+            //query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ONLY);
             try {
 
                 List<Attendee> tempList = query.find();
                 for (Attendee attend : tempList) {
-                    attend.getEventObject().fetchIfNeeded();
-                    events.add(attend.getEventObject());
+                    Events ev = attend.getEventObject().fetchIfNeeded();
+
+                    events.add(ev);
+                    Log.v("Attendee", "found: " + ev.getObjectId());
+
                 }
+
+                Log.v("Array Length", "Array length in backgroudn: "+ events.size());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -206,10 +230,11 @@ public class ChatTab extends Fragment{
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Events> events) {
+        protected void onPostExecute(ArrayList<Events> eventsArr) {
+            Log.v("Array Length", "Array length: "+ eventsArr.size());
+            //usersListView.setVisibility(View.VISIBLE);
+            populateList(eventsArr);
 
-            populateList();
-            usersListView.setVisibility(View.VISIBLE);
 
         }
 
