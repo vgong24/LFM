@@ -18,16 +18,19 @@ public class MessageAdapter extends BaseAdapter {
     public static final int DIRECTION_INCOMING = 0;
     public static final int DIRECTION_OUTGOING = 1;
 
-    private List<Pair<WritableMessage, Integer>> messages;
+    private List<Triple<WritableMessage, Integer, String>> messages;
+    private List<String> senderNames;
     private LayoutInflater layoutInflater;
 
     public MessageAdapter(Activity activity) {
         layoutInflater = activity.getLayoutInflater();
-        messages = new ArrayList<Pair<WritableMessage, Integer>>();
+        //messages = new ArrayList<Pair<WritableMessage, Integer>>();
+        messages = new ArrayList<Triple<WritableMessage, Integer, String>>();
+
     }
 
-    public void addMessage(WritableMessage message, int direction) {
-        messages.add(new Pair(message, direction));
+    public void addMessage(WritableMessage message, int direction, String senderName) {
+        messages.add(new Triple(message, direction, senderName));
         notifyDataSetChanged();
     }
 
@@ -79,8 +82,22 @@ public class MessageAdapter extends BaseAdapter {
 
         //Maybe implement a generic Pair class that also holds name
         TextView txtSender = (TextView) convertView.findViewById(R.id.txtSender);
-        txtSender.setText(message.getRecipientIds().get(0));
+        txtSender.setText(messages.get(i).third);
 
         return convertView;
+    }
+
+    private class Triple <F, S, T>{
+        private F first;
+        private S second;
+        private T third;
+
+        public Triple(F first, S second, T third){
+            this.first = first;
+            this.second = second;
+            this.third = third;
+        }
+
+
     }
 }

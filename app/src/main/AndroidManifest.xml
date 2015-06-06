@@ -83,11 +83,6 @@
         <service android:name=".MessageService"></service>
 
         <service android:name=".MessageServiceV2"></service>
-        <activity android:name=".MessagingActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait">
-        </activity>
-
 
 
         <service android:name="com.parse.PushService" />

@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -134,7 +135,10 @@ public class ChatTab extends Fragment{
                         //add all the recipients to arraylist
                         try {
                             list.get(i).getUserID().fetchIfNeeded();
-                            intent.putExtra("RECIPIENT_ID" + i, list.get(i).getUserID().getObjectId());
+                            ParseUser userObj = list.get(i).getUserID();
+                            intent.putExtra("RECIPIENT_ID" + i, userObj.getObjectId());
+                            intent.putExtra("RECIPIENT_NAME" + i, userObj.getUsername());
+                            //Make a pair
                         } catch (ParseException e1) {
                             e1.printStackTrace();
                         }
