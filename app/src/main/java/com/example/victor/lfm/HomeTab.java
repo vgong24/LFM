@@ -106,8 +106,6 @@ public class HomeTab extends Fragment {
 
                 context.startActivity(i);
 
-                // Needs alan's single event page
-                //Toast.makeText(getApplicationContext(), "Clicked at position "+position, Toast.LENGTH_SHORT).show();
             }
         });
     }
