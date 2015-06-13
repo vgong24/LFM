@@ -6,7 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;import android.content.Context;
+import android.support.v4.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -34,7 +35,7 @@ import java.util.List;
 /**
  * Created by Victor on 5/15/2015.
  */
-public class ChatTab extends Fragment{
+public class ChatTab extends Fragment {
     Context context;
     Activity activity;
     private String currentUserId;
@@ -56,6 +57,7 @@ public class ChatTab extends Fragment{
         this.activity = (Activity) context;
 
     }
+    public ChatTab(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
