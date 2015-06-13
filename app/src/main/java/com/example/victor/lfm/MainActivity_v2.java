@@ -32,7 +32,7 @@ public class MainActivity_v2 extends ActionBarActivity{
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[]={"Events","Messages", "Create"};
+    CharSequence Titles[]={"Events","Party Chat", "Friends"};
     int Numboftabs = Titles.length;
     public static FragmentManager fragmentManager;
     private ProgressDialog progressDialog;
