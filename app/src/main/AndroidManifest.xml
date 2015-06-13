@@ -79,6 +79,7 @@
 
             />
         <activity android:name=".MultiMessagingActivity"/>
+        <activity android:name=".CreateEvent"/>
 
         <service android:name=".MessageService"></service>
 

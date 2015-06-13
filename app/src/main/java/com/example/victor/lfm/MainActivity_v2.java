@@ -97,6 +97,12 @@ public class MainActivity_v2 extends ActionBarActivity{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if(id == R.id.create_event){
+            Intent intent = new Intent(getApplicationContext(), CreateEvent.class);
+            startActivity(intent);
+
+        }
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             //basically on destroy
