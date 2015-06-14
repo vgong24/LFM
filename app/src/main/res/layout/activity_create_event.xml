@@ -16,7 +16,15 @@
     <FrameLayout xmlns:map="http://schemas.android.com/apk/res-auto"
         android:id="@+id/createFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chatRoomProgressBar"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 
 </LinearLayout>

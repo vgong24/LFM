@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -91,6 +92,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     private SupportMapFragment mMapFragment;
 
     Button createEventBtn, timeBtn, dateBtn;
+
 
     Marker centerMarker;
 
@@ -240,6 +242,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     public void initField(){
 
+
             timeView = (TextView) view.findViewById(R.id.cTabTimeView);
             timeBtn = (Button) view.findViewById(R.id.cTabTimeBtn);
             createEventBtn = (Button) view.findViewById(R.id.cTabCreateBtn);
@@ -248,17 +251,19 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             dateView = (TextView) view.findViewById(R.id.cTabDateView);
             dateBtn = (Button) view.findViewById(R.id.cTabDateBtn);
 
-            dates = new ArrayList<Date>();
-            searchDates = new ArrayList<Date>();
+            if(catNames == null){
+                catNames = new ArrayList<String>();
+            }else{
+                catNames.clear();
+            }
 
-            catNames = new ArrayList<String>();
             searchCategories = new ArrayList<Category>();
             ev = new ArrayList<Events>();
             categoryArray = new ArrayList<>();
             cEventDateTime = Calendar.getInstance();
 
             ArrayAdapter<String> adapt = new ArrayAdapter<String>(context,
-                    android.R.layout.simple_spinner_item, catNames);
+                    android.R.layout.simple_spinner_dropdown_item, catNames);
 
         /*===================================================================
         MapFragment mapFrag= (MapFragment)activity.getFragmentManager().findFragmentById(R.id.map2);
@@ -324,10 +329,11 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         query.findInBackground(new FindCallback<Category>() {
             @Override
             public void done(List<Category> categories, ParseException e) {
-                if(e==null){
-                    for(int i = 0 ; i < categories.size(); i++){
+                if (e == null) {
+                    for (int i = 0; i < categories.size(); i++) {
                         categoryArray.add(categories.get(i));
                     }
+                    fillCategorySpinner();
                 }
             }
         });
@@ -336,17 +342,16 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     //Fill spinner with values from parse
     private void fillCategorySpinner(){
 
-        ParseQueryAdapter.QueryFactory<ParseObject> factory =
-                new ParseQueryAdapter.QueryFactory<ParseObject>() {
-                    public ParseQuery create() {
-                        ParseQuery query = new ParseQuery("Category");
-                        return query;
-                    }
-                };
+        for( int i = 0 ; i < categoryArray.size(); i++){
+            Category categoryType = (Category) categoryArray.get(i);
+            String categoryName = categoryType.getName();
+            catNames.add(categoryName);
 
-        ParseQueryAdapter<ParseObject> adapter = new ParseQueryAdapter<ParseObject>(context, factory);
-        adapter.setTextKey("Name");
-        categorySpin.setAdapter(adapter);
+        }
+
+        ArrayAdapter<String> adapt = new ArrayAdapter<String>(context,
+                android.R.layout.simple_spinner_item, catNames);
+        categorySpin.setAdapter(adapt);
         categorySpin.setSelection(1);
 
     }
