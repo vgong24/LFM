@@ -16,10 +16,12 @@ import android.support.v4.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -60,10 +62,8 @@ import java.util.TimeZone;
  * Created by Victor on 4/6/2015.
  */
 public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyListener{
-    TabHost tabhost;
     Context context;
     Activity activity;
-    TabHost.TabSpec tabSpec;
 
     Date date;
     TextView timeView, dateView, filterAddress;
@@ -83,15 +83,13 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     Spinner categorySpin;
     String selectedCategory, cater;
-    private ParseQueryAdapter<ParseObject> mainAdapter;
 
-    private GoogleApiClient mGoogleApiClient;
-    protected Location mLastLocation;
-
+    AutoCompleteTextView autoCompView;
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
 
     Button createEventBtn, timeBtn, dateBtn;
+
 
 
     Marker centerMarker;
@@ -111,6 +109,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.create_tab, container, false);
+        //Setup google places autocomplete in background
+
         initialize();
 
         //Create the map interface and replaces it with the default fragment placeholder in xml
@@ -119,6 +119,13 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
         return view;
     }
+
+    //MAP SECTION ==========================================================================
+    /*
+    Google Maps stuff
+    Display the first map location the user sees when creating a new event.
+    Should be able to move around while keeping the marker centered (static).
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         if(mMap != null){
@@ -159,14 +166,6 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     }
 
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-        //Toast.makeText(context, "destroyed", Toast.LENGTH_SHORT).show();
-
-    }
-
     //Set up Map fragment
     private void setUpMap(){
         //Toast.makeText(context.getApplicationContext(), "Setting up map", Toast.LENGTH_SHORT).show();
@@ -199,6 +198,14 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             }
         });
     }
+
+    @Override
+    public void onMapReady() {
+        setUpMapIfNeeded();
+
+    }
+
+    //GPS =========================================================================================
     //Asks User to turn on GPS if it is turned off
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -218,17 +225,9 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         alert.show();
     }
 
-    /*
-    Google Maps stuff
-    Display the first map location the user sees when creating a new event.
-    Should be able to move around while keeping the marker centered (static).
-     */
-    @Override
-    public void onMapReady() {
-       setUpMapIfNeeded();
 
-    }
 
+    //Bottom half fill in section ============================================================================
 
     public void initialize(){
 
@@ -240,43 +239,40 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     }
 
+
+
     public void initField(){
 
+        timeView = (TextView) view.findViewById(R.id.cTabTimeView);
+        timeBtn = (Button) view.findViewById(R.id.cTabTimeBtn);
+        createEventBtn = (Button) view.findViewById(R.id.cTabCreateBtn);
+        categorySpin = (Spinner) view.findViewById(R.id.cTabCatSpin);
 
-            timeView = (TextView) view.findViewById(R.id.cTabTimeView);
-            timeBtn = (Button) view.findViewById(R.id.cTabTimeBtn);
-            createEventBtn = (Button) view.findViewById(R.id.cTabCreateBtn);
-            categorySpin = (Spinner) view.findViewById(R.id.cTabCatSpin);
+        dateView = (TextView) view.findViewById(R.id.cTabDateView);
+        dateBtn = (Button) view.findViewById(R.id.cTabDateBtn);
 
-            dateView = (TextView) view.findViewById(R.id.cTabDateView);
-            dateBtn = (Button) view.findViewById(R.id.cTabDateBtn);
+        if(catNames == null){
+            catNames = new ArrayList<String>();
+        }else{
+            catNames.clear();
+        }
 
-            if(catNames == null){
-                catNames = new ArrayList<String>();
-            }else{
-                catNames.clear();
-            }
+        searchCategories = new ArrayList<Category>();
+        ev = new ArrayList<Events>();
+        categoryArray = new ArrayList<>();
+        cEventDateTime = Calendar.getInstance();
 
-            searchCategories = new ArrayList<Category>();
-            ev = new ArrayList<Events>();
-            categoryArray = new ArrayList<>();
-            cEventDateTime = Calendar.getInstance();
-
-            ArrayAdapter<String> adapt = new ArrayAdapter<String>(context,
-                    android.R.layout.simple_spinner_dropdown_item, catNames);
-
-        /*===================================================================
-        MapFragment mapFrag= (MapFragment)activity.getFragmentManager().findFragmentById(R.id.map2);
-        mapFrag.getMapAsync(this);
-        map = mapFrag.getMap();
-
-        */
-            filterAddress = (TextView) view.findViewById(R.id.cTabMapAddrView);
+        autoCompView = (AutoCompleteTextView) view.findViewById(R.id.create_auto_complete);
+        autoCompView.setThreshold(0);
+        ArrayAdapter<String> autoAdapter = new GooglePlacesAutoCompleteAdapter(context, android.R.layout.simple_list_item_1);
+        autoCompView.setAdapter(autoAdapter);
 
 
     }
 
     public void initClickListeners(){
+
+
         timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -306,7 +302,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         categorySpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(categoryArray.size() != 0)
+                if (categoryArray.size() != 0)
                     selectedCategory = categoryArray.get(position).getName();
                 else
                     selectedCategory = "none";
@@ -410,7 +406,6 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         }
         return result;
     }
-
 
 
 }

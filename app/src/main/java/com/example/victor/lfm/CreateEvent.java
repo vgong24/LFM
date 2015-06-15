@@ -57,8 +57,6 @@ public class CreateEvent extends FragmentActivity {
         protected void onPostExecute(Void none){
             progressBar.setVisibility(View.GONE);
             transaction.commit();
-
-
         }
     }
 

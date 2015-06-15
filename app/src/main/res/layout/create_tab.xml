@@ -8,11 +8,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="40"
+        android:layout_weight="50"
         android:orientation="vertical" >
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:elevation="1dp"
+            >
+
+            <AutoCompleteTextView
+                android:id="@+id/create_auto_complete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Search for place or drop pin"
+                android:background="#CCFFFFFF"
+                android:singleLine="true"
+                android:elevation="2dp"
+                >
+                <requestFocus/>
+
+            </AutoCompleteTextView>
 
             <FrameLayout xmlns:map="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/map2"
@@ -21,6 +38,8 @@
                 android:layout_height="match_parent" >
 
             </FrameLayout>
+
+
 
             <ImageButton
                 android:layout_width="42dp"
@@ -61,7 +80,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="50"
+        android:layout_weight="40"
         android:id="@+id/scrollView">
 
         <LinearLayout
