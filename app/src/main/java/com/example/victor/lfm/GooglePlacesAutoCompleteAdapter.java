@@ -2,17 +2,25 @@ package com.example.victor.lfm;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.TextView;
+
+import com.google.android.gms.location.places.Place;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 /**
  * Created by Victor on 6/14/2015.
  */
-public class GooglePlacesAutoCompleteAdapter extends ArrayAdapter<String> implements Filterable{
-    private ArrayList<String> resultList;
+public class GooglePlacesAutoCompleteAdapter extends ArrayAdapter<PlaceDetails> implements Filterable{
+    private ArrayList<PlaceDetails> resultList;
     PlacesAPI mPlaceAPI= new PlacesAPI();
     Context mContext;
     int mResource;
@@ -24,12 +32,30 @@ public class GooglePlacesAutoCompleteAdapter extends ArrayAdapter<String> implem
     }
 
     @Override
-    public int getCount(){
-        return resultList.size();
+    public View getView(int position, View convertView, ViewGroup parent){
+        //Get data from position
+        PlaceDetails place = resultList.get(position);
+        //Check if existing view is being reused
+        if(convertView == null){
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item, parent, false);
+        }
+        //Lookup view for data population
+        TextView autocompleteView = (TextView) convertView.findViewById(R.id.autocompleteText);
+        autocompleteView.setText(place.getName());
+
+        return convertView;
     }
 
     @Override
-    public String getItem(int index){
+    public int getCount(){
+        return resultList.size();
+    }
+    //
+    @Override
+    public PlaceDetails getItem(int index){
+        if(resultList.isEmpty()){
+            return null;
+        }
         return resultList.get(index);
     }
 
@@ -43,6 +69,13 @@ public class GooglePlacesAutoCompleteAdapter extends ArrayAdapter<String> implem
                     Log.v("Constraint", "input: " + constraint.toString());
                     //Retrieve the autocomplete results
                     resultList = mPlaceAPI.autocomplete(constraint.toString());
+
+                    /*
+                    ArrayList<String> resultNames = new ArrayList<>();
+                    //Grab the name of the result rather than object reference
+                    for(int i = 0 ; i < resultList.size(); i++){
+                        resultNames.add(resultList.get(i).getName().toString());
+                    }*/
 
                     //Assign the data to the filterresults
                     filterResults.values = resultList;
