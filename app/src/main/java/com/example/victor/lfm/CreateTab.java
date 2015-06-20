@@ -90,6 +90,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     Button createEventBtn, timeBtn, dateBtn;
 
+    ArrayAdapter<PlaceDetails> autoAdapter;
+
 
 
     Marker centerMarker;
@@ -239,8 +241,6 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     }
 
-
-
     public void initField(){
 
         timeView = (TextView) view.findViewById(R.id.cTabTimeView);
@@ -264,14 +264,23 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
         autoCompView = (AutoCompleteTextView) view.findViewById(R.id.create_auto_complete);
         autoCompView.setThreshold(0);
-        ArrayAdapter<String> autoAdapter = new GooglePlacesAutoCompleteAdapter(context, android.R.layout.simple_list_item_1);
+
+        autoAdapter = new GooglePlacesAutoCompleteAdapter(context, R.layout.list_item);
         autoCompView.setAdapter(autoAdapter);
 
 
     }
 
     public void initClickListeners(){
-
+        //After selecting auto complete item, map will zoom into that location
+        autoCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PlaceDetails placeItem = (PlaceDetails)parent.getItemAtPosition(position);
+                Log.v("onclick", "Description: " + placeItem.getName().toString());
+                autoCompView.setText(placeItem.getName().toString());
+            }
+        });
 
         timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
