@@ -23,6 +23,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Search for place or drop pin"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
                 android:background="#CCFFFFFF"
                 android:singleLine="true"
                 android:elevation="2dp"
