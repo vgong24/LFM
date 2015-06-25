@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -79,6 +80,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     LatLng loc;
     Location myLocation;
     LatLng centerOfMap;
+    LatLng placePoint;
 
 
     Spinner categorySpin;
@@ -92,7 +94,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     ArrayAdapter<PlaceDetails> autoAdapter;
 
-
+    PlacesAPI placesAPI;
 
     Marker centerMarker;
 
@@ -111,14 +113,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.create_tab, container, false);
-        //Setup google places autocomplete in background
 
         initialize();
-
-        //Create the map interface and replaces it with the default fragment placeholder in xml
-        mMapFragment = CustomMapFragment.newInstance();
-        getChildFragmentManager().beginTransaction().replace(R.id.map2, mMapFragment).commitAllowingStateLoss();
-
         return view;
     }
 
@@ -189,13 +185,13 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         LatLng latLng = new LatLng(latitude, longitude);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-        centerMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title("You are here").snippet("Consider yourself located"));
+        //centerMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title("You are here").snippet("Consider yourself located"));
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
                 //Gets coordinates of center
                 centerOfMap = mMap.getCameraPosition().target;
-                centerMarker.setPosition(centerOfMap);
+                //centerMarker.setPosition(centerOfMap);
 
             }
         });
@@ -232,11 +228,12 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     //Bottom half fill in section ============================================================================
 
     public void initialize(){
+        setUpMapIfNeeded();
 
-            initField();
-            initCategories();
-            fillCategorySpinner();
-            initClickListeners();
+        initField();
+        initCategories();
+        fillCategorySpinner();
+        initClickListeners();
 
 
     }
@@ -268,6 +265,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         autoAdapter = new GooglePlacesAutoCompleteAdapter(context, R.layout.list_item);
         autoCompView.setAdapter(autoAdapter);
 
+        placesAPI = new PlacesAPI();
+
 
     }
 
@@ -277,7 +276,13 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PlaceDetails placeItem = (PlaceDetails)parent.getItemAtPosition(position);
-                Log.v("onclick", "Description: " + placeItem.getName().toString());
+                String placeId = placeItem.getId();
+
+                Log.v("ID", "Searching: " + placeId);
+                setUpMapIfNeeded();
+                //Repositions marker to selected location in async thread
+                placesAPI.getLatLngByID(mMap, placeId);
+
                 autoCompView.setText(placeItem.getName().toString());
             }
         });
@@ -361,7 +366,11 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     }
 
-
+    /**
+     * Creates the event and saves it in parse db.
+     * Once saved, create a new Intent that redirects the user to EventDetails
+     * @param v
+     */
     public void createEvent(View v) {
 
         EditText temp;
@@ -397,6 +406,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
         createEvent.saveInBackground();
 
+        //Adds the host as an attendee of the created event
         Attendee attend = new Attendee();
         attend.setEvent((Events)createEvent);
         attend.setUser(ParseUser.getCurrentUser().getObjectId());

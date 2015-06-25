@@ -15,14 +15,14 @@ import java.util.Locale;
 
 public class PlaceDetails implements Place {
 
-    public String id;
+    public String place_id;
     public CharSequence formatted_address, name, icon;
     LatLng latLng;
 
 
     @Override
     public String getId() {
-        return id;
+        return place_id;
     }
 
     @Override

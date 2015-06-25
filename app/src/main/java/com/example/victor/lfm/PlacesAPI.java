@@ -1,9 +1,12 @@
 package com.example.victor.lfm;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
@@ -85,7 +88,9 @@ public class PlacesAPI {
             for(int i = 0; i < predsJsonArray.length(); i++){
                 place = new PlaceDetails();
 
-                place.name = predsJsonArray.getJSONObject(i).getString("description");
+                JSONObject jObject = predsJsonArray.getJSONObject(i);
+                place.name = jObject.getString("description");
+                place.place_id = jObject.getString("place_id");
                 Log.v("Location", "Description: " + predsJsonArray.getJSONObject(i).getString("description"));
 
                 resultList.add(place);
@@ -95,5 +100,100 @@ public class PlacesAPI {
             Log.e(LOG_TAG, "Cannot process JSon results", e);
         }
         return resultList;
+    }
+
+    public static LatLng searchLocationById(String placeId){
+        LatLng placeLocation = null;
+        HttpURLConnection conn = null;
+        StringBuilder jsonResults = new StringBuilder();
+
+        try{
+            StringBuilder sb = new StringBuilder(PLACES_API_BASE);
+            sb.append(TYPE_DETAILS);
+            sb.append(OUT_JSON);
+            sb.append("?key=" + API_KEY);
+            sb.append("&placeid="+placeId);
+
+
+            URL url = new URL(sb.toString());
+            Log.v("locationSearch", "url: "+ sb.toString());
+            conn = (HttpURLConnection) url.openConnection();
+            InputStreamReader in = new InputStreamReader(conn.getInputStream());
+
+            //Load results into StringBuilder
+            int read;
+            char[] buff = new char[1024];
+            while((read = in.read(buff)) != -1){
+                jsonResults.append(buff, 0, read);
+            }
+
+        }catch (MalformedURLException e){
+            Log.e(LOG_TAG, "Error processing Places API URL", e);
+            return placeLocation;
+        }catch(IOException e){
+            Log.e(LOG_TAG, "Error connecting to Places API", e);
+            return placeLocation;
+
+        } finally {
+            if(conn != null){
+                conn.disconnect();
+            }
+        }
+
+        try{
+            Log.v("LATLNG", "Entering LatLng part");
+
+
+            //Create a JSON object heiarchy from results
+
+            JSONObject jsonObj = new JSONObject(jsonResults.toString());
+
+            JSONObject jResult = jsonObj.getJSONObject("result");
+
+
+            JSONObject jGeometry = jResult.getJSONObject("geometry");
+            JSONObject jLocation = jGeometry.getJSONObject("location");
+
+            double jlat = jLocation.getDouble("lat");
+            double jlng = jLocation.getDouble("lng");
+            Log.v("LATLNG", jlat + " " + jlng);
+
+            placeLocation = new LatLng(jlat, jlng);
+
+
+
+        }catch(JSONException e){
+            Log.e(LOG_TAG, "Cannot process JSon results", e);
+        }
+        return placeLocation;
+    }
+
+    //Uses the place_id to find the Lat Lng position of the Place
+    //Then moves the camera to selected location
+    public void getLatLngByID(GoogleMap gmap, String pid){
+        new GetLatLngTask(gmap).execute(pid);
+    }
+
+    class GetLatLngTask extends AsyncTask<String, Void, LatLng>{
+        private GoogleMap gmap;
+        LatLng placeLocation;
+
+        public GetLatLngTask(GoogleMap map){
+            gmap = map;
+        }
+
+        @Override
+        protected LatLng doInBackground(String... params) {
+            String placeid = params[0];
+            placeLocation = searchLocationById(placeid);
+
+            return placeLocation;
+        }
+
+        @Override
+        protected void onPostExecute(LatLng ll){
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 10));
+
+        }
     }
 }
