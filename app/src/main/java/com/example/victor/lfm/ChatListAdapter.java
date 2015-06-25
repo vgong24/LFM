@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Victor on 5/29/2015.
+ * Usage: ChatTab
  */
 public class ChatListAdapter extends ArrayAdapter<Events> {
     Context context;

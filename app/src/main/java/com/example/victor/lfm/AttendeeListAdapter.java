@@ -23,6 +23,8 @@ import java.util.ArrayList;
 
 /**
  * Created by Victor on 5/28/2015.
+ * Usage: CreateTab
+ * Display User information (pic, name)
  */
 public class AttendeeListAdapter extends ArrayAdapter<Attendee> {
     TextView attenderName;
