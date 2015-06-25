@@ -177,6 +177,7 @@ public class PlacesAPI {
     class GetLatLngTask extends AsyncTask<String, Void, LatLng>{
         private GoogleMap gmap;
         LatLng placeLocation;
+        private final int ZOOM_DISTANCE = 13;
 
         public GetLatLngTask(GoogleMap map){
             gmap = map;
@@ -192,7 +193,7 @@ public class PlacesAPI {
 
         @Override
         protected void onPostExecute(LatLng ll){
-            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 10));
+            gmap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, ZOOM_DISTANCE));
 
         }
     }

@@ -80,7 +80,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     LatLng loc;
     Location myLocation;
     LatLng centerOfMap;
-    LatLng placePoint;
+    private final int ZOOM_DISTANCE = 13;
 
 
     Spinner categorySpin;
@@ -184,7 +184,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
         LatLng latLng = new LatLng(latitude, longitude);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_DISTANCE));
         //centerMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title("You are here").snippet("Consider yourself located"));
         mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             @Override
