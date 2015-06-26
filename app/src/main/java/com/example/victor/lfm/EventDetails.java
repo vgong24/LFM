@@ -175,17 +175,32 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         return super.onOptionsItemSelected(item);
     }
 
-    public void initOnClicks(){
-        joinTxtView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
-                Attendee attend = new Attendee();
-                attend.setEvent(evnt);
-                attend.setUser(ParseUser.getCurrentUser().getObjectId());
-                attend.saveInBackground();
-            }
-        });
+    public void initOnClicks(final boolean hasJoined){
+        //If current user hasn't joined the event yet
+        if(!hasJoined){
+            joinTxtView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
+                    Attendee attend = new Attendee();
+                    attend.setEvent(evnt);
+                    attend.setUser(ParseUser.getCurrentUser().getObjectId());
+                    attend.saveInBackground();
+
+                    //Recursively reset join button
+                    initOnClicks(!hasJoined);
+                }
+            });
+        }else{
+            joinTxtView.setText("Leave");
+            joinTxtView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Already Joined", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
 /*
         cancel.setOnClickListener(new View.OnClickListener(){
 
@@ -205,7 +220,6 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     private void populateList(ArrayList<Attendee> attArr){
         AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(), R.layout.attendee_list_view, attArr);
         attendeeListView.setAdapter(attendeeListAdapter);
-
     }
 
 
@@ -222,9 +236,13 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
      */
     private class SetUpBackground extends AsyncTask<Events, Void, ArrayList<Attendee>>{
         ArrayList<Attendee> attendeesArr;
+        String currentUserId;
+        private boolean currentlyJoined;
 
         @Override
         protected ArrayList<Attendee> doInBackground(Events... params) {
+            currentUserId = ParseUser.getCurrentUser().getObjectId();
+            currentlyJoined = false;
             attendeesArr = new ArrayList<>();
             ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
             query.whereEqualTo("Event", params[0]);
@@ -235,6 +253,9 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                     //Need to retrieve User data within the attend object
                     ParseUser user = (ParseUser) attend.get("User");
                     user.fetchIfNeeded();
+                    if(user.getObjectId().equalsIgnoreCase(currentUserId)){
+                        currentlyJoined = true;
+                    }
                     attendeesArr.add(attend);
                 }
             } catch (ParseException e) {
@@ -252,7 +273,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                 //Toast.makeText(getApplicationContext(), attendees.get(i).getUserFirstName(), Toast.LENGTH_SHORT).show();
             }
             populateList(attendees);
-            initOnClicks();
+            initOnClicks(currentlyJoined);
         }
     }
 

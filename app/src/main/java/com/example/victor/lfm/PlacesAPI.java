@@ -149,8 +149,6 @@ public class PlacesAPI {
             JSONObject jsonObj = new JSONObject(jsonResults.toString());
 
             JSONObject jResult = jsonObj.getJSONObject("result");
-
-
             JSONObject jGeometry = jResult.getJSONObject("geometry");
             JSONObject jLocation = jGeometry.getJSONObject("location");
 
