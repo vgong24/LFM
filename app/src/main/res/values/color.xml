@@ -8,10 +8,12 @@
     <color name="ColorPrimary">#00e5ff</color>
     <color name="ColorPrimaryDark">#006064</color>
     <color name="tabsScrollColor">#00b8d4</color>
+    <color name="attendeeItem">#0091EA</color>
 
     <color name="ColorPrimaryDetail">#009688</color>
     <color name="ColorPrimaryMessage">#FF1744</color>
 
+    <color name="RedExit">#FF6E40</color>
 
 
     <color name="sinch_purple">#ff63029d</color>
