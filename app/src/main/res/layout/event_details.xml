@@ -71,14 +71,15 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="15"
+        style="@style/JoinButton"
         android:clickable="true">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:textSize="20dp"
             android:text="JOIN"
-            android:layout_gravity="center"
+            android:gravity="center"
             android:id="@+id/join_view" />
     </LinearLayout>
 

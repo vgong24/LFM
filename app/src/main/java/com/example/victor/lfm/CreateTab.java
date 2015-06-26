@@ -51,6 +51,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -65,6 +66,14 @@ import java.util.TimeZone;
 public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyListener{
     Context context;
     Activity activity;
+
+    Events createEvent;
+
+    String eventId;
+    String eventInfo;
+    Date eventDate;
+    double eventLat;
+    double eventLng;
 
     Date date;
     TextView timeView, dateView, filterAddress;
@@ -334,6 +343,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     }
 
+
     public void initCategories(){
         ParseQuery<Category> query = ParseQuery.getQuery("Category");
         query.findInBackground(new FindCallback<Category>() {
@@ -382,20 +392,23 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         int maxMember = Integer.parseInt(temp.getText().toString());
 
         temp = (EditText) view.findViewById(R.id.cTabDescEdit);
-        String eventInfo = temp.getText().toString();
+        eventInfo = temp.getText().toString();
 
 
         String category = selectedCategory;
+        if(createEvent == null){
+            createEvent = (Events) ParseObject.create("Events");
 
-        ParseObject createEvent = ParseObject.create("Events");
+        }
 
         createEvent.put("Max", maxMember);
         createEvent.put("Description", eventInfo);
         createEvent.put("Host", ParseUser.getCurrentUser());
         //test
         cEventDateTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+        eventDate = cEventDateTime.getTime();
+        createEvent.put("Date", eventDate);
 
-        createEvent.put("Date", cEventDateTime.getTime());
 
         //get id from category
         //replace id with category id
@@ -403,8 +416,16 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         createEvent.put("Category", ParseObject.createWithoutData("Category", categoryID));
         ParseGeoPoint point = new ParseGeoPoint(centerOfMap.latitude, centerOfMap.longitude);
         createEvent.put("Location", point);
+        eventLat = point.getLatitude();
+        eventLng = point.getLongitude();
 
-        createEvent.saveInBackground();
+        createEvent.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                eventId = createEvent.getObjectId();
+                startEventDetailActivity();
+            }
+        });
 
         //Adds the host as an attendee of the created event
         Attendee attend = new Attendee();
@@ -413,6 +434,21 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         attend.saveInBackground();
         String eventTime = cEventDateTime.getTime() + "";
         Toast.makeText(context.getApplicationContext(), "Event Time: " + eventTime, Toast.LENGTH_SHORT).show();
+    }
+
+    //Should have one static method that can be called from HomeTab as well to reduce redundancy
+    public void startEventDetailActivity(){
+        //Start Event Details activity
+        //Pass field values into intent extras to save time in displaying information
+        Intent i = new Intent(context.getApplicationContext(), EventDetails.class);
+
+        i.putExtra("EventId", eventId);
+        i.putExtra("EventDate", eventDate.getTime());
+        i.putExtra("EventTitle",eventInfo);
+        i.putExtra("EventLat", eventLat);
+        i.putExtra("EventLong", eventLng);
+        context.startActivity(i);
+        activity.finish();
     }
 
     private String getCategoryID(String catStr){
