@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -193,6 +194,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             });
         }else{
             joinTxtView.setText("Leave");
+            joinTxtView.setBackgroundResource(R.color.RedExit);
             joinTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
