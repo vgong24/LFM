@@ -106,11 +106,19 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <Spinner
-                    android:layout_weight="1"
-                    android:layout_width="0dip"
+                    android:layout_weight=".5"
+                    android:layout_width="0dp"
 
                     android:layout_height="wrap_content"
                     android:id="@+id/cTabCatSpin" />
+
+                <Spinner
+                    android:layout_weight=".5"
+                    android:layout_width="0dp"
+
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cTabPPSpin" />
+
             </LinearLayout>
 
             <LinearLayout
