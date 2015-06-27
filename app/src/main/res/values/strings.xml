@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">LFM</string>
+    <string name="app_name">Ciya</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="login">Log in</string>
@@ -28,5 +28,10 @@
     <string name="logout">Logout</string>
     <string name="action_search">search</string>
     <string name="action_chat">switch_chat</string>
+
+    <string-array name="public_private">
+        <item>Public</item>
+        <item>Private</item>
+    </string-array>
 
 </resources>
