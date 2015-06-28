@@ -29,6 +29,7 @@ public class Application extends android.app.Application {
     ParseObject.registerSubclass(Reviews.class);
     ParseObject.registerSubclass(_User.class);
     ParseObject.registerSubclass(Assets.class);
+    ParseObject.registerSubclass(FriendRequest.class);
     Parse.initialize(this, "aTeqCcZ5KEMR72fG8kiZED2Rxeb2r7ruWtqBSVa6",
         "JPdPZXMcR4ESbXNly1vuP19EFoYK3upi8sopk282");
 
