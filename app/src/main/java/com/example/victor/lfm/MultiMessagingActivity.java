@@ -240,12 +240,13 @@ public class MultiMessagingActivity extends ActionBarActivity {
         @Override
         public void onMessageSent(MessageClient client, Message message, final String recipientIdextra) {
             Toast.makeText(getApplicationContext(),"On sent message", Toast.LENGTH_SHORT).show();
-            //PROTOCOL: Strip the chatname and senderName from body
-            String arr[] = message.getTextBody().split(" ",3);
-            final String msgBody = arr[2];
-            final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), msgBody);
 
             if(!isSent) {
+                //PROTOCOL: Strip the chatname and senderName from body
+                String arr[] = message.getTextBody().split(" ",3);
+                final String msgBody = arr[2];
+                final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), msgBody);
+
                 //only add message to parse database if it doesn't already exist there
                 ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
                 query.whereEqualTo("sinchId", message.getMessageId());

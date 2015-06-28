@@ -75,6 +75,9 @@ public class ChatTab extends Fragment {
         if(events == null){
             events = new ArrayList<Events>();
         }
+        if(usersListView == null){
+            usersListView = (ListView) v.findViewById(R.id.usersListView);
+        }
 
     }
 
@@ -163,9 +166,8 @@ public class ChatTab extends Fragment {
     public void populateList(ArrayList<Events> eventsArrayList){
         progressBar.setVisibility(View.GONE);
         eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, eventsArrayList);
-        usersListView = (ListView) activity.findViewById(R.id.usersListView);
+        //usersListView = (ListView) activity.findViewById(R.id.usersListView);
         usersListView.setAdapter(eventsArrayAdapter);
-
         usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override

@@ -29,6 +29,9 @@
     <string name="action_search">search</string>
     <string name="action_chat">switch_chat</string>
 
+    <string name="search_hint">Username</string>
+    <string name="findContact">Contact</string>
+
     <string-array name="public_private">
         <item>Public</item>
         <item>Private</item>

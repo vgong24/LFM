@@ -80,14 +80,30 @@
         <activity
             android:name=".EventDetails"
             android:label="Event Details"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+
             />
 
         <activity android:name=".MainActivity_v2"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTop"
+            >
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            -->
 
-            />
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+
+        </activity>
+
+
         <activity android:name=".MultiMessagingActivity"/>
-        <activity android:name=".CreateEvent"/>
+        <activity android:name=".CreateEvent"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            />
 
         <service android:name=".MessageService"></service>
 
