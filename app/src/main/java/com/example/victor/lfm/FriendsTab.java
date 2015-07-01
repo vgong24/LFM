@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,12 @@ public class FriendsTab extends Fragment {
     Activity activity;
 
     TextView searchedFriend;
+    ListView friendlv;
+
+    List<String> friendNames;
+    FriendListDBHandler dbhandler;
+    ArrayAdapter<String> profileAdapter;
+
 
     public FriendsTab(Context context){
         this.context = context;
@@ -46,14 +53,21 @@ public class FriendsTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.friends_tab, container, false);
         initialize();
+        populateFriendList();
         setupSearchView();
         return v;
     }
 
     public void initialize(){
         searchedFriend = (TextView) v.findViewById(R.id.searchFriendView);
+        friendlv = (ListView) v.findViewById(R.id.friendListView);
+        friendNames = new ArrayList<>();
+        dbhandler = new FriendListDBHandler(context);
+        if(dbhandler.getFriendCount() != 0){
+            friendNames.addAll(dbhandler.getAllFriendProfilesToString());
+        }
     }
-
+    //Set up Search functionality
     private void setupSearchView() {
         SearchManager searchManager = (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) v.findViewById(R.id.searchView);
@@ -74,6 +88,19 @@ public class FriendsTab extends Fragment {
                 return false;
             }
         });
+    }
+
+    //Display Friendlist
+    public void populateFriendList(){
+        profileAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+        friendlv.setAdapter(profileAdapter);
+    }
+
+    //send a friend requests using usernames rather than object ids
+    public void sendRequest(String friendname){
+        String currentUserName = ParseUser.getCurrentUser().getUsername();
+        FriendRequest.sendFriendRequest(currentUserName, friendname);
+
     }
 
 
@@ -101,15 +128,25 @@ public class FriendsTab extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(ParseUser puser){
+        protected void onPostExecute(final ParseUser puser){
             if(puser == null){
                 Log.v("searchFriend", "Friend not found");
                 searchedFriend.setText("");
                 Toast.makeText(context, "Friend not found", Toast.LENGTH_SHORT).show();
 
             }else{
-                Log.v("searchFriend", "Found friend: "+ puser.getUsername());
-                searchedFriend.setText(puser.getUsername());
+                final String friendUserName = puser.getUsername();
+                Log.v("searchFriend", "Found friend: "+friendUserName);
+                searchedFriend.setText(friendUserName);
+                searchedFriend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Send Friend request
+                        sendRequest(friendUserName);
+                        Toast.makeText(context, "Friend Request Sent", Toast.LENGTH_SHORT).show();
+                        //searchedFriend.setText("");
+                    }
+                });
             }
 
         }
