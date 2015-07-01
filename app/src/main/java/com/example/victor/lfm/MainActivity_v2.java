@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
@@ -115,6 +116,11 @@ public class MainActivity_v2 extends ActionBarActivity{
             finish();
             startActivity(intent);
             return true;
+        }
+
+        if(id == R.id.emptyFriendDB){
+            FriendListDBHandler db = new FriendListDBHandler(getApplicationContext());
+            db.deleteDatabase();
         }
 
         return super.onOptionsItemSelected(item);

@@ -16,6 +16,12 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/emptyFriendDB"
+        android:orderInCategory="100"
+        android:title="emptyDB"
+        android:showAsAction="never"
+        />
 
 
 
