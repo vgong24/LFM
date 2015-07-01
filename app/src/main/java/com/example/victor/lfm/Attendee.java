@@ -25,8 +25,11 @@ public class Attendee extends ParseObject {
             this.fetchIfNeeded();
         } catch (ParseException e) {
 
-    }
+        }
         return (_User) getParseObject("User");
+    }
+    public ParseUser getUserID(){
+        return (ParseUser) getParseUser("User");
     }
 
     public void setUser(String id) {
@@ -39,6 +42,7 @@ public class Attendee extends ParseObject {
     public String getEventID() {
         return getString("Event");
     }
+    public Events getEventObject(){return (Events) getParseObject("Event");}
     public void setEventID(String id) {
         put("Event", id);
     }

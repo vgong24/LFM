@@ -18,39 +18,67 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_username"
+                android:layout_marginTop="8dp"
                 android:inputType="textEmailAddress"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:textSize="32sp"
+                android:padding="10dp"
+                android:textColor="@color/sinch_purple"
+                android:background="@drawable/inputbox"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp">
+                <requestFocus/>
+            </EditText>
 
             <EditText
                 android:id="@+id/password_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
+                android:layout_marginTop="8dp"
                 android:inputType="textPassword"
-                android:maxLines="1"
-                android:singleLine="true" />
-            
+                android:textSize="32sp"
+                android:padding="10dp"
+                android:textColor="@color/sinch_purple"
+                android:background="@drawable/inputbox"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp">
+            </EditText>
+
+
             <EditText
                 android:id="@+id/password_again_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password_again"
+                android:layout_marginTop="8dp"
                 android:inputType="textPassword"
-                android:maxLines="1"
-                android:singleLine="true"
+                android:textSize="32sp"
+                android:padding="10dp"
+                android:textColor="@color/sinch_purple"
+                android:background="@drawable/inputbox"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
                 android:imeActionId="@+id/edittext_action_signup"
                 android:imeActionLabel="@string/signup"
-                android:imeOptions="actionUnspecified" />
+                android:imeOptions="actionUnspecified">
+            </EditText>
+
 
             <EditText
                 android:id="@+id/name_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_name"
+                android:layout_marginTop="8dp"
                 android:inputType="text"
-                android:maxLines="1"
-                android:singleLine="true" />
+                android:textSize="32sp"
+                android:padding="10dp"
+                android:textColor="@color/sinch_purple"
+                android:background="@drawable/inputbox"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp">
+                <requestFocus/>
+            </EditText>
 
             <EditText
                 android:id="@+id/birthday_edit_text"

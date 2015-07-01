@@ -21,6 +21,10 @@ public class DatePickerFragment extends DialogFragment
         dateText = tv;
         this.datetime = datetime;
     }
+    public static DatePickerFragment newInstance(TextView tv, Calendar datetime){
+        DatePickerFragment f = new DatePickerFragment(tv, datetime);
+        return f;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

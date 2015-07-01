@@ -45,6 +45,7 @@ public class Events extends ParseObject  {
     public void setMax(int max) {
         put("Max", max);
     }
+    public ParseGeoPoint getLocation(){return getParseGeoPoint("Location");}
     public static ParseQuery<Events> getQuery() {
         return ParseQuery.getQuery(Events.class);
     }
