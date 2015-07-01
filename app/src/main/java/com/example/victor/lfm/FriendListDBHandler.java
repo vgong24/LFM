@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class FriendListDBHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "friendList",
     TABLE_FRIENDS = "friends",
     KEY_ID = "id",
@@ -41,9 +41,13 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS);
         onCreate(db);
     }
-    public void deleteDatabase(){
+    public void dropDatabase(){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS);
+    }
+    public void deleteDatabase(){
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_FRIENDS, null, null);
     }
 
     public void createFriend(String friendObjectId, String fname, String realName, String status){

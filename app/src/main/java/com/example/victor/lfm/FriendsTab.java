@@ -40,11 +40,12 @@ public class FriendsTab extends Fragment {
     TextView searchedFriend;
     ListView friendlv;
 
-    List<String> friendNames;
+    List<FriendProfile> friendNames;
     FriendListDBHandler dbhandler;
-    ArrayAdapter<String> profileAdapter;
+    FriendListAdapter profileAdapter;
 
     String currentUser;
+    String reqType;
 
 
     public FriendsTab(Context context){
@@ -64,16 +65,21 @@ public class FriendsTab extends Fragment {
     public void initialize(){
         currentUser = ParseUser.getCurrentUser().getUsername();
         searchedFriend = (TextView) v.findViewById(R.id.searchFriendView);
+        searchedFriend.setVisibility(View.GONE); //Hide the search results to not mess up FriendList
+
         friendlv = (ListView) v.findViewById(R.id.friendListView);
-        friendNames = new ArrayList<>();
+        if(friendNames == null)
+            friendNames = new ArrayList<>();
 
         dbhandler = new FriendListDBHandler(context);
         if(dbhandler.getFriendCount() != 0){
-            friendNames.addAll(dbhandler.getAllFriendProfilesToString());
+            friendNames.addAll(dbhandler.getAllFriendProfiles());
         }
 
         new UpdateFriendList().execute(currentUser);
     }
+
+
     //Set up Search functionality
     private void setupSearchView() {
         SearchManager searchManager = (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
@@ -98,21 +104,21 @@ public class FriendsTab extends Fragment {
     }
 
     //Given username, check the friends db for any usernames that matches
-    private boolean profileExists(String profileName){
+    private int profileExists(String profileName){
         int profileCount = friendNames.size();
 
         for (int i = 0; i < profileCount; i++){
-            if(profileName.compareToIgnoreCase(friendNames.get(i)) == 0)
-                return true;
+            if(profileName.compareToIgnoreCase(friendNames.get(i).getUserName()) == 0)
+                return i;
         }
 
-        return false;
+        return -1;
 
     }
 
     //Display Friendlist
     public void populateFriendList(){
-        profileAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, friendNames);
+        profileAdapter = new FriendListAdapter(context, R.layout.friend_request_item, friendNames);
         friendlv.setAdapter(profileAdapter);
     }
 
@@ -122,6 +128,8 @@ public class FriendsTab extends Fragment {
         FriendRequest.sendFriendRequest(currentUserName, friendname);
 
     }
+
+
 
     //Find any new friends to add to local database
     //Check for any requests for the current user
@@ -134,29 +142,75 @@ public class FriendsTab extends Fragment {
             final String STATUS = "approve";
             String username = params[0];
             List<FriendRequest> friendRequestList = new ArrayList<>();
-            ParseQuery<FriendRequest> query = ParseQuery.getQuery("FriendRequest");
-            query.whereEqualTo("reqFrom",username);
-            query.whereEqualTo("status", STATUS);
+            boolean newFriends = false;
+
+            List<ParseQuery<FriendRequest>> queries = new ArrayList<>();
+            //find rows where you sent request
+            ParseQuery<FriendRequest> query1 = ParseQuery.getQuery("FriendRequest");
+            query1.whereEqualTo("reqFrom",username);
+            //find rows where requests were sent to you ReqTo
+            ParseQuery<FriendRequest> query2 = ParseQuery.getQuery("FriendRequest");
+            query2.whereEqualTo("reqTo", username);
+
+            queries.add(query1);
+            queries.add(query2);
+
+            ParseQuery<FriendRequest> finalQuery = ParseQuery.or(queries);
+
 
             try {
-                friendRequestList = query.find();
+                friendRequestList = finalQuery.find();
                 for(FriendRequest fr : friendRequestList){
-                    String friendName, fstatus = STATUS;
-                    friendName = fr.getString("reqTo");
+                    String reqFrom, reqTo, fstatus, fObjectId;
 
-                    if(!profileExists(friendName)){
-                        dbhandler.createFriend("", friendName,"", fstatus);
-                        friendNames.add(friendName);
-                        return true;
+                    fObjectId = fr.getString("objectId");
+                    fstatus = fr.getString("status");
+                    reqTo = fr.getString("reqTo");
+                    reqFrom = fr.getString("reqFrom");
+
+                    //profile check
+                    int pTo = profileExists(reqTo);
+                    int pFrom = profileExists(reqFrom);
+
+                    Log.v("CheckStatus", "From: " + reqFrom + ", To: "+ reqTo + ", stat: "+ fstatus);
+
+                    //Add to database if the sender is not from the user or if the user sent
+                    //If reqfrom = current user and status is request, show pending
+                    //Add usernames that do not match current user
+
+                    if( pTo < 0 && !currentUser.equalsIgnoreCase(reqTo)){
+                        reqType = reqTo;
+                        newFriends = true;
+                    }else if(pFrom < 0 && !currentUser.equalsIgnoreCase(reqFrom)) {
+                        reqType = reqFrom;
+                        //if fstatus is request, make it pending (since reqTo is current user)
+                        if (fstatus.equalsIgnoreCase("request")) {
+                            fstatus = "pending";
+                        }
+                        newFriends = true;
+                    }else{
+                        int pos = ((pTo > pFrom) ? pTo : pFrom);
+                        FriendProfile temprofile = friendNames.get(pos);
+                        if(!fstatus.equalsIgnoreCase(temprofile.getStatus())){
+                            temprofile.setStatus(fstatus);
+                        }
                     }
+
+                    if(newFriends){
+                        dbhandler.createFriend(fObjectId, reqType, "", fstatus);
+                        FriendProfile fp = new FriendProfile(fObjectId, reqType, "", fstatus);
+                        friendNames.add(fp);
+
+                    }
+
                 }
+
 
             } catch (ParseException e) {
                 e.printStackTrace();
             }
 
-
-            return false;
+            return newFriends;
         }
 
         @Override
@@ -172,7 +226,8 @@ public class FriendsTab extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        populateFriendList();
+        //populateFriendList();
+        //initialize();
     }
 
 
@@ -209,6 +264,7 @@ public class FriendsTab extends Fragment {
             }else{
                 final String friendUserName = puser.getUsername();
                 Log.v("searchFriend", "Found friend: "+friendUserName);
+                searchedFriend.setVisibility(View.VISIBLE);
                 searchedFriend.setText(friendUserName);
                 searchedFriend.setOnClickListener(new View.OnClickListener() {
                     @Override
