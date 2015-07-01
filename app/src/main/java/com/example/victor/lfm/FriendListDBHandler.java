@@ -67,7 +67,7 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KEY_STATUS, status);
-        db.update(TABLE_FRIENDS, cv, KEY_FRIEND_ID + "=" + friendObjId, null);
+        db.update(TABLE_FRIENDS, cv, KEY_FRIEND_ID + " = " + "'" + friendObjId + "'", null);
 
     }
 

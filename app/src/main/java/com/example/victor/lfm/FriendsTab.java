@@ -119,10 +119,11 @@ public class FriendsTab extends Fragment {
 
     }
 
-    //Display Friendlist
+    //Display Friendlist then set up onclick listeners
     public void populateFriendList(){
         profileAdapter = new FriendListAdapter(context, R.layout.friend_request_item, friendNames);
         friendlv.setAdapter(profileAdapter);
+        onFriendClick();
     }
 
     //send a friend requests using usernames rather than object ids
@@ -132,6 +133,40 @@ public class FriendsTab extends Fragment {
 
     }
 
+
+    //Onclick listeners for approve (remove), request(accept), and pending (pending)
+    private final String REMOVE = "approve";
+    private final String ACCEPT = "request";
+    private final String PENDING = "pending";
+
+    public void onFriendClick(){
+        friendlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FriendProfile friendProfile = friendNames.get(position);
+                String friendReqId = friendProfile.getUserId();
+                String friendprofileStatus = friendProfile.getStatus();
+                Log.v("OnClickFriend: ", friendprofileStatus + " " + friendReqId);
+                switch(friendprofileStatus){
+                    case REMOVE:
+                        break;
+                    case ACCEPT:
+                        FriendRequest.approveFriendRequest(friendReqId);
+                        Toast.makeText(context, "Accepted Friend Request", Toast.LENGTH_SHORT).show();
+                        break;
+                    case PENDING:
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        populateFriendList();
+        //initialize();
+    }
 
 
     //Find any new friends to add to local database
@@ -173,7 +208,7 @@ public class FriendsTab extends Fragment {
 
                     String reqFrom, reqTo, fstatus, fObjectId;
 
-                    fObjectId = fr.getString("objectId");
+                    fObjectId = fr.getObjectId();
                     fstatus = fr.getString("status");
                     reqTo = fr.getString("reqTo");
                     reqFrom = fr.getString("reqFrom");
@@ -182,7 +217,7 @@ public class FriendsTab extends Fragment {
                     int pTo = profileExists(reqTo);
                     int pFrom = profileExists(reqFrom);
 
-                    Log.v("CheckStatus", "From: " + reqFrom + ", To: "+ reqTo + ", stat: "+ fstatus);
+                    Log.v("CheckStatus", "From: " + reqFrom + ", To: "+ reqTo + ", stat: "+ fstatus + " objectID: " + fObjectId);
 
                     //Add to database if the sender is not from the user or if the user sent
                     //If reqfrom = current user and status is request, show pending
@@ -208,7 +243,7 @@ public class FriendsTab extends Fragment {
                         if(!fstatus.equalsIgnoreCase(temprofile.getStatus())){
                             temprofile.setStatus(fstatus);
                         }
-                        //Change status in db
+                        //Update status in db
                         dbhandler.changeFriendStatus(temprofile.getUserId(), fstatus);
 
                     }
@@ -242,12 +277,6 @@ public class FriendsTab extends Fragment {
         }
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        populateFriendList();
-        //initialize();
-    }
 
 
     //Async display username results
