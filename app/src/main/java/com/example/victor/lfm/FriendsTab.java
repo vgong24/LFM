@@ -57,7 +57,7 @@ public class FriendsTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.friends_tab, container, false);
         initialize();
-        populateFriendList();
+        //populateFriendList();
         setupSearchView();
         return v;
     }
@@ -68,8 +68,11 @@ public class FriendsTab extends Fragment {
         searchedFriend.setVisibility(View.GONE); //Hide the search results to not mess up FriendList
 
         friendlv = (ListView) v.findViewById(R.id.friendListView);
-        if(friendNames == null)
+        if(friendNames == null) {
             friendNames = new ArrayList<>();
+        }else{
+            friendNames.clear();
+        }
 
         dbhandler = new FriendListDBHandler(context);
         if(dbhandler.getFriendCount() != 0){
@@ -136,6 +139,11 @@ public class FriendsTab extends Fragment {
 
     class UpdateFriendList extends AsyncTask<String, Void, Boolean>{
 
+        @Override
+        protected void onPreExecute(){
+
+        }
+
         //Check for friends that were sent requests by user if they approved it
         @Override
         protected Boolean doInBackground(String... params) {
@@ -161,6 +169,8 @@ public class FriendsTab extends Fragment {
             try {
                 friendRequestList = finalQuery.find();
                 for(FriendRequest fr : friendRequestList){
+                    boolean newFriendbool = false;
+
                     String reqFrom, reqTo, fstatus, fObjectId;
 
                     fObjectId = fr.getString("objectId");
@@ -181,24 +191,32 @@ public class FriendsTab extends Fragment {
                     if( pTo < 0 && !currentUser.equalsIgnoreCase(reqTo)){
                         reqType = reqTo;
                         newFriends = true;
-                    }else if(pFrom < 0 && !currentUser.equalsIgnoreCase(reqFrom)) {
-                        reqType = reqFrom;
-                        //if fstatus is request, make it pending (since reqTo is current user)
+                        newFriendbool = true;
+
+                        //if fstatus is request, make it pending (since reqFrom is current user)
                         if (fstatus.equalsIgnoreCase("request")) {
                             fstatus = "pending";
                         }
+
+                    }else if(pFrom < 0 && !currentUser.equalsIgnoreCase(reqFrom)) {
+                        reqType = reqFrom;
                         newFriends = true;
+                        newFriendbool = true;
                     }else{
                         int pos = ((pTo > pFrom) ? pTo : pFrom);
                         FriendProfile temprofile = friendNames.get(pos);
                         if(!fstatus.equalsIgnoreCase(temprofile.getStatus())){
                             temprofile.setStatus(fstatus);
                         }
+                        //Change status in db
+                        dbhandler.changeFriendStatus(temprofile.getUserId(), fstatus);
+
                     }
 
-                    if(newFriends){
+                    if(newFriendbool){//if new friend, add to db
                         dbhandler.createFriend(fObjectId, reqType, "", fstatus);
                         FriendProfile fp = new FriendProfile(fObjectId, reqType, "", fstatus);
+                        Log.v("AddingFriend", "Adding friend");
                         friendNames.add(fp);
 
                     }
@@ -217,6 +235,7 @@ public class FriendsTab extends Fragment {
         protected void onPostExecute(Boolean newFriends){
             //Add new friends to db
             if(newFriends){
+                Log.v("Add", "populating list again");
                 populateFriendList();
             }
 
@@ -226,7 +245,7 @@ public class FriendsTab extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        //populateFriendList();
+        populateFriendList();
         //initialize();
     }
 
