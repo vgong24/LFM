@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +16,14 @@ import java.util.List;
  */
 public class FriendListDBHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "friendList",
     TABLE_FRIENDS = "friends",
     KEY_ID = "id",
     KEY_FRIEND_ID = "fObjectId",
     KEY_REAL_NAME = "fRealName",
-    KEY_NAME = "fname"
-    ;
+    KEY_NAME = "fname",
+    KEY_STATUS = "Friendstatus";
 
 
     public FriendListDBHandler(Context context) {
@@ -31,22 +32,39 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_FRIENDS + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_FRIEND_ID + " TEXT, " + KEY_NAME + " TEXT, " + KEY_REAL_NAME + " TEXT )");
+        db.execSQL("CREATE TABLE " + TABLE_FRIENDS + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_FRIEND_ID + " TEXT, " + KEY_NAME + " TEXT, " + KEY_REAL_NAME + " TEXT, " + KEY_STATUS + " TEXT )");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.w("TaskDBAdapter", "Upgrading from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS);
         onCreate(db);
     }
+    public void deleteDatabase(){
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS);
+    }
 
-    public void createFriend(String friendObjectId, String fname, String realName){
+    public void createFriend(String friendObjectId, String fname, String realName, String status){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_FRIEND_ID, friendObjectId);
         values.put(KEY_NAME, fname);
         values.put(KEY_REAL_NAME, realName);
+        values.put(KEY_STATUS, status);
+
+        db.insert(TABLE_FRIENDS, null, values);
+        db.close();
+    }
+    //Create friends based on data from FriendRequest
+    public void createFriend(String friendName, String status){
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NAME, friendName);
+        values.put(KEY_STATUS, status);
 
         db.insert(TABLE_FRIENDS, null, values);
         db.close();
@@ -67,7 +85,7 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             do{
-                profiles.add(new FriendProfile(cursor.getString(1),cursor.getString(2), cursor.getString(3)));
+                profiles.add(new FriendProfile(cursor.getString(1),cursor.getString(2), cursor.getString(3), cursor.getString(4)));
             }
             while(cursor.moveToNext());
         }
