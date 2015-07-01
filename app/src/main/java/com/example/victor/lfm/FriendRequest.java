@@ -1,7 +1,12 @@
 package com.example.victor.lfm;
 
+import android.util.Log;
+
+import com.parse.GetCallback;
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 /**
@@ -26,7 +31,16 @@ public class FriendRequest extends ParseObject {
     }
 
     //accept friend request
-    public static void approveFriendRequest(String requester){
-
+    public static void approveFriendRequest(String requestId){
+        ParseQuery query = ParseQuery.getQuery("FriendRequest");
+        Log.v("GETID: ", requestId + "");
+        query.whereEqualTo("objectId", requestId);
+        query.getFirstInBackground(new GetCallback() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                parseObject.put("status", APPROVED);
+                parseObject.saveInBackground();
+            }
+        });
     }
 }
