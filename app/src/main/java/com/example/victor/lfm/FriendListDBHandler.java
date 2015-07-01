@@ -62,6 +62,15 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
         db.insert(TABLE_FRIENDS, null, values);
         db.close();
     }
+
+    public void changeFriendStatus(String friendObjId, String status){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_STATUS, status);
+        db.update(TABLE_FRIENDS, cv, KEY_FRIEND_ID + "=" + friendObjId, null);
+
+    }
+
     //Create friends based on data from FriendRequest
     public void createFriend(String friendName, String status){
         SQLiteDatabase db = getWritableDatabase();

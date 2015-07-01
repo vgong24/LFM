@@ -111,6 +111,10 @@ public class MainActivity_v2 extends ActionBarActivity{
             LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
             receiver = null;
 
+            //Delete friends from db
+            FriendListDBHandler db = new FriendListDBHandler(getApplicationContext());
+            db.deleteDatabase();
+
             ParseUser.logOut();
             Intent intent = new Intent(getApplicationContext(), LoginActivity_v2.class);
             finish();
