@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceButton"
             android:text="Capacity"
-            android:layout_weight=".25"
+            android:layout_weight=".30"
             android:id="@+id/friend_item_status" />
 
 

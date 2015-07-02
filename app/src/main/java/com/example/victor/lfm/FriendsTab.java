@@ -47,6 +47,8 @@ public class FriendsTab extends Fragment {
     String currentUser;
     String reqType;
 
+    List<FriendRequest> friendRequestList;
+
 
     public FriendsTab(Context context){
         this.context = context;
@@ -182,9 +184,13 @@ public class FriendsTab extends Fragment {
         //Check for friends that were sent requests by user if they approved it
         @Override
         protected Boolean doInBackground(String... params) {
-            final String STATUS = "approve";
             String username = params[0];
-            List<FriendRequest> friendRequestList = new ArrayList<>();
+            if(friendRequestList == null){
+                friendRequestList = new ArrayList<>();
+            }else{
+                friendRequestList.clear();
+            }
+
             boolean newFriends = false;
 
             List<ParseQuery<FriendRequest>> queries = new ArrayList<>();
@@ -237,14 +243,16 @@ public class FriendsTab extends Fragment {
                         reqType = reqFrom;
                         newFriends = true;
                         newFriendbool = true;
-                    }else{
+                    }else {
                         int pos = ((pTo > pFrom) ? pTo : pFrom);
                         FriendProfile temprofile = friendNames.get(pos);
-                        if(!fstatus.equalsIgnoreCase(temprofile.getStatus())){
+                        String tempStat = temprofile.getStatus();
+                        if( !(fstatus.equalsIgnoreCase("request") && (tempStat.equalsIgnoreCase("pending") || tempStat.equalsIgnoreCase("request") ))){
+
                             temprofile.setStatus(fstatus);
+                            //Update status in db
+                            dbhandler.changeFriendStatus(temprofile.getUserId(), fstatus);
                         }
-                        //Update status in db
-                        dbhandler.changeFriendStatus(temprofile.getUserId(), fstatus);
 
                     }
 
