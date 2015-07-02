@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -77,7 +79,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     double eventLng;
 
     Date date;
-    TextView timeView, dateView, filterAddress;
+    TextView timeView, dateView;
+    EditText cMembers, cDescription;
     List<String> catNames;
     ArrayList<Date> dates, searchDates;
     ArrayList<Category> searchCategories;
@@ -274,7 +277,12 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
         timeView = (TextView) view.findViewById(R.id.cTabTimeView);
         timeBtn = (Button) view.findViewById(R.id.cTabTimeBtn);
+        cMembers = (EditText) view.findViewById(R.id.cTabMemberEdit);
+        cDescription = (EditText) view.findViewById(R.id.cTabDescEdit);
+
         createEventBtn = (Button) view.findViewById(R.id.cTabCreateBtn);
+        createEventBtn.setEnabled(false);
+
         categorySpin = (Spinner) view.findViewById(R.id.cTabCatSpin);
 
         dateView = (TextView) view.findViewById(R.id.cTabDateView);
@@ -307,7 +315,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         autoCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                PlaceDetails placeItem = (PlaceDetails)parent.getItemAtPosition(position);
+                PlaceDetails placeItem = (PlaceDetails) parent.getItemAtPosition(position);
                 String placeId = placeItem.getId();
 
                 Log.v("ID", "Searching: " + placeId);
@@ -334,6 +342,28 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             public void onClick(View v) {
                 DialogFragment newFragment = DatePickerFragment.newInstance(dateView, cEventDateTime);
                 newFragment.show(getActivity().getFragmentManager(), "datePicker");
+            }
+        });
+
+        //Keep eventBtn disabled until description is filled
+        cDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() != 0){
+                    createEventBtn.setEnabled(true);
+                }else{
+                    createEventBtn.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
