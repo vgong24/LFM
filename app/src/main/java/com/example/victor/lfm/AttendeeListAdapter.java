@@ -3,12 +3,16 @@ package com.example.victor.lfm;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +35,8 @@ public class AttendeeListAdapter extends ArrayAdapter<Attendee> {
     int viewListXML;
     ArrayList<Attendee> attendeeArrayList;
     Context context;
+    //Using ratio of 7.2 to get the correct size. 720 : 100
+    private final double BITMAP_SCALE = 7.2;
 
     public AttendeeListAdapter(Context context, int viewListXML, ArrayList<Attendee> attendeesArr) {//Example R.layout.event_list_item, events
         super(context, viewListXML, attendeesArr);
@@ -95,7 +101,20 @@ public class AttendeeListAdapter extends ArrayAdapter<Attendee> {
                     byte[] data = thumbnail.getData();
                     Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
                     if (bmp != null) {
-                        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, 200, 200, true);
+                        //Scale bitmaps based on Device width
+                        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                        Display display = wm.getDefaultDisplay();
+                        Point size = new Point();
+                        display.getSize(size);
+
+                        int width = size.x;
+                        int height = size.y;
+                        //Using ratio of 7.2 to get the correct size. 720 : 100
+                        int bitmapScale = (int) (width / BITMAP_SCALE);
+                        Log.v("Bitmap", "Bitmap width: " + width + " height: "+ height);
+
+
+                        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, bitmapScale, bitmapScale, true);
                         return resizedbitmap;
                     }
                 } catch (ParseException e) {
