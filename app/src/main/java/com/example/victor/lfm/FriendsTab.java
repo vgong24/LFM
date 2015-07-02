@@ -133,6 +133,7 @@ public class FriendsTab extends Fragment {
         String currentUserName = ParseUser.getCurrentUser().getUsername();
         FriendRequest.sendFriendRequest(currentUserName, friendname);
 
+
     }
 
 
@@ -155,10 +156,13 @@ public class FriendsTab extends Fragment {
                     case ACCEPT:
                         FriendRequest.approveFriendRequest(friendReqId);
                         Toast.makeText(context, "Accepted Friend Request", Toast.LENGTH_SHORT).show();
+                        friendProfile.setStatus(REMOVE);
+
                         break;
                     case PENDING:
                         break;
                 }
+                populateFriendList();
             }
         });
     }
@@ -252,6 +256,8 @@ public class FriendsTab extends Fragment {
                             temprofile.setStatus(fstatus);
                             //Update status in db
                             dbhandler.changeFriendStatus(temprofile.getUserId(), fstatus);
+                            newFriends = true;
+
                         }
 
                     }

@@ -3,15 +3,18 @@ package com.example.victor.lfm;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.text.Layout;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,6 +38,7 @@ public class EventListAdapter extends ArrayAdapter<Events> {
     int viewListXML;
     ArrayList<Events> eventArray;
     Context context;
+    private final double BITMAP_SCALE = 14.4;
 
     public EventListAdapter(Context context, int viewListXML, ArrayList<Events> eventArray){//Example R.layout.event_list_item, events
         super(context, viewListXML, eventArray);
@@ -119,7 +123,15 @@ public class EventListAdapter extends ArrayAdapter<Events> {
                     byte[] data = thumbnail.getData();
                     Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
                     if (bmp != null) {
-                        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, 100, 100, true);
+                        //Scale bitmaps based on Device width
+                        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                        Display display = wm.getDefaultDisplay();
+                        Point size = new Point();
+                        display.getSize(size);
+
+                        int width = size.x;
+                        int bitmapScale = (int) (width / BITMAP_SCALE);
+                        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, bitmapScale, bitmapScale, true);
                         return resizedbitmap;
                     }
                 } catch (ParseException e) {

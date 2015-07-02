@@ -13,6 +13,8 @@
             android:id="@+id/attendeeProfilePic"
             android:layout_margin="10dp"
             android:layout_alignParentLeft="true"
+            android:maxWidth="100dp"
+            android:maxHeight="100dp"
             />
 
         <TextView
