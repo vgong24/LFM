@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -105,6 +106,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     PlacesAPI placesAPI;
 
+    LocationListener locationListener;
+
     Marker centerMarker;
 
     //Setup map
@@ -112,10 +115,18 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     Criteria criteria;
 
     View view;
+    Bundle bundle;
+
+    public CreateTab (Context context, Bundle bundle){
+        this.context = context;
+        activity = (Activity) context;
+        this.bundle = bundle;
+    }
     public CreateTab (Context context){
         this.context = context;
         activity = (Activity) context;
     }
+
 
 
     @Override
@@ -179,19 +190,29 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         mMap.setMyLocationEnabled(true);
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setCostAllowed(false);
 
         String provider = locationManager.getBestProvider(criteria, true);
         myLocation = locationManager.getLastKnownLocation(provider);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        double latitude;
+        double longitude;
         if(myLocation == null){
-            buildAlertMessageNoGps();
-            return;
+            //buildAlertMessageNoGps();
+
+            latitude = 21.3000;
+            longitude = -157.8167;
+
+        }else{
+            latitude = myLocation.getLatitude();
+            longitude = myLocation.getLongitude();
         }
-        double latitude = myLocation.getLatitude();
-        double longitude = myLocation.getLongitude();
+
 
         LatLng latLng = new LatLng(latitude, longitude);
+        centerOfMap = latLng;
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_DISTANCE));
         //centerMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude,longitude)).title("You are here").snippet("Consider yourself located"));
@@ -231,6 +252,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
+
 
 
 
@@ -424,6 +447,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         //replace id with category id
         String categoryID = getCategoryID(category);
         createEvent.put("Category", ParseObject.createWithoutData("Category", categoryID));
+
         ParseGeoPoint point = new ParseGeoPoint(centerOfMap.latitude, centerOfMap.longitude);
         createEvent.put("Location", point);
         eventLat = point.getLatitude();
