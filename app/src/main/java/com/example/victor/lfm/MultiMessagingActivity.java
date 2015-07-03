@@ -23,6 +23,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.sinch.android.rtc.PushPair;
 import com.sinch.android.rtc.messaging.Message;
 import com.sinch.android.rtc.messaging.MessageClient;
@@ -181,13 +182,36 @@ public class MultiMessagingActivity extends ActionBarActivity {
             Toast.makeText(this, "Please enter a message", Toast.LENGTH_LONG).show();
             return;
         }
-        //Before the message has been sent
+        //Store message to parse first
         //Send to all recipients (use list)
         //PROTOCOL: ChatRoom + " "  + senderName +" " + restOfMessage
 
-        isSent = false;
-        messageService.sendMessage(recipientIDs, groupID + " " + currentName + " " + messageBody);
-        messageBodyField.setText("");
+        ParseObject parseMessage = new ParseObject("ParseMessage");
+        parseMessage.put("senderId", currentUserId);
+        parseMessage.put("senderName", currentName);
+        //Make recipientID the EventID so chats can stay with their respective rooms
+        parseMessage.put("recipientId", groupID);
+        parseMessage.put("messageText", messageBody);
+        //parseMessage.put("sinchId", writableMessage.getMessageId());
+        parseMessage.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e == null) {
+                    //If message was properly saved, send message to everyone else using sinch.
+                    final WritableMessage writableMessage = new WritableMessage(recipientIDs, messageBody);
+
+                    messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
+
+                    messageService.sendMessage(recipientIDs, groupID + " " + currentName + " " + messageBody);
+                    messageBodyField.setText("");
+
+                }else{
+                    Toast.makeText(getApplicationContext(), "Text not sent", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -239,41 +263,7 @@ public class MultiMessagingActivity extends ActionBarActivity {
 
         @Override
         public void onMessageSent(MessageClient client, Message message, final String recipientIdextra) {
-            Toast.makeText(getApplicationContext(),"On sent message", Toast.LENGTH_SHORT).show();
 
-            if(!isSent) {
-                //PROTOCOL: Strip the chatname and senderName from body
-                String arr[] = message.getTextBody().split(" ",3);
-                final String msgBody = arr[2];
-                final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), msgBody);
-
-                //only add message to parse database if it doesn't already exist there
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
-                query.whereEqualTo("sinchId", message.getMessageId());
-                query.findInBackground(new FindCallback<ParseObject>() {
-                    @Override
-                    public void done(List<ParseObject> messageList, com.parse.ParseException e) {
-                        if (e == null) {
-                            if (messageList.size() == 0) {
-                                if (!isSent) {
-                                    ParseObject parseMessage = new ParseObject("ParseMessage");
-                                    parseMessage.put("senderId", currentUserId);
-                                    parseMessage.put("senderName", currentName);
-                                    //Make recipientID the EventID so chats can stay with their respective rooms
-                                    parseMessage.put("recipientId", groupID);
-                                    parseMessage.put("messageText", writableMessage.getTextBody());
-                                    parseMessage.put("sinchId", writableMessage.getMessageId());
-                                    parseMessage.saveInBackground();
-
-                                    messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
-                                    isSent = true;
-                                }
-                            }
-
-                        }
-                    }
-                });
-            }
         }
 
         @Override
