@@ -129,10 +129,15 @@ public class FriendsTab extends Fragment {
     }
 
     //send a friend requests using usernames rather than object ids
+    //If username matches current user, dont send. duh~
     public void sendRequest(String friendname){
         String currentUserName = ParseUser.getCurrentUser().getUsername();
-        FriendRequest.sendFriendRequest(currentUserName, friendname);
-
+        if(!friendname.equalsIgnoreCase(currentUserName)) {
+            FriendRequest.sendFriendRequest(currentUserName, friendname);
+            Toast.makeText(context, "Friend Request Sent", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(context, "That's you, idiot.", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -331,10 +336,13 @@ public class FriendsTab extends Fragment {
                 searchedFriend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Send Friend request
-                        sendRequest(friendUserName);
-                        Toast.makeText(context, "Friend Request Sent", Toast.LENGTH_SHORT).show();
-                        //searchedFriend.setText("");
+                        //Check to see if already exists in database
+                        if(profileExists(friendUserName) > 0){
+                            Toast.makeText(context, "Already added", Toast.LENGTH_SHORT).show();
+                        }else{
+                            //Send Friend request
+                            sendRequest(friendUserName);
+                        }
                     }
                 });
             }
