@@ -489,6 +489,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         i.putExtra("EventTitle",eventInfo);
         i.putExtra("EventLat", eventLat);
         i.putExtra("EventLong", eventLng);
+        i.putExtra("EventHost", ParseUser.getCurrentUser().getObjectId());
         context.startActivity(i);
         activity.finish();
     }
