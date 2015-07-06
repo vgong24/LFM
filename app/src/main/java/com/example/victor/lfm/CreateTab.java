@@ -464,11 +464,21 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         createEvent.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                eventId = createEvent.getObjectId();
-                startEventDetailActivity();
+                if (e == null) {
+                    eventId = createEvent.getObjectId();
+                    addAttendee();
+                    startEventDetailActivity();
+                } else {
+                    Toast.makeText(context, "Did not save successfully", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
+
+    }
+
+    public void  addAttendee(){
         //Adds the host as an attendee of the created event
         Attendee attend = new Attendee();
         attend.setEvent((Events)createEvent);
