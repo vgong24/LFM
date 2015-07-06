@@ -135,6 +135,7 @@ public class FriendsTab extends Fragment {
         if(!friendname.equalsIgnoreCase(currentUserName)) {
             FriendRequest.sendFriendRequest(currentUserName, friendname);
             Toast.makeText(context, "Friend Request Sent", Toast.LENGTH_SHORT).show();
+            new UpdateFriendList().execute(currentUser);
         }else{
             Toast.makeText(context, "That's you, idiot.", Toast.LENGTH_SHORT).show();
         }
@@ -325,7 +326,6 @@ public class FriendsTab extends Fragment {
         protected void onPostExecute(final ParseUser puser){
             if(puser == null){
                 Log.v("searchFriend", "Friend not found");
-                searchedFriend.setText("");
                 Toast.makeText(context, "Friend not found", Toast.LENGTH_SHORT).show();
 
             }else{
@@ -336,8 +336,10 @@ public class FriendsTab extends Fragment {
                 searchedFriend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        searchedFriend.setText("");
+                        searchedFriend.setVisibility(View.GONE);
                         //Check to see if already exists in database
-                        if(profileExists(friendUserName) > 0){
+                        if(profileExists(friendUserName) >= 0){
                             Toast.makeText(context, "Already added", Toast.LENGTH_SHORT).show();
                         }else{
                             //Send Friend request
