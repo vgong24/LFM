@@ -105,7 +105,7 @@ public class MainActivity_v2 extends ActionBarActivity{
         }
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.logout_action) {
             //basically on destroy
             stopService(serviceIntent);
             LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);

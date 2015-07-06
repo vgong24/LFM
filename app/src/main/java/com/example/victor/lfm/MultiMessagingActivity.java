@@ -148,7 +148,8 @@ public class MultiMessagingActivity extends ActionBarActivity {
     private void populateMessageHistory() {
         String[] userIds = {currentUserId, groupID};
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
-        query.whereEqualTo("recipientId", groupID);
+        ParseObject eventObject = ParseObject.createWithoutData("Events", groupID);
+        query.whereEqualTo("recipientId", eventObject);
         query.orderByAscending("createdAt");
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
@@ -187,10 +188,11 @@ public class MultiMessagingActivity extends ActionBarActivity {
         //PROTOCOL: ChatRoom + " "  + senderName +" " + restOfMessage
 
         ParseObject parseMessage = new ParseObject("ParseMessage");
+        ParseObject eventObject = ParseObject.createWithoutData("Events", groupID);
         parseMessage.put("senderId", currentUserId);
         parseMessage.put("senderName", currentName);
         //Make recipientID the EventID so chats can stay with their respective rooms
-        parseMessage.put("recipientId", groupID);
+        parseMessage.put("recipientId", eventObject);
         parseMessage.put("messageText", messageBody);
         //parseMessage.put("sinchId", writableMessage.getMessageId());
         parseMessage.saveInBackground(new SaveCallback() {
