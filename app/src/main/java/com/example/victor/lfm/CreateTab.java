@@ -119,6 +119,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     //Setup map
     LocationManager locationManager;
     Criteria criteria;
+    String currentUserId;
 
     View view;
     Bundle bundle;
@@ -252,6 +253,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     }
 
     public void initField(){
+        currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         timeView = (TextView) view.findViewById(R.id.cTabTimeView);
         timeBtn = (Button) view.findViewById(R.id.cTabTimeBtn);
@@ -444,7 +446,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
         createEvent.put("Max", maxMember);
         createEvent.put("Description", eventInfo);
-        createEvent.put("Host", ParseUser.getCurrentUser());
+        createEvent.put("Host", currentUserId);
         //test
         cEventDateTime.setTimeZone(TimeZone.getTimeZone("UTC"));
         eventDate = cEventDateTime.getTime();
@@ -467,7 +469,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
                 if (e == null) {
                     eventId = createEvent.getObjectId();
                     addAttendee();
-                    startEventDetailActivity();
+                    //startEventDetailActivity();
                 } else {
                     Toast.makeText(context, "Did not save successfully", Toast.LENGTH_SHORT).show();
                 }
@@ -482,8 +484,13 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         //Adds the host as an attendee of the created event
         Attendee attend = new Attendee();
         attend.setEvent((Events)createEvent);
-        attend.setUser(ParseUser.getCurrentUser().getObjectId());
-        attend.saveInBackground();
+        attend.setUser(currentUserId);
+        attend.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                startEventDetailActivity();
+            }
+        });
         String eventTime = cEventDateTime.getTime() + "";
         Toast.makeText(context.getApplicationContext(), "Event Time: " + eventTime, Toast.LENGTH_SHORT).show();
     }

@@ -303,7 +303,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
             Log.d("Count", "Starting Debug");
             for (int i = 0; i < attendees.size(); i++){
-                Log.d("Count", i + " " + attendees.get(i).getUserFirstName());
+                Log.d("Count", i + " ");
                 //Toast.makeText(getApplicationContext(), attendees.get(i).getUserFirstName(), Toast.LENGTH_SHORT).show();
             }
             progressBar.setVisibility(View.GONE);
