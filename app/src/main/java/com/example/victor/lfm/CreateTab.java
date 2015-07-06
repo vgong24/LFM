@@ -63,6 +63,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+
 /**
  * Created by Victor on 4/6/2015.
  */
@@ -94,6 +95,8 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     Location myLocation;
     LatLng centerOfMap;
     private final int ZOOM_DISTANCE = 13;
+
+    GPSTracker gpsTracker;
 
 
     Spinner categorySpin;
@@ -195,22 +198,18 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         criteria.setCostAllowed(false);
-
-        String provider = locationManager.getBestProvider(criteria, true);
-        myLocation = locationManager.getLastKnownLocation(provider);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
         double latitude;
         double longitude;
-        if(myLocation == null){
-            //buildAlertMessageNoGps();
-
+        //Use gpstracker to get location
+        if(gpsTracker.canGetLocation()){
+            latitude = gpsTracker.getLatitude();
+            longitude = gpsTracker.getLongitude();
+        }else{
+            gpsTracker.showSettingsAlert();
             latitude = 21.3000;
             longitude = -157.8167;
-
-        }else{
-            latitude = myLocation.getLatitude();
-            longitude = myLocation.getLongitude();
         }
 
 
@@ -236,33 +235,12 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     }
 
-    //GPS =========================================================================================
-    //Asks User to turn on GPS if it is turned off
-    private void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        dialog.cancel();
-                    }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-
-
-
 
     //Bottom half fill in section ============================================================================
 
     public void initialize(){
+        //Init location
+        gpsTracker = new GPSTracker(context);
         setUpMapIfNeeded();
 
         initField();
