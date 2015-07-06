@@ -5,6 +5,8 @@ import android.app.Activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseQuery;
 import android.support.v4.app.Fragment;
 
@@ -37,6 +40,7 @@ public class HomeTab extends Fragment {
     Context context;
 
     ListView eventListView;
+    GPSTracker tracker;
 
     ProgressBar dialog;
     boolean _areEventsLoaded = false;
@@ -63,6 +67,7 @@ public class HomeTab extends Fragment {
 
 
     public void initialize() {
+        tracker = new GPSTracker(context);
         initField();
         dialog.setVisibility(View.VISIBLE);
         fillEventList();
@@ -111,10 +116,19 @@ public class HomeTab extends Fragment {
     }
 
     public void fillEventList() {
+        ParseGeoPoint geoPoint = null;
+
+        //Filter contents by gps coordinates
+        if(tracker.canGetLocation()){
+            geoPoint = new ParseGeoPoint(tracker.getLatitude(), tracker.getLongitude());
+        }else{
+            tracker.showSettingsAlert();
+            return;
+        }
         Events e = new Events();
         events.clear();
         ParseQuery<Events> query = e.getQuery();
-        //query.
+        query.whereWithinKilometers("Location", geoPoint, 100);
         query.addAscendingOrder("Date");
         query.findInBackground(new FindCallback<Events>() {
 
