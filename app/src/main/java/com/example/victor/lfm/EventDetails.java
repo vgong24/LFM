@@ -66,6 +66,8 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     Toolbar toolbar;
     ActionBar ab;
     SimpleDateFormat sdf;
+    String hostId;
+    boolean isHost;
 
     private GoogleMap gmap;
 
@@ -90,6 +92,15 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     public void initFields(){
         //Get data from previous Intent in HomeTab.java @ readySelect method
         prevInfo = getIntent();
+        isHost = false;
+
+        hostId = prevInfo.getExtras().getString("EventHost");
+
+        if(hostId.equalsIgnoreCase(ParseUser.getCurrentUser().getObjectId())){
+            isHost = true;
+
+        }
+
         objId = prevInfo.getExtras().getString("EventId");
         evnt = (Events) ParseObject.createWithoutData("Events", objId);
         //Setup header fields
@@ -159,7 +170,23 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.details_toolbar, menu);
+        //check previous info to see if you are host
+        /*
+        Intent prevIntent = getIntent();
+        String hostID = prevIntent.getExtras().getString("EventHost");
+
+        if(hostID.equalsIgnoreCase(ParseUser.getCurrentUser().getObjectId())){
+            getMenuInflater().inflate(R.menu.details_toolbar_host, menu);
+        }else{
+            getMenuInflater().inflate(R.menu.details_toolbar, menu);
+        }
+        */
+        if(isHost){
+            getMenuInflater().inflate(R.menu.details_toolbar_host, menu);
+        }else{
+            getMenuInflater().inflate(R.menu.details_toolbar, menu);
+
+        }
         return true;
     }
     @Override

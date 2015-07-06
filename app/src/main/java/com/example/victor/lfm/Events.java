@@ -13,9 +13,16 @@ public class Events extends ParseObject  {
     public void setHost(String user) {
         put("Host", user);
     }
-    public int getHost() {
-        return getInt("Host");
+    public ParseUser getHost() {
+        try{
+            this.fetchIfNeeded();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return (ParseUser) getParseObject("Host");
+
     }
+
     public Category getCat() {
         try {
             this.fetchIfNeeded();
