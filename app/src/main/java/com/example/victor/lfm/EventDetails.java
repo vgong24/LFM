@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
     TextView event_description;
     String eventDescription;
+    ProgressBar progressBar;
 
 
     ArrayList<Attendee> attendees;
@@ -68,6 +70,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     SimpleDateFormat sdf;
     String hostId;
     boolean isHost;
+    String currentUserId;
 
     private GoogleMap gmap;
 
@@ -90,13 +93,17 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
     //Initialize textviews, arraylists, Intent extras
     public void initFields(){
+        progressBar = (ProgressBar) findViewById(R.id.eventDetailProgressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         //Get data from previous Intent in HomeTab.java @ readySelect method
         prevInfo = getIntent();
         isHost = false;
+        currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         hostId = prevInfo.getExtras().getString("EventHost");
 
-        if(hostId.equalsIgnoreCase(ParseUser.getCurrentUser().getObjectId())){
+        if(hostId.equalsIgnoreCase(currentUserId)){
             isHost = true;
 
         }
@@ -112,6 +119,8 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         //Setup views
         attendeeListView = (ListView)findViewById(R.id.detail_attendee_listview);
         joinTxtView = (TextView)findViewById(R.id.join_view);
+        joinTxtView.setEnabled(false);
+
         event_description = (TextView) findViewById(R.id.detail_description);
         //Setup lists
         attendees = new ArrayList<Attendee>();
@@ -205,14 +214,15 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
     public void initOnClicks(final boolean hasJoined){
         //If current user hasn't joined the event yet
-        if(!hasJoined){
+        joinTxtView.setEnabled(true);
+        if(!hasJoined && !isHost){
             joinTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
                     Attendee attend = new Attendee();
                     attend.setEvent(evnt);
-                    attend.setUser(ParseUser.getCurrentUser().getObjectId());
+                    attend.setUser(currentUserId);
                     attend.saveInBackground();
 
                     //Recursively reset join button
@@ -225,7 +235,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             joinTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Already Joined", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Leaveing group (not implemented)", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -265,14 +275,18 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
      */
     private class SetUpBackground extends AsyncTask<Events, Void, ArrayList<Attendee>>{
         ArrayList<Attendee> attendeesArr;
-        String currentUserId;
+
         private boolean currentlyJoined;
 
         @Override
         protected ArrayList<Attendee> doInBackground(Events... params) {
-            currentUserId = ParseUser.getCurrentUser().getObjectId();
             currentlyJoined = false;
-            attendeesArr = new ArrayList<>();
+            if(attendeesArr == null){
+                attendeesArr = new ArrayList<>();
+            }else{
+                attendeesArr.clear();
+            }
+
             ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
             query.whereEqualTo("Event", params[0]);
             try {
@@ -301,6 +315,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                 Log.d("Count", i + " " + attendees.get(i).getUserFirstName());
                 //Toast.makeText(getApplicationContext(), attendees.get(i).getUserFirstName(), Toast.LENGTH_SHORT).show();
             }
+            progressBar.setVisibility(View.GONE);
             populateList(attendees);
             initOnClicks(currentlyJoined);
         }
