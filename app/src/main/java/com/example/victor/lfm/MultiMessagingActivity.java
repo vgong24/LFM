@@ -137,6 +137,7 @@ public class MultiMessagingActivity extends ActionBarActivity {
                 i.putExtra("EventTitle", events.getDescr());
                 i.putExtra("EventLat", events.getLocation().getLatitude());
                 i.putExtra("EventLong", events.getLocation().getLongitude());
+                i.putExtra("EventHost", events.getHost().getObjectId());
                 startActivity(i);
             }
         });
