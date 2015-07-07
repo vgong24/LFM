@@ -34,7 +34,7 @@ public class CreateEvent extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        fragment = new CreateTab(CreateEvent.this);
+        fragment = CreateTab.newInstance(CreateEvent.this);
         progressBar = (ProgressBar) findViewById(R.id.chatRoomProgressBar);
         progressBar.setVisibility(View.VISIBLE);
         transaction = getSupportFragmentManager().beginTransaction();

@@ -52,12 +52,15 @@ public class ChatTab extends Fragment {
     private SetUpChatList chatList;
 
 
-    public ChatTab(Context context){
-        this.context = context;
-        this.activity = (Activity) context;
+    public static ChatTab newInstance(Context context){
+        ChatTab chatTab = new ChatTab();
+        chatTab.context = context;
+        chatTab.activity = (Activity) context;
+        return chatTab;
+    }
+    public ChatTab(){
 
     }
-    public ChatTab(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

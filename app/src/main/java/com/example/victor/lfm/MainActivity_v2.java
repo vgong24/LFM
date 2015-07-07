@@ -155,7 +155,6 @@ public class MainActivity_v2 extends ActionBarActivity{
     @Override
     public void onDestroy(){
         super.onDestroy();
-        Toast.makeText(getApplicationContext(), "Destroying activity", Toast.LENGTH_SHORT).show();
         stopService(serviceIntent);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         receiver = null;

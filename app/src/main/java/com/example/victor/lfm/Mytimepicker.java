@@ -19,16 +19,14 @@ public class Mytimepicker extends DialogFragment implements TimePickerDialog.OnT
     TextView timeTxt;
     Calendar datetime;
     Context context;
-    public Mytimepicker(TextView txtview, Calendar datetime) {
-        timeTxt = txtview;
-        this.datetime = datetime;
-    }
 
     public Mytimepicker() {
 
     }
     public static Mytimepicker newInstance(TextView tv, Calendar datetime){
-        Mytimepicker f = new Mytimepicker(tv, datetime);
+        Mytimepicker f = new Mytimepicker();
+        f.timeTxt = tv;
+        f.datetime = datetime;
         return f;
     }
     public void setContext(Context context){

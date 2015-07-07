@@ -124,14 +124,22 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     View view;
     Bundle bundle;
 
-    public CreateTab (Context context, Bundle bundle){
-        this.context = context;
-        activity = (Activity) context;
-        this.bundle = bundle;
+    public static CreateTab newInstance(Context context, Bundle bundle){
+        CreateTab createTab = new CreateTab();
+        createTab.context = context;
+        createTab.activity = (Activity) context;
+        createTab.bundle = bundle;
+        return createTab;
     }
-    public CreateTab (Context context){
-        this.context = context;
-        activity = (Activity) context;
+    public static CreateTab newInstance(Context context){
+        CreateTab createTab = new CreateTab();
+        createTab.context = context;
+        createTab.activity = (Activity) context;
+        return createTab;
+    }
+
+    public CreateTab(){
+
     }
 
 
@@ -310,7 +318,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         timeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Mytimepicker mtp = new Mytimepicker(timeView, cEventDateTime);
+                Mytimepicker mtp = Mytimepicker.newInstance(timeView, cEventDateTime);
                 mtp.setContext(context);
                 DialogFragment newFragment = mtp;
                 newFragment.show(getActivity().getFragmentManager(), "timePicker");

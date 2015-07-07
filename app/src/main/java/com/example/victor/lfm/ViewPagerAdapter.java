@@ -55,14 +55,14 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 //Show Event List
                 if(home == null){
-                    home = new HomeTab(context);
+                    home = HomeTab.newInstance(context);
                 }
                 return home;
 
             case 1:
                 //Show Chat rooms
                 if(chat == null){
-                    chat = new ChatTab(context);
+                    chat = ChatTab.newInstance(context);
                 }
                 return chat;
 
@@ -70,7 +70,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
             case 2:
                 //Show Friends
                 if(ftab == null){
-                    ftab = new FriendsTab(context);
+                    ftab = FriendsTab.newInstance(context);
                 }
                 return ftab;
 
