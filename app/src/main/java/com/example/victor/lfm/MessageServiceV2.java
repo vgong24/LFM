@@ -48,7 +48,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
     }
 
     public void startSinchClient(String username) {
-        Toast.makeText(getApplicationContext(), "Starting sinch client", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Starting sinch client", Toast.LENGTH_SHORT).show();
         sinchClient = Sinch.getSinchClientBuilder().context(this).userId(username).applicationKey(APP_KEY)
                 .applicationSecret(APP_SECRET).environmentHost(ENVIRONMENT).build();
 
@@ -75,7 +75,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
 
     @Override
     public void onClientStarted(SinchClient client) {
-        Toast.makeText(getApplicationContext(), "Broadcasting sinchClient", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "Broadcasting sinchClient", Toast.LENGTH_SHORT).show();
         broadcastIntent.putExtra("success", true);
         broadcaster.sendBroadcast(broadcastIntent);
 
@@ -124,7 +124,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
     @Override
     public void onDestroy() {
         if(sinchClient != null) {
-            Toast.makeText(getApplicationContext(), "Stopping SinchClient", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Stopping SinchClient", Toast.LENGTH_SHORT).show();
             sinchClient.stopListeningOnActiveConnection();
             sinchClient.terminate();
         }

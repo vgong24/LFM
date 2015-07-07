@@ -54,8 +54,14 @@ public class HomeTab extends Fragment {
 
 
 
-    public HomeTab(Context context) {
-        this.context = context;
+    public static HomeTab newInstance(Context context) {
+        HomeTab homeTab = new HomeTab();
+        homeTab.context = context;
+        return homeTab;
+    }
+
+    public HomeTab(){
+
     }
 
     @Override

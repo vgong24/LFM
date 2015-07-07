@@ -17,12 +17,15 @@ public class DatePickerFragment extends DialogFragment
     TextView dateText;
     Calendar datetime;
 
-    public DatePickerFragment(TextView tv, Calendar datetime) {
-        dateText = tv;
-        this.datetime = datetime;
+    public DatePickerFragment(){
+
     }
+
+
     public static DatePickerFragment newInstance(TextView tv, Calendar datetime){
-        DatePickerFragment f = new DatePickerFragment(tv, datetime);
+        DatePickerFragment f = new DatePickerFragment();
+        f.dateText = tv;
+        f.datetime = datetime;
         return f;
     }
 

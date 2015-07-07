@@ -32,7 +32,7 @@ public class LoginActivity_v2 extends Activity {
         super.onCreate(savedInstanceState);
 
         intent = new Intent(getApplicationContext(), MainActivity_v2.class);
-        serviceIntent = new Intent(getApplicationContext(), MessageService.class);
+        serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {

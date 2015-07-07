@@ -50,9 +50,12 @@ public class FriendsTab extends Fragment {
     List<FriendRequest> friendRequestList;
 
 
-    public FriendsTab(Context context){
-        this.context = context;
-        activity = (Activity) context;
+    public static FriendsTab newInstance(Context context){
+        FriendsTab friendsTab = new FriendsTab();
+
+        friendsTab.context = context;
+        friendsTab.activity = (Activity) context;
+        return friendsTab;
     }
 
     @Override
