@@ -446,7 +446,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
         createEvent.put("Max", maxMember);
         createEvent.put("Description", eventInfo);
-        createEvent.put("Host", currentUserId);
+        createEvent.put("Host", ParseUser.getCurrentUser());
         //test
         cEventDateTime.setTimeZone(TimeZone.getTimeZone("UTC"));
         eventDate = cEventDateTime.getTime();
@@ -472,6 +472,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
                     //startEventDetailActivity();
                 } else {
                     Toast.makeText(context, "Did not save successfully", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
 
             }
