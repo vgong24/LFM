@@ -71,6 +71,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     String hostId;
     boolean isHost;
     String currentUserId;
+    AttendeeListAdapter attendeeListAdapter;
 
     private GoogleMap gmap;
 
@@ -227,6 +228,9 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
                     //Recursively reset join button
                     initOnClicks(!hasJoined);
+
+                    //once clicked, refresh page
+                    new SetUpBackground().execute(evnt);
                 }
             });
         }else{
@@ -248,7 +252,8 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     }
 
     private void populateList(ArrayList<Attendee> attArr){
-        AttendeeListAdapter attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(), R.layout.attendee_list_view, attArr);
+
+        attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(), R.layout.attendee_list_view, attArr);
         attendeeListView.setAdapter(attendeeListAdapter);
     }
 
