@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.victor.lfm" >
+    package="com.bowen.victor.ciya" >
 
     <permission
-        android:name="com.example.victor.lfm.googlemapsv2.permission.MAPS_RECEIVE"
+        android:name="com.bowen.victor.ciya.googlemapsv2.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
     <uses-sdk
@@ -20,7 +20,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <permission android:name="com.example.victor.lfm.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <permission android:name="com.bowen.victor.ciya.permission.C2D_MESSAGE" android:protectionLevel="signature" />
     <uses-permission android:name="com.example.victor.lfm.permission.C2D_MESSAGE" />
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -34,14 +34,14 @@
 
     <application
         android:allowBackup="true"
-        android:name=".Application"
+        android:name="com.bowen.victor.ciya.Application"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
 
         <activity
-            android:name=".LoginActivity_v2"
+            android:name="com.bowen.victor.ciya.LoginActivity_v2"
             android:noHistory="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name" >
@@ -54,35 +54,18 @@
         </activity>
 
         <activity
-            android:name=".SignUpActivity"
+            android:name="com.bowen.victor.ciya.SignUpActivity"
             android:label="@string/title_activity_signup"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".WelcomeActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo">
-
-        <meta-data
-            android:name="com.parse.ui.ParseLoginActivity.FACEBOOK_LOGIN_ENABLED"
-            android:value="true"/>
-        <meta-data
-            android:name="com.parse.ui.ParseLoginActivity.TWITTER_LOGIN_ENABLED"
-            android:value="true"/>
-        </activity>
 
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".EventDetails"
+            android:name="com.bowen.victor.ciya.EventDetails"
             android:label="Event Details"
             android:configChanges="orientation|keyboardHidden|screenSize"
 
             />
 
-        <activity android:name=".MainActivity_v2"
+        <activity android:name="com.bowen.victor.ciya.MainActivity_v2"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             >
@@ -98,12 +81,12 @@
         </activity>
 
 
-        <activity android:name=".MultiMessagingActivity"/>
-        <activity android:name=".CreateEvent"
+        <activity android:name="com.bowen.victor.ciya.MultiMessagingActivity"/>
+        <activity android:name="com.bowen.victor.ciya.CreateEvent"
             android:configChanges="orientation|keyboardHidden|screenSize"
             />
 
-        <service android:name=".MessageServiceV2"></service>
+        <service android:name="com.bowen.victor.ciya.MessageServiceV2"></service>
 
         <service android:name="com.parse.PushService" />
         <receiver android:name="com.parse.ParseBroadcastReceiver">

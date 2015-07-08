@@ -13,7 +13,7 @@ ADDED from AndroidManifest.xml:2:1
 	android:versionCode
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
-permission#com.example.victor.lfm.googlemapsv2.permission.MAPS_RECEIVE
+permission#com.bowen.victor.ciya.googlemapsv2.permission.MAPS_RECEIVE
 ADDED from AndroidManifest.xml:5:5
 	android:protectionLevel
 		ADDED from AndroidManifest.xml:7:9
@@ -141,10 +141,10 @@ uses-permission#com.google.android.c2dm.permission.RECEIVE
 ADDED from AndroidManifest.xml:21:5
 	android:name
 		ADDED from AndroidManifest.xml:21:22
-permission#com.example.victor.lfm.permission.C2D_MESSAGE
+permission#com.bowen.victor.ciya.permission.C2D_MESSAGE
 ADDED from AndroidManifest.xml:23:5
 	android:protectionLevel
-		ADDED from AndroidManifest.xml:23:78
+		ADDED from AndroidManifest.xml:23:77
 	android:name
 		ADDED from AndroidManifest.xml:23:17
 uses-permission#com.example.victor.lfm.permission.C2D_MESSAGE
@@ -267,7 +267,7 @@ MERGED from com.android.support:support-v4:22.0.0:22:5
 		ADDED from AndroidManifest.xml:40:9
 	android:name
 		ADDED from AndroidManifest.xml:37:9
-activity#com.example.victor.lfm.LoginActivity_v2
+activity#com.bowen.victor.ciya.LoginActivity_v2
 ADDED from AndroidManifest.xml:43:9
 	android:noHistory
 		ADDED from AndroidManifest.xml:45:13
@@ -287,7 +287,7 @@ category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:52:17
 	android:name
 		ADDED from AndroidManifest.xml:52:27
-activity#com.example.victor.lfm.SignUpActivity
+activity#com.bowen.victor.ciya.SignUpActivity
 ADDED from AndroidManifest.xml:56:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:59:13
@@ -295,7 +295,7 @@ ADDED from AndroidManifest.xml:56:9
 		ADDED from AndroidManifest.xml:58:13
 	android:name
 		ADDED from AndroidManifest.xml:57:13
-activity#com.example.victor.lfm.WelcomeActivity
+activity#com.bowen.victor.ciya.WelcomeActivity
 ADDED from AndroidManifest.xml:60:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:63:13
@@ -317,7 +317,7 @@ ADDED from AndroidManifest.xml:69:9
 		ADDED from AndroidManifest.xml:70:13
 	android:value
 		ADDED from AndroidManifest.xml:71:13
-activity#com.example.victor.lfm.LoginActivity
+activity#com.bowen.victor.ciya.LoginActivity
 ADDED from AndroidManifest.xml:74:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:77:13
@@ -325,7 +325,7 @@ ADDED from AndroidManifest.xml:74:9
 		ADDED from AndroidManifest.xml:76:13
 	android:name
 		ADDED from AndroidManifest.xml:75:13
-activity#com.example.victor.lfm.EventDetails
+activity#com.bowen.victor.ciya.EventDetails
 ADDED from AndroidManifest.xml:78:9
 	android:label
 		ADDED from AndroidManifest.xml:80:13
@@ -333,7 +333,7 @@ ADDED from AndroidManifest.xml:78:9
 		ADDED from AndroidManifest.xml:81:13
 	android:name
 		ADDED from AndroidManifest.xml:79:13
-activity#com.example.victor.lfm.MainActivity_v2
+activity#com.bowen.victor.ciya.MainActivity_v2
 ADDED from AndroidManifest.xml:85:9
 	android:configChanges
 		ADDED from AndroidManifest.xml:86:13
@@ -347,17 +347,17 @@ ADDED from AndroidManifest.xml:95:13
 		ADDED from AndroidManifest.xml:96:17
 	android:name
 		ADDED from AndroidManifest.xml:95:24
-activity#com.example.victor.lfm.MultiMessagingActivity
+activity#com.bowen.victor.ciya.MultiMessagingActivity
 ADDED from AndroidManifest.xml:101:9
 	android:name
 		ADDED from AndroidManifest.xml:101:19
-activity#com.example.victor.lfm.CreateEvent
+activity#com.bowen.victor.ciya.CreateEvent
 ADDED from AndroidManifest.xml:102:9
 	android:configChanges
 		ADDED from AndroidManifest.xml:103:13
 	android:name
 		ADDED from AndroidManifest.xml:102:19
-service#com.example.victor.lfm.MessageServiceV2
+service#com.bowen.victor.ciya.MessageServiceV2
 ADDED from AndroidManifest.xml:106:9
 	android:name
 		ADDED from AndroidManifest.xml:106:18
