@@ -22,10 +22,14 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.DeleteCallback;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +61,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     String hostId;
     boolean isHost;
     String currentUserId;
+    String userAttendeeId;
     AttendeeListAdapter attendeeListAdapter;
 
     private GoogleMap gmap;
@@ -166,17 +171,6 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        //check previous info to see if you are host
-        /*
-        Intent prevIntent = getIntent();
-        String hostID = prevIntent.getExtras().getString("EventHost");
-
-        if(hostID.equalsIgnoreCase(ParseUser.getCurrentUser().getObjectId())){
-            getMenuInflater().inflate(R.menu.details_toolbar_host, menu);
-        }else{
-            getMenuInflater().inflate(R.menu.details_toolbar, menu);
-        }
-        */
         if(isHost){
             getMenuInflater().inflate(R.menu.details_toolbar_host, menu);
         }else{
@@ -203,20 +197,12 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         //If current user hasn't joined the event yet
         joinTxtView.setEnabled(true);
         if(!hasJoined && !isHost){
+            joinTxtView.setText("Join");
+            joinTxtView.setBackgroundResource(R.color.GreenJoin);
             joinTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
-                    Attendee attend = new Attendee();
-                    attend.setEvent(evnt);
-                    attend.setUser(currentUserId);
-                    attend.saveInBackground();
-
-                    //Recursively reset join button
-                    initOnClicks(!hasJoined);
-
-                    //once clicked, refresh page
-                    new SetUpBackground().execute(evnt);
+                    joinEventAsAttendee(evnt);
                 }
             });
         }else{
@@ -225,10 +211,50 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             joinTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Leaveing group (not implemented)", Toast.LENGTH_SHORT).show();
+                    if (!isHost) {
+                        Toast.makeText(getApplicationContext(), "Leaving group", Toast.LENGTH_SHORT).show();
+                        //Leave event as attendee
+                        leaveEventAsAttendee(evnt);
+                    } else {
+                        Toast.makeText(getApplicationContext(), " Host Leaveing group (not implemented)", Toast.LENGTH_SHORT).show();
+
+                    }
                 }
             });
         }
+
+    }
+    public void joinEventAsAttendee(Events eventJoining){
+        Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
+        Attendee attend = new Attendee();
+        attend.setEvent(eventJoining);
+        attend.setUser(currentUserId);
+        attend.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                //once clicked, refresh page
+                new SetUpBackground().execute(evnt);
+            }
+        });
+    }
+
+    public void leaveEventAsAttendee(final Events eventLeaving){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Attendees");
+        Log.v("leaveEvent", "attendeeId: " + userAttendeeId);
+        query.getInBackground(userAttendeeId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if (e == null) {
+                    parseObject.deleteInBackground(new DeleteCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            Log.v("deleted", "deleted attendee");
+                            new SetUpBackground().execute(eventLeaving);
+                        }
+                    });
+                }
+            }
+        });
 
     }
 
@@ -261,6 +287,11 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         private boolean currentlyJoined;
 
         @Override
+        protected void onPreExecute(){
+            joinTxtView.setEnabled(false);
+        }
+
+        @Override
         protected ArrayList<Attendee> doInBackground(Events... params) {
             currentlyJoined = false;
             if(attendeesArr == null){
@@ -280,6 +311,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                     user.fetchIfNeeded();
                     if(user.getObjectId().equalsIgnoreCase(currentUserId)){
                         currentlyJoined = true;
+                        userAttendeeId = attend.getObjectId();
                     }
                     attendeesArr.add(attend);
                 }
