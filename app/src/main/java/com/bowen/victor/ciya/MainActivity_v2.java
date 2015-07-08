@@ -146,7 +146,7 @@ public class MainActivity_v2 extends ActionBarActivity{
             }
         };
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.example.victor.lfm.MainActivity_v2"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.bowen.victor.ciya.MainActivity_v2"));
     }
 
     //shut off sinch client

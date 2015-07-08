@@ -20,15 +20,24 @@ import java.util.List;
 
 public class MessageServiceV2  extends Service implements SinchClientListener {
 
+    /*
     private static final String APP_KEY = "77e0f813-7d7c-49a7-8c8d-54ef1150a93d";
     private static final String APP_SECRET = "HpVNwp8epkGfsSYmANOgTA==";
     private static final String ENVIRONMENT = "sandbox.sinch.com";
+    */
+
+    /* production */
+    private static final String APP_KEY = "15fa33c9-20d1-498b-8fec-5759f41a8039";
+    private static final String APP_SECRET = "KoOg+I0v6UqCFI9wVogcbA==";
+    private static final String ENVIRONMENT = "clientapi.sinch.com";
+
+
     private final MessageServiceInterface serviceInterface = new MessageServiceInterface();
     private SinchClient sinchClient = null;
     private MessageClient messageClient = null;
     private String currentUserId;
     private LocalBroadcastManager broadcaster;
-    private Intent broadcastIntent = new Intent("com.example.victor.lfm.MainActivity_v2");
+    private Intent broadcastIntent = new Intent("com.bowen.victor.ciya.MainActivity_v2");
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
