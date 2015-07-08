@@ -14,7 +14,7 @@
 
         />
 
-    <com.example.victor.lfm.SlidingTabLayout
+    <com.bowen.victor.ciya.SlidingTabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
