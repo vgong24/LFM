@@ -176,7 +176,7 @@ ADDED from AndroidManifest.xml:33:5
 	android:name
 		ADDED from AndroidManifest.xml:33:22
 application
-ADDED from AndroidManifest.xml:35:5
+ADDED from AndroidManifest.xml:36:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
 MERGED from com.android.support:support-v4:22.0.0:22:5
 MERGED from com.google.android.gms:play-services:7.0.0:19:5
@@ -258,139 +258,139 @@ MERGED from com.google.android.gms:play-services-wearable:7.0.0:19:5
 MERGED from com.google.android.gms:play-services-base:7.0.0:20:5
 MERGED from com.android.support:support-v4:22.0.0:22:5
 	android:label
-		ADDED from AndroidManifest.xml:39:9
-	android:allowBackup
-		ADDED from AndroidManifest.xml:36:9
-	android:icon
-		ADDED from AndroidManifest.xml:38:9
-	android:theme
 		ADDED from AndroidManifest.xml:40:9
-	android:name
+	android:allowBackup
 		ADDED from AndroidManifest.xml:37:9
+	android:icon
+		ADDED from AndroidManifest.xml:39:9
+	android:theme
+		ADDED from AndroidManifest.xml:41:9
+	android:name
+		ADDED from AndroidManifest.xml:38:9
 activity#com.bowen.victor.ciya.LoginActivity_v2
-ADDED from AndroidManifest.xml:43:9
+ADDED from AndroidManifest.xml:44:9
 	android:noHistory
-		ADDED from AndroidManifest.xml:45:13
-	android:label
-		ADDED from AndroidManifest.xml:47:13
-	android:configChanges
 		ADDED from AndroidManifest.xml:46:13
+	android:label
+		ADDED from AndroidManifest.xml:48:13
+	android:configChanges
+		ADDED from AndroidManifest.xml:47:13
 	android:name
-		ADDED from AndroidManifest.xml:44:13
+		ADDED from AndroidManifest.xml:45:13
 intent-filter#android.intent.action.MAIN+android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:49:13
+ADDED from AndroidManifest.xml:50:13
 action#android.intent.action.MAIN
-ADDED from AndroidManifest.xml:50:17
+ADDED from AndroidManifest.xml:51:17
 	android:name
-		ADDED from AndroidManifest.xml:50:25
+		ADDED from AndroidManifest.xml:51:25
 category#android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:52:17
+ADDED from AndroidManifest.xml:53:17
 	android:name
-		ADDED from AndroidManifest.xml:52:27
+		ADDED from AndroidManifest.xml:53:27
 activity#com.bowen.victor.ciya.SignUpActivity
-ADDED from AndroidManifest.xml:56:9
+ADDED from AndroidManifest.xml:57:9
 	android:screenOrientation
+		ADDED from AndroidManifest.xml:60:13
+	android:label
 		ADDED from AndroidManifest.xml:59:13
-	android:label
+	android:name
 		ADDED from AndroidManifest.xml:58:13
-	android:name
-		ADDED from AndroidManifest.xml:57:13
 activity#com.bowen.victor.ciya.EventDetails
-ADDED from AndroidManifest.xml:61:9
+ADDED from AndroidManifest.xml:62:9
 	android:label
-		ADDED from AndroidManifest.xml:63:13
-	android:configChanges
 		ADDED from AndroidManifest.xml:64:13
+	android:configChanges
+		ADDED from AndroidManifest.xml:65:13
 	android:name
-		ADDED from AndroidManifest.xml:62:13
+		ADDED from AndroidManifest.xml:63:13
 activity#com.bowen.victor.ciya.MainActivity_v2
-ADDED from AndroidManifest.xml:68:9
+ADDED from AndroidManifest.xml:69:9
 	android:configChanges
-		ADDED from AndroidManifest.xml:69:13
-	android:name
-		ADDED from AndroidManifest.xml:68:19
-	android:launchMode
 		ADDED from AndroidManifest.xml:70:13
+	android:name
+		ADDED from AndroidManifest.xml:69:19
+	android:launchMode
+		ADDED from AndroidManifest.xml:71:13
 meta-data#android.app.searchable
-ADDED from AndroidManifest.xml:78:13
+ADDED from AndroidManifest.xml:79:13
 	android:resource
-		ADDED from AndroidManifest.xml:79:17
+		ADDED from AndroidManifest.xml:80:17
 	android:name
-		ADDED from AndroidManifest.xml:78:24
+		ADDED from AndroidManifest.xml:79:24
 activity#com.bowen.victor.ciya.MultiMessagingActivity
-ADDED from AndroidManifest.xml:84:9
-	android:name
-		ADDED from AndroidManifest.xml:84:19
-activity#com.bowen.victor.ciya.CreateEvent
 ADDED from AndroidManifest.xml:85:9
-	android:configChanges
-		ADDED from AndroidManifest.xml:86:13
 	android:name
 		ADDED from AndroidManifest.xml:85:19
+activity#com.bowen.victor.ciya.CreateEvent
+ADDED from AndroidManifest.xml:86:9
+	android:configChanges
+		ADDED from AndroidManifest.xml:87:13
+	android:name
+		ADDED from AndroidManifest.xml:86:19
 service#com.bowen.victor.ciya.MessageServiceV2
-ADDED from AndroidManifest.xml:89:9
+ADDED from AndroidManifest.xml:90:9
 	android:name
-		ADDED from AndroidManifest.xml:89:18
+		ADDED from AndroidManifest.xml:90:18
 service#com.parse.PushService
-ADDED from AndroidManifest.xml:91:9
-	android:name
-		ADDED from AndroidManifest.xml:91:18
-receiver#com.parse.ParseBroadcastReceiver
 ADDED from AndroidManifest.xml:92:9
 	android:name
-		ADDED from AndroidManifest.xml:92:19
-intent-filter#android.intent.action.BOOT_COMPLETED+android.intent.action.USER_PRESENT
-ADDED from AndroidManifest.xml:93:13
-action#android.intent.action.BOOT_COMPLETED
-ADDED from AndroidManifest.xml:94:17
+		ADDED from AndroidManifest.xml:92:18
+receiver#com.parse.ParseBroadcastReceiver
+ADDED from AndroidManifest.xml:93:9
 	android:name
-		ADDED from AndroidManifest.xml:94:25
-action#android.intent.action.USER_PRESENT
+		ADDED from AndroidManifest.xml:93:19
+intent-filter#android.intent.action.BOOT_COMPLETED+android.intent.action.USER_PRESENT
+ADDED from AndroidManifest.xml:94:13
+action#android.intent.action.BOOT_COMPLETED
 ADDED from AndroidManifest.xml:95:17
 	android:name
 		ADDED from AndroidManifest.xml:95:25
+action#android.intent.action.USER_PRESENT
+ADDED from AndroidManifest.xml:96:17
+	android:name
+		ADDED from AndroidManifest.xml:96:25
 receiver#com.parse.ParsePushBroadcastReceiver
-ADDED from AndroidManifest.xml:98:9
+ADDED from AndroidManifest.xml:99:9
 	android:exported
-		ADDED from AndroidManifest.xml:99:13
+		ADDED from AndroidManifest.xml:100:13
 	android:name
-		ADDED from AndroidManifest.xml:98:19
+		ADDED from AndroidManifest.xml:99:19
 intent-filter#com.parse.push.intent.DELETE+com.parse.push.intent.OPEN+com.parse.push.intent.RECEIVE
-ADDED from AndroidManifest.xml:100:13
+ADDED from AndroidManifest.xml:101:13
 action#com.parse.push.intent.RECEIVE
-ADDED from AndroidManifest.xml:101:17
-	android:name
-		ADDED from AndroidManifest.xml:101:25
-action#com.parse.push.intent.DELETE
 ADDED from AndroidManifest.xml:102:17
 	android:name
 		ADDED from AndroidManifest.xml:102:25
-action#com.parse.push.intent.OPEN
+action#com.parse.push.intent.DELETE
 ADDED from AndroidManifest.xml:103:17
 	android:name
 		ADDED from AndroidManifest.xml:103:25
+action#com.parse.push.intent.OPEN
+ADDED from AndroidManifest.xml:104:17
+	android:name
+		ADDED from AndroidManifest.xml:104:25
 receiver#com.parse.GcmBroadcastReceiver
-ADDED from AndroidManifest.xml:106:9
+ADDED from AndroidManifest.xml:107:9
 	android:permission
-		ADDED from AndroidManifest.xml:107:13
+		ADDED from AndroidManifest.xml:108:13
 	android:name
-		ADDED from AndroidManifest.xml:106:19
+		ADDED from AndroidManifest.xml:107:19
 intent-filter#com.bowen.victor.ciya+com.google.android.c2dm.intent.RECEIVE+com.google.android.c2dm.intent.REGISTRATION
-ADDED from AndroidManifest.xml:108:13
+ADDED from AndroidManifest.xml:109:13
 action#com.google.android.c2dm.intent.RECEIVE
-ADDED from AndroidManifest.xml:109:17
-	android:name
-		ADDED from AndroidManifest.xml:109:25
-action#com.google.android.c2dm.intent.REGISTRATION
 ADDED from AndroidManifest.xml:110:17
 	android:name
 		ADDED from AndroidManifest.xml:110:25
+action#com.google.android.c2dm.intent.REGISTRATION
+ADDED from AndroidManifest.xml:111:17
+	android:name
+		ADDED from AndroidManifest.xml:111:25
 category#com.bowen.victor.ciya
-ADDED from AndroidManifest.xml:115:17
+ADDED from AndroidManifest.xml:116:17
 	android:name
-		ADDED from AndroidManifest.xml:115:27
+		ADDED from AndroidManifest.xml:116:27
 meta-data#com.google.android.gms.version
-ADDED from AndroidManifest.xml:119:9
+ADDED from AndroidManifest.xml:120:9
 MERGED from com.google.android.gms:play-services-base:7.0.0:21:9
 MERGED from com.google.android.gms:play-services-base:7.0.0:21:9
 MERGED from com.google.android.gms:play-services-base:7.0.0:21:9
@@ -418,12 +418,12 @@ MERGED from com.google.android.gms:play-services-base:7.0.0:21:9
 MERGED from com.google.android.gms:play-services-base:7.0.0:21:9
 MERGED from com.google.android.gms:play-services-base:7.0.0:21:9
 	android:name
-		ADDED from AndroidManifest.xml:119:20
+		ADDED from AndroidManifest.xml:120:20
 	android:value
-		ADDED from AndroidManifest.xml:120:13
+		ADDED from AndroidManifest.xml:121:13
 meta-data#com.google.android.maps.v2.API_KEY
-ADDED from AndroidManifest.xml:121:9
+ADDED from AndroidManifest.xml:122:9
 	android:name
-		ADDED from AndroidManifest.xml:122:13
-	android:value
 		ADDED from AndroidManifest.xml:123:13
+	android:value
+		ADDED from AndroidManifest.xml:124:13

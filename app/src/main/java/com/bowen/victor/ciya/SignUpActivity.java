@@ -51,6 +51,7 @@ public class SignUpActivity extends Activity {
         });
         firstName = (EditText) findViewById(R.id.name_edit_text);
         bday = (EditText) findViewById(R.id.birthday_edit_text);
+        bday.setVisibility(View.GONE);
 
         // Set up the submit button click handler
         Button mActionButton = (Button) findViewById(R.id.action_button);
