@@ -131,23 +131,36 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <Button
-                        android:id="@+id/cTabDateBtn"
-                        android:layout_width="120dp"
-                        android:layout_height="35dp"
-                        android:layout_marginLeft="10dp"
-                        android:paddingRight="16dp"
-                        android:text="Set Date"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                    <android.support.v7.widget.CardView
+                        style="@style/MaterialButton">
 
-                    <TextView
-                        android:id="@+id/cTabDateView"
-                        android:layout_width="235dp"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="30dp"
-                        android:hint="MM/DD/YYYY"
-                        android:textColor="#000"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        <TextView
+                            android:id="@+id/cTabDateView"
+                            style="@style/MaterialButtonTextView"
+                            android:background="@drawable/button_click_selector"
+                            android:hint="MM/DD/YYYY"
+                            android:textColor="#000"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+                    </android.support.v7.widget.CardView>
+                    <android.support.v7.widget.CardView
+                        style="@style/MaterialButton"
+                        >
+                        <TextView
+                            android:id="@+id/cTabTimeView"
+                            style="@style/MaterialButtonTextView"
+                            android:background="@drawable/button_click_selector"
+                            android:hint="hh:mm a"
+                            android:textColor="#000"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    </android.support.v7.widget.CardView>
+
+
+
+
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -155,23 +168,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <Button
-                        android:id="@+id/cTabTimeBtn"
-                        android:layout_width="120dp"
-                        android:layout_height="35dp"
-                        android:layout_marginLeft="10dp"
-                        android:paddingRight="16dp"
-                        android:text="Set Time"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <TextView
-                        android:id="@+id/cTabTimeView"
-                        android:layout_width="235dp"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="30dp"
-                        android:hint="hh:mm a"
-                        android:textColor="#000"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
                 </LinearLayout>
 
                 <LinearLayout

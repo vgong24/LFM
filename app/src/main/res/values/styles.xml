@@ -28,4 +28,23 @@
         <item name="android:background">#CCFF90</item>
 
     </style>
+    <style name="MaterialButton" parent="CardView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cardBackgroundColor">#ffd9d9d9</item>
+        <item name="cardCornerRadius">2dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="android:layout_margin">6dp</item>
+        
+    </style>
+    <style name="MaterialButtonTextView">
+        <item name="android:paddingTop">8.5dp</item>
+        <item name="android:paddingBottom">8.5dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+
+    </style>
+    
 </resources>
