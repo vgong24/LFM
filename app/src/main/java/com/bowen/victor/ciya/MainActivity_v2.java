@@ -4,6 +4,7 @@ package com.bowen.victor.ciya;
  * Created by Victor on 4/6/2015.
  */
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -78,6 +80,25 @@ public class MainActivity_v2 extends ActionBarActivity{
 
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
+        tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //When moving between pages, recreate options menu
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
 
     }
 
@@ -85,7 +106,17 @@ public class MainActivity_v2 extends ActionBarActivity{
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        switch(pager.getCurrentItem()){
+            case 0:
+                getMenuInflater().inflate(R.menu.menu_main, menu);
+                break;
+
+            default:
+                getMenuInflater().inflate(R.menu.details_toolbar, menu);
+                break;
+        }
+        //getMenuInflater().inflate(R.menu.menu_main, menu);
+
         return true;
     }
 
