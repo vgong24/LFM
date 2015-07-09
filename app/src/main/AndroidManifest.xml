@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bowen.victor.ciya" >
+    package="com.bowen.victor.ciya"
+    android:versionCode="2"
+    android:versionName="1.01"
+    >
 
     <permission
         android:name="com.bowen.victor.ciya.googlemapsv2.permission.MAPS_RECEIVE"
