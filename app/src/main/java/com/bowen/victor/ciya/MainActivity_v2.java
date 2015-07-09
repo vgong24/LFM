@@ -108,11 +108,14 @@ public class MainActivity_v2 extends ActionBarActivity{
         // Inflate the menu; this adds items to the action bar if it is present.
         switch(pager.getCurrentItem()){
             case 0:
-                getMenuInflater().inflate(R.menu.menu_main, menu);
+                getMenuInflater().inflate(R.menu.main_events, menu);
+                break;
+            case 1:
+                getMenuInflater().inflate(R.menu.main_chat, menu);
                 break;
 
             default:
-                getMenuInflater().inflate(R.menu.details_toolbar, menu);
+                getMenuInflater().inflate(R.menu.main_friends, menu);
                 break;
         }
         //getMenuInflater().inflate(R.menu.menu_main, menu);
