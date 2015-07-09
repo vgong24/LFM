@@ -396,7 +396,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         ArrayAdapter<String> adapt = new ArrayAdapter<String>(context,
                 android.R.layout.simple_spinner_item, catNames);
         categorySpin.setAdapter(adapt);
-        categorySpin.setSelection(1);
+        categorySpin.setSelection(0);
 
         fillPublicPrivateSpinner();
 
