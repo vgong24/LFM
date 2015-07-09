@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -26,6 +27,7 @@ public class SignUpActivity extends Activity {
     private EditText passwordAgainEditText;
     private EditText firstName;
     private EditText bday;
+    private EditText email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class SignUpActivity extends Activity {
         firstName = (EditText) findViewById(R.id.name_edit_text);
         bday = (EditText) findViewById(R.id.birthday_edit_text);
         bday.setVisibility(View.GONE);
+        email = (EditText) findViewById(R.id.emailTxt);
 
         // Set up the submit button click handler
         Button mActionButton = (Button) findViewById(R.id.action_button);
@@ -67,6 +70,7 @@ public class SignUpActivity extends Activity {
         String password = passwordEditText.getText().toString().trim();
         String passwordAgain = passwordAgainEditText.getText().toString().trim();
         String fn = firstName.getText().toString();
+        String emailAddr = email.getText().toString().trim();
 
         // Validate the sign up data
         boolean validationError = false;
@@ -89,6 +93,12 @@ public class SignUpActivity extends Activity {
             validationError = true;
             validationErrorMessage.append(getString(R.string.error_mismatched_passwords));
         }
+        if(!Patterns.EMAIL_ADDRESS.matcher(emailAddr).matches()){
+            if(!validationError) {
+                validationError = true;
+                validationErrorMessage.append("Enter email address");
+            }
+        }
         validationErrorMessage.append(getString(R.string.error_end));
 
         // If there is a validation error, display the error
@@ -107,6 +117,7 @@ public class SignUpActivity extends Activity {
         final ParseUser user = new ParseUser();
         user.setUsername(username);
         user.setPassword(password);
+        user.setEmail(emailAddr);
         user.put("firstName", fn);
 
         // Call the Parse signup method
