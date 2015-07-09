@@ -2,6 +2,7 @@ package com.bowen.victor.ciya;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBar;
@@ -49,8 +50,8 @@ public class MultiMessagingActivity extends ActionBarActivity {
     private Toolbar toolbar;
     private ActionBar ab;
 
-    private ServiceConnection serviceConnection = new MyServiceConnection();
-    private MessageClientListener messageClientListener = new MyMessageClientListener();
+    private ServiceConnection serviceConnection;
+    private MessageClientListener messageClientListener;
     private boolean isSent;
 
     private ArrayList<Pair<String, String>> recipientInfo;
@@ -63,6 +64,12 @@ public class MultiMessagingActivity extends ActionBarActivity {
         initialize();
     }
     public void initFields(){
+        if(serviceConnection == null){
+            serviceConnection = new MyServiceConnection();
+        }
+        if(messageClientListener == null){
+            messageClientListener = new MyMessageClientListener();
+        }
         toolbar = (Toolbar)findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         ab = getSupportActionBar();
@@ -78,8 +85,9 @@ public class MultiMessagingActivity extends ActionBarActivity {
             String rid = intent.getStringExtra("RECIPIENT_ID" + i);
             recipientIDs.add(rid);
         }
-        currentUserId = ParseUser.getCurrentUser().getObjectId();
-        currentName = ParseUser.getCurrentUser().getUsername();
+        ParseUser pu = ParseUser.getCurrentUser();
+        currentUserId = pu.getObjectId();
+        currentName = pu.getUsername();
         messagesList = (ListView) findViewById(R.id.listMessages);
         messageAdapter = new MessageAdapter(this);
         messagesList.setAdapter(messageAdapter);
@@ -89,7 +97,8 @@ public class MultiMessagingActivity extends ActionBarActivity {
 
         bindService(new Intent(this, MessageServiceV2.class), serviceConnection, BIND_AUTO_CREATE);
 
-        populateMessageHistory();
+        //populateMessageHistory();
+        new SetupHistory().execute();
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
 
@@ -144,31 +153,44 @@ public class MultiMessagingActivity extends ActionBarActivity {
     }
 
     //get previous messages from parse & display
-    private void populateMessageHistory() {
-        String[] userIds = {currentUserId, groupID};
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
-        ParseObject eventObject = ParseObject.createWithoutData("Events", groupID);
-        query.whereEqualTo("recipientId", eventObject);
-        query.orderByAscending("createdAt");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> messageList, com.parse.ParseException e) {
-                if (e == null) {
-                    for (int i = 0; i < messageList.size(); i++) {
-                        WritableMessage message = new WritableMessage(messageList.get(i).get("recipientId").toString(), messageList.get(i).get("messageText").toString());
-                        String username = messageList.get(i).getString("senderName");
-                        //Check which direction the message came from. currentUser or other recipients
-                        if (messageList.get(i).get("senderId").toString().equals(currentUserId)) {
-                            //Pass current username
-                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, username);
-                        } else {
-                            //Pass sender username
-                            messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING, username);
-                        }
-                    }
+    //Populate MessageHistory in background thread
+    class SetupHistory extends AsyncTask<Void, Void, List<ParseObject>>{
+
+        @Override
+        protected List<ParseObject> doInBackground(Void... params) {
+            String[] userIds = {currentUserId, groupID};
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("ParseMessage");
+            ParseObject eventObject = ParseObject.createWithoutData("Events", groupID);
+            query.whereEqualTo("recipientId", eventObject);
+            query.orderByAscending("createdAt");
+            try{
+                List<ParseObject> messageList = query.find();
+                return messageList;
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(List<ParseObject> messageList){
+            if(messageList == null){
+                return;
+            }
+            for (int i = 0; i < messageList.size(); i++) {
+                WritableMessage message = new WritableMessage(messageList.get(i).get("recipientId").toString(), messageList.get(i).get("messageText").toString());
+                String username = messageList.get(i).getString("senderName");
+                //Check which direction the message came from. currentUser or other recipients
+                if (messageList.get(i).get("senderId").toString().equals(currentUserId)) {
+                    //Pass current username
+                    messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, username);
+                } else {
+                    //Pass sender username
+                    messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING, username);
                 }
             }
-        });
+        }
     }
 
     /*

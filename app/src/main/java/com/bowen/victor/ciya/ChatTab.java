@@ -78,50 +78,6 @@ public class ChatTab extends Fragment {
 
     }
 
-
-    /**
-     * Display clickable list of events you are currently participating
-     */
-    private void setChatList(){
-        currentUserId = ParseUser.getCurrentUser().getObjectId();
-        names = new ArrayList<String>();
-        events = new ArrayList<Events>();
-
-
-        ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
-        query.whereEqualTo("User", ParseUser.getCurrentUser());
-        query.findInBackground(new FindCallback<Attendee>() {
-            @Override
-            public void done(List<Attendee> list, ParseException e) {
-                if (e == null) {
-                    for (Attendee attend : list) {
-                        try {
-                            attend.getEventObject().fetchIfNeeded();
-                            events.add(attend.getEventObject());
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
-                        }
-
-                    }
-
-                    usersListView = (ListView) activity.findViewById(R.id.usersListView);
-                    eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, events);
-                    usersListView.setAdapter(eventsArrayAdapter);
-
-                    usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            openChatRoom(events, position);
-                        }
-                    });
-                }
-            }
-        });
-
-
-    }
-
     //open a conversation with multiple people
     //Send the event object ID which will represent the universal recipient
     public void openChatRoom(ArrayList<Events> eventsArrayList, int pos){
