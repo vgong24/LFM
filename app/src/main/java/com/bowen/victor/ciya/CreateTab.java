@@ -249,7 +249,6 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         timeView = (TextView) view.findViewById(R.id.cTabTimeView);
-        timeBtn = (Button) view.findViewById(R.id.cTabTimeBtn);
         cMembers = (EditText) view.findViewById(R.id.cTabMemberEdit);
         cDescription = (EditText) view.findViewById(R.id.cTabDescEdit);
 
@@ -259,7 +258,6 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         categorySpin = (Spinner) view.findViewById(R.id.cTabCatSpin);
 
         dateView = (TextView) view.findViewById(R.id.cTabDateView);
-        dateBtn = (Button) view.findViewById(R.id.cTabDateBtn);
 
         if(catNames == null){
             catNames = new ArrayList<String>();
@@ -300,7 +298,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             }
         });
 
-        timeBtn.setOnClickListener(new View.OnClickListener() {
+        timeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Mytimepicker mtp = Mytimepicker.newInstance(timeView, cEventDateTime);
@@ -310,7 +308,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             }
         });
 
-        dateBtn.setOnClickListener(new View.OnClickListener() {
+        dateView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment newFragment = DatePickerFragment.newInstance(dateView, cEventDateTime);
