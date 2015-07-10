@@ -65,7 +65,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     ActionBar ab;
     SimpleDateFormat sdf;
     String hostId;
-    boolean isKicked;
+    boolean isKicked, isInvited;
     String inviteStatus = "";
     boolean isHost;
     String currentUserId;
@@ -99,6 +99,8 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         //Get data from previous Intent in HomeTab.java @ readySelect method
         prevInfo = getIntent();
         isHost = false;
+        isKicked = false;
+        isInvited = false;
         currentUserId = ParseUser.getCurrentUser().getObjectId();
 
         hostId = prevInfo.getExtras().getString("EventHost");
@@ -325,7 +327,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
                 List<Attendee> tempList = query.find();
                 for( Attendee attend : tempList){
-                    //Need to retrieve User data within the attend object
+                    //Get the invitation status: kicked, joined, invited
                     try{
                         inviteStatus = attend.getInviteStatus();
                         if(inviteStatus.equalsIgnoreCase(Attendee.JOINED)) {
@@ -337,15 +339,22 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                         e.printStackTrace();
                     }
 
+                    //Need to retrieve User data within the attend object
                     ParseUser user = (ParseUser) attend.get("User");
                     user.fetchIfNeeded();
                     if(user.getObjectId().equalsIgnoreCase(currentUserId)){
                         if(inviteStatus.equalsIgnoreCase(Attendee.KICKED)){
                             isKicked = true;
                         }
-                        currentlyJoined = true;
+                        switch(inviteStatus){
+                            case Attendee.KICKED:
+                                isKicked = true; break;
+                            case Attendee.INVITED:
+                                currentlyJoined = false;
+                                break;
+                            default:currentlyJoined = true;
+                        }
                         userAttendeeId = attend.getObjectId();
-                        //Get the invitation status: kicked, joined, invited
                     }
 
 

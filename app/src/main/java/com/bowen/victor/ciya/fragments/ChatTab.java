@@ -172,6 +172,7 @@ public class ChatTab extends Fragment {
             //CHANGE
             //query.whereEqualTo("User", userObject);
             query.whereEqualTo("User", ParseUser.getCurrentUser());
+            query.whereEqualTo("inviteStatus", Attendee.JOINED);
             //query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ONLY);
             try {
 
