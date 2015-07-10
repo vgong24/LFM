@@ -68,6 +68,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
 
             />
+        <activity android:name=".InviteActivity"
+            android:label="Invite Activity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            />
 
         <activity android:name="com.bowen.victor.ciya.MainActivity_v2"
             android:configChanges="orientation|keyboardHidden|screenSize"

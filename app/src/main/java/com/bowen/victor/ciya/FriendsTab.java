@@ -19,6 +19,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -46,7 +47,7 @@ public class FriendsTab extends Fragment {
 
     List<FriendRequest> friendRequestList;
 
-
+    //Regular friends tab
     public static FriendsTab newInstance(Context context){
         FriendsTab friendsTab = new FriendsTab();
 

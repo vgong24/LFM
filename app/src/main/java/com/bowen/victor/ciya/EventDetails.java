@@ -184,6 +184,11 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
         int id = item.getItemId();
 
+        if(id == R.id.action_invite){
+            Intent intent = new Intent(getApplicationContext(), InviteActivity.class);
+            startActivity(intent);
+        }
+
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_switch_chat) {
             Toast.makeText(getApplicationContext(), "meep", Toast.LENGTH_SHORT).show();

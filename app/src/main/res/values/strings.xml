@@ -33,6 +33,7 @@
     <string name="search_hint">Username</string>
     <string name="findContact">Contact</string>
     <string name="action_invite_friend">Invite</string>
+    <string name="invitation">INVITES</string>
 
     <string-array name="public_private">
         <item>Public</item>
