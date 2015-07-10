@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,17 +7,20 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.bowen.victor.ciya.structures.FriendProfile;
+import com.bowen.victor.ciya.R;
+
 import java.util.List;
 
 /**
- * Created by Victor on 6/30/2015.
+ * Created by Victor on 7/9/2015.
  */
-public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
+public class InviteListAdapter extends ArrayAdapter<FriendProfile>{
     Context context;
     int resourcexml;
     List<FriendProfile> friendProfiles;
 
-    public FriendListAdapter(Context context, int resource, List<FriendProfile> friendList) {
+    public InviteListAdapter(Context context, int resource, List<FriendProfile> friendList) {
         super(context, resource, friendList);
         this.context = context;
         resourcexml = resource;
@@ -36,7 +39,7 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
             holder = new ViewHolder();
 
             holder.friendName = (TextView) view.findViewById(R.id.friend_username);
-            holder.friendStatus = (TextView) view.findViewById(R.id.friend_item_status);
+            holder.inviteStatus = (TextView) view.findViewById(R.id.invite_status);
 
 
             view.setTag(holder);
@@ -47,31 +50,14 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
         FriendProfile friendProfile = friendProfiles.get(position);
         String fName = friendProfile.getUserName();
         holder.friendName.setText(fName);
-        String statusBox = friendProfile.getStatus();
-
-
-        switch(statusBox){
-            case "pending":
-                holder.friendStatus.setText("Pending");
-                break;
-
-            case "request": //if someone sent you a request, you can approve it
-                holder.friendStatus.setText("Accept");
-                break;
-            case "approve": //if you are already friends, you can choose to remove friend
-                holder.friendStatus.setText("Remove");
-                break;
-            default:
-                holder.friendStatus.setVisibility(View.GONE);
-                break;
-        }
+        holder.inviteStatus.setText("Invite");
 
         return view;
     }
 
     static class ViewHolder {
         TextView friendName;
-        TextView friendStatus;
+        TextView inviteStatus;
 
 
     }

@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.fragments;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -19,7 +19,11 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.bowen.victor.ciya.FriendListDBHandler;
+import com.bowen.victor.ciya.structures.FriendRequest;
+import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.adapters.FriendListAdapter;
+import com.bowen.victor.ciya.structures.FriendProfile;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;

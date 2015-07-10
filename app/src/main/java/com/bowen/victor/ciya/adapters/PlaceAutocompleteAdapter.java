@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.adapters;
 
 /*
  * Copyright (C) 2015 Google Inc. All Rights Reserved.

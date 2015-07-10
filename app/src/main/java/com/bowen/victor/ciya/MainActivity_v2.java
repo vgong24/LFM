@@ -4,7 +4,6 @@ package com.bowen.victor.ciya;
  * Created by Victor on 4/6/2015.
  */
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,11 +15,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bowen.victor.ciya.slidingtab.SlidingTabLayout;
+import com.bowen.victor.ciya.slidingtab.ViewPagerAdapter;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseUser;
 

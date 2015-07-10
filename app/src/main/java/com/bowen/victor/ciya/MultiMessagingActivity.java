@@ -17,7 +17,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
+import com.bowen.victor.ciya.adapters.MessageAdapter;
+import com.bowen.victor.ciya.structures.Events;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;

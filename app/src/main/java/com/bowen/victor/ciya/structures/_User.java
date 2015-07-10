@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.structures;
 
 import com.parse.ParseClassName;
 import com.parse.ParseException;

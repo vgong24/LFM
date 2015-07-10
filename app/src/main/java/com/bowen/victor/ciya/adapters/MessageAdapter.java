@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.bowen.victor.ciya.R;
 import com.sinch.android.rtc.messaging.WritableMessage;
 
 import java.util.ArrayList;

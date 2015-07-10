@@ -8,6 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.bowen.victor.ciya.fragments.CreateTab;
+import com.bowen.victor.ciya.structures.Attendee;
+
 import java.util.ArrayList;
 
 /**

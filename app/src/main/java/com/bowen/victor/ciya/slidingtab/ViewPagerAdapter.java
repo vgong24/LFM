@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.slidingtab;
 
 /**
  * Created by Victor on 4/6/2015.
@@ -8,6 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.bowen.victor.ciya.fragments.ChatTab;
+import com.bowen.victor.ciya.fragments.CreateTab;
+import com.bowen.victor.ciya.fragments.FriendsTab;
+import com.bowen.victor.ciya.fragments.HomeTab;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 /**

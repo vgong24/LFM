@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.structures;
 
 /**
  * Created by Victor on 6/30/2015.

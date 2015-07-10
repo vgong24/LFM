@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.fragments;
 
 import android.app.Activity;
 
@@ -12,6 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bowen.victor.ciya.FriendListDBHandler;
+import com.bowen.victor.ciya.structures.FriendRequest;
+import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.adapters.InviteListAdapter;
+import com.bowen.victor.ciya.structures.FriendProfile;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;

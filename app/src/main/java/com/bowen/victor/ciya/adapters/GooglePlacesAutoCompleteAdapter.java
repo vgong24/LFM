@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,6 +9,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+
+import com.bowen.victor.ciya.PlaceDetails;
+import com.bowen.victor.ciya.PlacesAPI;
+import com.bowen.victor.ciya.R;
 
 import java.util.ArrayList;
 

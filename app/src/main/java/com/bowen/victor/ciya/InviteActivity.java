@@ -1,6 +1,5 @@
 package com.bowen.victor.ciya;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -9,6 +8,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import com.bowen.victor.ciya.fragments.InviteFragment;
+import com.bowen.victor.ciya.structures.Attendee;
 
 import java.util.ArrayList;
 

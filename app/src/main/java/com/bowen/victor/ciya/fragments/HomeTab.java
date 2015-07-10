@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.fragments;
 
 import android.app.Activity;
 
@@ -15,6 +15,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;;
 import android.widget.Toast;
 
+import com.bowen.victor.ciya.EventDetails;
+import com.bowen.victor.ciya.GPSTracker;
+import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.adapters.EventListAdapter;
+import com.bowen.victor.ciya.structures.Events;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;

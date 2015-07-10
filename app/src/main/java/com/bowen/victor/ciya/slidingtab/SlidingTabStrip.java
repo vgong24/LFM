@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.slidingtab;
 
 import android.R;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -28,6 +28,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bowen.victor.ciya.EventDetails;
+import com.bowen.victor.ciya.GPSTracker;
+import com.bowen.victor.ciya.MainActivity_v2;
+import com.bowen.victor.ciya.PlaceDetails;
+import com.bowen.victor.ciya.PlacesAPI;
+import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.adapters.GooglePlacesAutoCompleteAdapter;
+import com.bowen.victor.ciya.structures.Attendee;
+import com.bowen.victor.ciya.structures.Category;
+import com.bowen.victor.ciya.structures.Events;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;

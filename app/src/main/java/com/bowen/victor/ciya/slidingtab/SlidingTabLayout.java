@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.slidingtab;
 
 /*
  * Copyright (C) 2013 GroupUp Project
@@ -30,6 +30,8 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bowen.victor.ciya.R;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to

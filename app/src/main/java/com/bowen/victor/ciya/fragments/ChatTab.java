@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.fragments;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -17,6 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.bowen.victor.ciya.MultiMessagingActivity;
+import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.adapters.ChatListAdapter;
+import com.bowen.victor.ciya.structures.Attendee;
+import com.bowen.victor.ciya.structures.Events;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
