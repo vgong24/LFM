@@ -9,15 +9,22 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bowen.victor.ciya.dbHandlers.FriendListDBHandler;
+import com.bowen.victor.ciya.structures.Attendee;
+import com.bowen.victor.ciya.structures.Events;
 import com.bowen.victor.ciya.structures.FriendRequest;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.InviteListAdapter;
 import com.bowen.victor.ciya.structures.FriendProfile;
+import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,13 +48,16 @@ public class InviteFragment extends Fragment {
     InviteListAdapter profileAdapter;
 
     String currentUser;
+    String eventid;
     String reqType;
 
     List<FriendRequest> friendRequestList;
 
-    public static InviteFragment newInstance(Context context){
+    public static InviteFragment newInstance(Context context, String eventID){
         InviteFragment fragment = new InviteFragment();
-
+        Bundle args = new Bundle();
+        args.putString("eventId", eventID);
+        fragment.setArguments(args);
         fragment.context = context;
         fragment.activity = (Activity) context;
         return fragment;
@@ -88,8 +98,35 @@ public class InviteFragment extends Fragment {
     public void populateFriendList(){
         profileAdapter = new InviteListAdapter(context, R.layout.invite_item, friendNames);
         friendlv.setAdapter(profileAdapter);
-        //onFriendClick();
+        onFriendClick();
     }
+    public void onFriendClick(){
+        friendlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FriendProfile fp = friendNames.get(position);
+                String eventid = getArguments().getString("eventId");
+                //send invite to person. at this point probably multiple invites
+                sendInvite(eventid, fp.getUserId());
+            }
+        });
+    }
+
+    public void sendInvite(String eventJoining, String invitee){
+        Toast.makeText(context, "Invite Sent", Toast.LENGTH_SHORT).show();
+        Attendee attend = new Attendee();
+        attend.setEvent(eventJoining);
+        attend.setUser(invitee);
+        attend.setAttendeeStatus(Attendee.INVITED);
+        attend.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                //once clicked, refresh page
+                //new SetUpBackground().execute(evnt);
+            }
+        });
+    }
+
 
 
 }

@@ -1,5 +1,6 @@
 package com.bowen.victor.ciya.activities;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -28,7 +29,10 @@ public class InviteActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
 
-        fragment = InviteFragment.newInstance(InviteActivity.this);
+        Intent prevIntent = getIntent();
+        String eventID = prevIntent.getStringExtra("EventID");
+
+        fragment = InviteFragment.newInstance(InviteActivity.this, eventID);
         progressBar = (ProgressBar) findViewById(R.id.chatRoomProgressBar);
         progressBar.setVisibility(View.VISIBLE);
         transaction = getSupportFragmentManager().beginTransaction();

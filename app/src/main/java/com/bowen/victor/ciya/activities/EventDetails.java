@@ -196,6 +196,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
         if(id == R.id.action_invite){
             Intent intent = new Intent(getApplicationContext(), InviteActivity.class);
+            intent.putExtra("EventID", evnt.getObjectId());
             startActivity(intent);
         }
 
@@ -221,6 +222,9 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             joinTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(isInvited){
+                        joinedAsInvitee(evnt);
+                    }
                     joinEventAsAttendee(evnt);
                 }
             });
@@ -244,7 +248,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         }
 
     }
-    public void joinEventAsAttendee(Events eventJoining){
+    public void joinedAsInvitee(Events eventJoining){
         Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
         Attendee attend = new Attendee();
         attend.setEvent(eventJoining);
@@ -255,6 +259,27 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             public void done(ParseException e) {
                 //once clicked, refresh page
                 new SetUpBackground().execute(evnt);
+            }
+        });
+
+    }
+    public void joinEventAsAttendee(final Events eventJoining){
+        Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Attendees");
+        Log.v("leaveEvent", "attendeeId: " + userAttendeeId);
+        query.getInBackground(userAttendeeId, new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject parseObject, ParseException e) {
+                if (e == null) {
+                    parseObject.put("inviteStatus", Attendee.JOINED);
+                    parseObject.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            new SetUpBackground().execute(eventJoining);
+
+                        }
+                    });
+                }
             }
         });
     }
@@ -351,6 +376,8 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                                 isKicked = true; break;
                             case Attendee.INVITED:
                                 currentlyJoined = false;
+
+
                                 break;
                             default:currentlyJoined = true;
                         }

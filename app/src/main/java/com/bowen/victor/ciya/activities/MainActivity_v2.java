@@ -160,6 +160,7 @@ public class MainActivity_v2 extends ActionBarActivity{
         if(id == R.id.emptyFriendDB){
             FriendListDBHandler db = new FriendListDBHandler(getApplicationContext());
             db.deleteDatabase();
+            //db.dropDatabase();
         }
 
         return super.onOptionsItemSelected(item);

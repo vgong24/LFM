@@ -17,13 +17,14 @@ import java.util.List;
  */
 public class FriendListDBHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "friendList",
     TABLE_FRIENDS = "friends",
     KEY_ID = "id",
-    KEY_FRIEND_ID = "fObjectId",
+    KEY_OBJECT_ID = "fObjectId",
     KEY_REAL_NAME = "fRealName",
     KEY_NAME = "fname",
+    KEY_FRIEND_ID = "fuserId",
     KEY_STATUS = "Friendstatus";
 
 
@@ -33,7 +34,7 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_FRIENDS + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_FRIEND_ID + " TEXT, " + KEY_NAME + " TEXT, " + KEY_REAL_NAME + " TEXT, " + KEY_STATUS + " TEXT )");
+        db.execSQL("CREATE TABLE " + TABLE_FRIENDS + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_OBJECT_ID + " TEXT, "+ KEY_FRIEND_ID + " TEXT, " + KEY_NAME + " TEXT, " + KEY_REAL_NAME + " TEXT, " + KEY_STATUS + " TEXT )");
     }
 
     @Override
@@ -51,14 +52,15 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
         db.delete(TABLE_FRIENDS, null, null);
     }
 
-    public void createFriend(String friendObjectId, String fname, String realName, String status){
+    public void createFriend(String friendObjectId, String friendId, String fname, String realName, String status){
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_FRIEND_ID, friendObjectId);
+        values.put(KEY_OBJECT_ID, friendObjectId);
         values.put(KEY_NAME, fname);
         values.put(KEY_REAL_NAME, realName);
         values.put(KEY_STATUS, status);
+        values.put(KEY_FRIEND_ID,friendId);
 
         db.insert(TABLE_FRIENDS, null, values);
         db.close();
@@ -68,7 +70,7 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(KEY_STATUS, status);
-        db.update(TABLE_FRIENDS, cv, KEY_FRIEND_ID + " = " + "'" + friendObjId + "'", null);
+        db.update(TABLE_FRIENDS, cv, KEY_OBJECT_ID + " = " + "'" + friendObjId + "'", null);
 
     }
 
@@ -86,7 +88,7 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
 
     public void deleteFriend(String friendObjectId){
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(TABLE_FRIENDS, KEY_FRIEND_ID + "=?", new String[]{friendObjectId});
+        db.delete(TABLE_FRIENDS, KEY_OBJECT_ID + "=?", new String[]{friendObjectId});
         db.close();
 
     }
@@ -99,7 +101,7 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             do{
-                profiles.add(new FriendProfile(cursor.getString(1),cursor.getString(2), cursor.getString(3), cursor.getString(4)));
+                profiles.add(new FriendProfile(cursor.getString(1),cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getString(5)));
             }
             while(cursor.moveToNext());
         }
@@ -127,7 +129,7 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
 
     public int getFriendCount(){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + KEY_FRIEND_ID + " FROM "+ TABLE_FRIENDS, null);
+        Cursor cursor = db.rawQuery("SELECT " + KEY_OBJECT_ID + " FROM "+ TABLE_FRIENDS, null);
         int count = cursor.getCount();
         db.close();
         cursor.close();

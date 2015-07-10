@@ -24,7 +24,9 @@ import com.bowen.victor.ciya.structures.FriendRequest;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.FriendListAdapter;
 import com.bowen.victor.ciya.structures.FriendProfile;
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -82,6 +84,7 @@ public class FriendsTab extends Fragment {
         }
 
         dbhandler = new FriendListDBHandler(context);
+
         if(dbhandler.getFriendCount() != 0){
             friendNames.addAll(dbhandler.getAllFriendProfiles());
         }
@@ -158,7 +161,7 @@ public class FriendsTab extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FriendProfile friendProfile = friendNames.get(position);
-                String friendReqId = friendProfile.getUserId();
+                String friendReqId = friendProfile.getFriendRequestId();
                 String friendprofileStatus = friendProfile.getStatus();
                 Log.v("OnClickFriend: ", friendprofileStatus + " " + friendReqId);
                 switch(friendprofileStatus){
@@ -227,7 +230,7 @@ public class FriendsTab extends Fragment {
                 for(FriendRequest fr : friendRequestList){
                     boolean newFriendbool = false;
 
-                    String reqFrom, reqTo, fstatus, fObjectId;
+                    String reqFrom, reqTo, fstatus, fObjectId, friendName = "";
 
                     fObjectId = fr.getObjectId();
                     fstatus = fr.getString("status");
@@ -248,6 +251,7 @@ public class FriendsTab extends Fragment {
                         reqType = reqTo;
                         newFriends = true;
                         newFriendbool = true;
+                        friendName = reqTo;
 
                         //if fstatus is request, make it pending (since reqFrom is current user)
                         if (fstatus.equalsIgnoreCase("request")) {
@@ -258,15 +262,17 @@ public class FriendsTab extends Fragment {
                         reqType = reqFrom;
                         newFriends = true;
                         newFriendbool = true;
+                        friendName = reqFrom;
                     }else {
                         int pos = ((pTo > pFrom) ? pTo : pFrom);
+
                         FriendProfile temprofile = friendNames.get(pos);
                         String tempStat = temprofile.getStatus();
                         if( !(fstatus.equalsIgnoreCase("request") && (tempStat.equalsIgnoreCase("pending") || tempStat.equalsIgnoreCase("request") ))){
 
                             temprofile.setStatus(fstatus);
                             //Update status in db
-                            dbhandler.changeFriendStatus(temprofile.getUserId(), fstatus);
+                            dbhandler.changeFriendStatus(temprofile.getFriendRequestId(), fstatus);
                             newFriends = true;
 
                         }
@@ -274,10 +280,19 @@ public class FriendsTab extends Fragment {
                     }
 
                     if(newFriendbool){//if new friend, add to db
-                        dbhandler.createFriend(fObjectId, reqType, "", fstatus);
-                        FriendProfile fp = new FriendProfile(fObjectId, reqType, "", fstatus);
-                        Log.v("AddingFriend", "Adding friend");
-                        friendNames.add(fp);
+                        ParseQuery query = ParseUser.getQuery();
+                        query.whereEqualTo("username", friendName);
+                        List<ParseUser> list = query.find();
+                        for(ParseUser friendObject: list){
+
+                            dbhandler.createFriend(fObjectId, friendObject.getObjectId(), reqType, "", fstatus);
+                            FriendProfile fp = new FriendProfile(fObjectId, friendObject.getObjectId(), reqType, "", fstatus);
+                            Log.v("AddingFriend", "Adding friend");
+                            friendNames.add(fp);
+                        }
+
+
+
 
                     }
 

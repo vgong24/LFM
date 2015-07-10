@@ -56,12 +56,13 @@ public class Attendee extends ParseObject {
         return getString("Event");
     }
     public Events getEventObject(){return (Events) getParseObject("Event");}
-    public void setEventID(String id) {
-        put("Event", id);
+    public void setEvent(String id) {
+        put("Event", ParseObject.createWithoutData("Events", id));
     }
     public void setEvent(Events e){
         put("Event", e);
     }
+
     public static ParseQuery<Attendee> getQuery() {
         return ParseQuery.getQuery(Attendee.class);
     }
