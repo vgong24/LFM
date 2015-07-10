@@ -131,7 +131,29 @@ public class FriendsTab extends Fragment {
 
     //Display Friendlist then set up onclick listeners
     public void populateFriendList(){
-        profileAdapter = new FriendListAdapter(context, R.layout.friend_request_item, friendNames);
+        profileAdapter = new FriendListAdapter(context, R.layout.friend_request_item, friendNames, new FriendListAdapter.BtnClickListener() {
+
+            @Override
+            public void onBtnClick(int position) {
+                FriendProfile friendProfile = friendNames.get(position);
+                String friendReqId = friendProfile.getFriendRequestId();
+                String friendProfileStatus = friendProfile.getStatus();
+
+                switch(friendProfileStatus){
+                    case REMOVE:
+                        Toast.makeText(context, "Removed Friend Request", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ACCEPT:
+                        FriendRequest.approveFriendRequest(friendReqId);
+                        Toast.makeText(context, "Accepted Friend Request", Toast.LENGTH_SHORT).show();
+                        friendProfile.setStatus(REMOVE);
+                        break;
+                    case PENDING:
+                        break;
+                }
+                populateFriendList();
+            }
+        });
         friendlv.setAdapter(profileAdapter);
         onFriendClick();
     }
@@ -155,28 +177,33 @@ public class FriendsTab extends Fragment {
     private final String REMOVE = "approve";
     private final String ACCEPT = "request";
     private final String PENDING = "pending";
+    private int focus = -1;
 
     public void onFriendClick(){
         friendlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                /*
                 FriendProfile friendProfile = friendNames.get(position);
                 String friendReqId = friendProfile.getFriendRequestId();
                 String friendprofileStatus = friendProfile.getStatus();
                 Log.v("OnClickFriend: ", friendprofileStatus + " " + friendReqId);
+
                 switch(friendprofileStatus){
                     case REMOVE:
+                        Toast.makeText(context, "Removed Friend Request", Toast.LENGTH_SHORT).show();
                         break;
                     case ACCEPT:
                         FriendRequest.approveFriendRequest(friendReqId);
                         Toast.makeText(context, "Accepted Friend Request", Toast.LENGTH_SHORT).show();
                         friendProfile.setStatus(REMOVE);
-
                         break;
                     case PENDING:
                         break;
                 }
+
                 populateFriendList();
+                */
             }
         });
     }
