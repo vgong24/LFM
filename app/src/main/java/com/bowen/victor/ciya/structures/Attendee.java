@@ -8,6 +8,10 @@ import com.parse.*;
 
 @ParseClassName("Attendees")
 public class Attendee extends ParseObject {
+    public final static String JOINED = "joined";
+    public final static String KICKED = "kicked";
+    public final static String INVITED = "invited";
+
     public void setAttend(boolean here) {
         put("Attended", here);
     }
@@ -30,6 +34,15 @@ public class Attendee extends ParseObject {
     }
     public ParseUser getUserID(){
         return (ParseUser) getParseUser("User");
+    }
+    public String getInviteStatus(){
+        return getString("inviteStatus");
+    }
+    public void setAttendeeStatus(String status){
+        put("inviteStatus", status);
+    }
+    public void setInviteStatus(String status){
+        setAttendeeStatus(status);
     }
 
     public void setUser(String id) {

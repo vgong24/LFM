@@ -45,6 +45,8 @@ import java.util.List;
  * Created by Victor on 2/14/2015.
  */
 public class EventDetails extends ActionBarActivity implements CustomMapFragment.OnMapReadyListener {
+
+
     Intent prevInfo;
     String objId;
     TextView joinTxtView;
@@ -63,6 +65,8 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     ActionBar ab;
     SimpleDateFormat sdf;
     String hostId;
+    boolean isKicked;
+    String inviteStatus = "";
     boolean isHost;
     String currentUserId;
     String userAttendeeId;
@@ -203,9 +207,13 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     }
 
     public void initOnClicks(final boolean hasJoined){
-        //If current user hasn't joined the event yet
+        //If current user hasn't joined the event yet and hasn't been kicked by host
         joinTxtView.setEnabled(true);
-        if(!hasJoined && !isHost){
+
+        if(isKicked){
+            joinTxtView.setText("Unable to join");
+
+        }else if(!hasJoined && !isHost){
             joinTxtView.setText("Join");
             joinTxtView.setBackgroundResource(R.color.GreenJoin);
             joinTxtView.setOnClickListener(new View.OnClickListener() {
@@ -214,6 +222,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                     joinEventAsAttendee(evnt);
                 }
             });
+
         }else{
             joinTxtView.setText("Leave");
             joinTxtView.setBackgroundResource(R.color.RedExit);
@@ -238,6 +247,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         Attendee attend = new Attendee();
         attend.setEvent(eventJoining);
         attend.setUser(currentUserId);
+        attend.setAttendeeStatus(Attendee.JOINED);
         attend.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -316,13 +326,30 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                 List<Attendee> tempList = query.find();
                 for( Attendee attend : tempList){
                     //Need to retrieve User data within the attend object
+                    try{
+                        inviteStatus = attend.getInviteStatus();
+                        if(inviteStatus.equalsIgnoreCase(Attendee.JOINED)) {
+                            attendeesArr.add(attend);
+                        }
+                    }catch(NullPointerException e){
+                        inviteStatus="joined";
+                        attendeesArr.add(attend);
+                        e.printStackTrace();
+                    }
+
                     ParseUser user = (ParseUser) attend.get("User");
                     user.fetchIfNeeded();
                     if(user.getObjectId().equalsIgnoreCase(currentUserId)){
+                        if(inviteStatus.equalsIgnoreCase(Attendee.KICKED)){
+                            isKicked = true;
+                        }
                         currentlyJoined = true;
                         userAttendeeId = attend.getObjectId();
+                        //Get the invitation status: kicked, joined, invited
                     }
-                    attendeesArr.add(attend);
+
+
+
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
