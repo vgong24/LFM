@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.activities;
 
 /**
  * Created by Victor on 4/6/2015.
@@ -19,6 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bowen.victor.ciya.dbHandlers.FriendListDBHandler;
+import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.services.MessageServiceV2;
 import com.bowen.victor.ciya.slidingtab.SlidingTabLayout;
 import com.bowen.victor.ciya.slidingtab.ViewPagerAdapter;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -180,7 +183,7 @@ public class MainActivity_v2 extends ActionBarActivity{
             }
         };
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.bowen.victor.ciya.MainActivity_v2"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("com.bowen.victor.ciya.activities.MainActivity_v2"));
     }
 
     //shut off sinch client

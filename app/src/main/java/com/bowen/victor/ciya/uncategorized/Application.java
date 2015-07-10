@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.uncategorized;
 
 import com.bowen.victor.ciya.structures.Assets;
 import com.bowen.victor.ciya.structures.Attendee;
@@ -6,6 +6,7 @@ import com.bowen.victor.ciya.structures.Category;
 import com.bowen.victor.ciya.structures.Events;
 import com.bowen.victor.ciya.structures.FriendRequest;
 import com.bowen.victor.ciya.structures.Interests;
+import com.bowen.victor.ciya.structures.Reviews;
 import com.bowen.victor.ciya.structures._User;
 import com.parse.Parse;
 import com.parse.ParseObject;

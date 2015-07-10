@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.bowen.victor.ciya.MultiMessagingActivity;
+import com.bowen.victor.ciya.activities.MultiMessagingActivity;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.ChatListAdapter;
 import com.bowen.victor.ciya.structures.Attendee;

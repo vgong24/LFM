@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -37,7 +37,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
     private MessageClient messageClient = null;
     private String currentUserId;
     private LocalBroadcastManager broadcaster;
-    private Intent broadcastIntent = new Intent("com.bowen.victor.ciya.MainActivity_v2");
+    private Intent broadcastIntent = new Intent("com.bowen.victor.ciya.activities.MainActivity_v2");
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

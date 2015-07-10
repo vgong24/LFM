@@ -28,11 +28,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bowen.victor.ciya.EventDetails;
-import com.bowen.victor.ciya.GPSTracker;
-import com.bowen.victor.ciya.MainActivity_v2;
-import com.bowen.victor.ciya.PlaceDetails;
-import com.bowen.victor.ciya.PlacesAPI;
+import com.bowen.victor.ciya.activities.EventDetails;
+import com.bowen.victor.ciya.tools.GPSTracker;
+import com.bowen.victor.ciya.activities.MainActivity_v2;
+import com.bowen.victor.ciya.structures.PlaceDetails;
+import com.bowen.victor.ciya.tools.PlacesAPI;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.GooglePlacesAutoCompleteAdapter;
 import com.bowen.victor.ciya.structures.Attendee;

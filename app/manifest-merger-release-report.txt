@@ -271,7 +271,7 @@ MERGED from com.android.support:support-v4:22.0.0:22:5
 		ADDED from AndroidManifest.xml:44:9
 	android:name
 		ADDED from AndroidManifest.xml:41:9
-activity#com.bowen.victor.ciya.LoginActivity_v2
+activity#com.bowen.victor.ciya.activities.LoginActivity_v2
 ADDED from AndroidManifest.xml:47:9
 	android:noHistory
 		ADDED from AndroidManifest.xml:49:13
@@ -291,7 +291,7 @@ category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:56:17
 	android:name
 		ADDED from AndroidManifest.xml:56:27
-activity#com.bowen.victor.ciya.SignUpActivity
+activity#com.bowen.victor.ciya.activities.SignUpActivity
 ADDED from AndroidManifest.xml:60:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:63:13
@@ -299,7 +299,7 @@ ADDED from AndroidManifest.xml:60:9
 		ADDED from AndroidManifest.xml:62:13
 	android:name
 		ADDED from AndroidManifest.xml:61:13
-activity#com.bowen.victor.ciya.EventDetails
+activity#com.bowen.victor.ciya.activities.EventDetails
 ADDED from AndroidManifest.xml:65:9
 	android:label
 		ADDED from AndroidManifest.xml:67:13
@@ -307,7 +307,7 @@ ADDED from AndroidManifest.xml:65:9
 		ADDED from AndroidManifest.xml:68:13
 	android:name
 		ADDED from AndroidManifest.xml:66:13
-activity#com.bowen.victor.ciya.MainActivity_v2
+activity#com.bowen.victor.ciya.activities.MainActivity_v2
 ADDED from AndroidManifest.xml:72:9
 	android:configChanges
 		ADDED from AndroidManifest.xml:73:13
@@ -321,17 +321,17 @@ ADDED from AndroidManifest.xml:82:13
 		ADDED from AndroidManifest.xml:83:17
 	android:name
 		ADDED from AndroidManifest.xml:82:24
-activity#com.bowen.victor.ciya.MultiMessagingActivity
+activity#com.bowen.victor.ciya.activities.MultiMessagingActivity
 ADDED from AndroidManifest.xml:88:9
 	android:name
 		ADDED from AndroidManifest.xml:88:19
-activity#com.bowen.victor.ciya.CreateEvent
+activity#com.bowen.victor.ciya.activities.CreateEvent
 ADDED from AndroidManifest.xml:89:9
 	android:configChanges
 		ADDED from AndroidManifest.xml:90:13
 	android:name
 		ADDED from AndroidManifest.xml:89:19
-service#com.bowen.victor.ciya.MessageServiceV2
+service#com.bowen.victor.ciya.services.MessageServiceV2
 ADDED from AndroidManifest.xml:93:9
 	android:name
 		ADDED from AndroidManifest.xml:93:18

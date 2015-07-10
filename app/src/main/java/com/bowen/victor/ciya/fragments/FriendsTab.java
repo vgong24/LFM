@@ -19,7 +19,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bowen.victor.ciya.FriendListDBHandler;
+import com.bowen.victor.ciya.dbHandlers.FriendListDBHandler;
 import com.bowen.victor.ciya.structures.FriendRequest;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.FriendListAdapter;

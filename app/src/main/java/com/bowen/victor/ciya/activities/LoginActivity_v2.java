@@ -1,9 +1,11 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.activities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.services.MessageServiceV2;
 import com.parse.LogInCallback;
 import com.parse.ParseUser;
 

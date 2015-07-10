@@ -1,9 +1,12 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.uncategorized;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.activities.MainActivity_v2;
 
 /**
  * Created by Victor on 2/14/2015.

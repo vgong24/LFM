@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.activities;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.AttendeeListAdapter;
 import com.bowen.victor.ciya.fragments.CustomMapFragment;
 import com.bowen.victor.ciya.structures.Attendee;

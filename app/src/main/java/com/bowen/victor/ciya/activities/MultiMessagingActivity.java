@@ -1,4 +1,4 @@
-package com.bowen.victor.ciya;
+package com.bowen.victor.ciya.activities;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -17,7 +17,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.MessageAdapter;
+import com.bowen.victor.ciya.services.MessageServiceV2;
 import com.bowen.victor.ciya.structures.Events;
 import com.parse.GetCallback;
 import com.parse.ParseException;

@@ -15,8 +15,8 @@ import android.widget.ListView;
 import android.widget.ProgressBar;;
 import android.widget.Toast;
 
-import com.bowen.victor.ciya.EventDetails;
-import com.bowen.victor.ciya.GPSTracker;
+import com.bowen.victor.ciya.activities.EventDetails;
+import com.bowen.victor.ciya.tools.GPSTracker;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.EventListAdapter;
 import com.bowen.victor.ciya.structures.Events;
