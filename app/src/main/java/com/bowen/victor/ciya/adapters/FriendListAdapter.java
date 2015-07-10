@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bowen.victor.ciya.structures.FriendProfile;
@@ -39,7 +40,8 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
             holder = new ViewHolder();
 
             holder.friendName = (TextView) view.findViewById(R.id.friend_username);
-            holder.friendStatus = (TextView) view.findViewById(R.id.friend_item_status);
+            holder.friendStatusText = (TextView) view.findViewById(R.id.friend_status_text);
+            holder.friendStatusImg = (ImageView) view.findViewById(R.id.friend_status_img);
 
 
             view.setTag(holder);
@@ -55,17 +57,19 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
 
         switch(statusBox){
             case "pending":
-                holder.friendStatus.setText("Pending");
+                holder.friendStatusText.setText("Pending");
                 break;
 
             case "request": //if someone sent you a request, you can approve it
-                holder.friendStatus.setText("Accept");
+                holder.friendStatusText.setText("Accept");
+                holder.friendStatusImg.setImageResource(R.drawable.greenplus);
                 break;
             case "approve": //if you are already friends, you can choose to remove friend
-                holder.friendStatus.setText("Remove");
+                holder.friendStatusText.setText("Remove");
+                holder.friendStatusImg.setImageResource(R.drawable.redx);
                 break;
             default:
-                holder.friendStatus.setVisibility(View.GONE);
+                holder.friendStatusText.setVisibility(View.GONE);
                 break;
         }
 
@@ -74,8 +78,8 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
 
     static class ViewHolder {
         TextView friendName;
-        TextView friendStatus;
-
+        TextView friendStatusText;
+        ImageView friendStatusImg;
 
     }
 }

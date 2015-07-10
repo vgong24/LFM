@@ -33,7 +33,7 @@ public class EventListAdapter extends ArrayAdapter<Events> {
     int viewListXML;
     ArrayList<Events> eventArray;
     Context context;
-    private final double BITMAP_SCALE = 14.4;
+    private final double BITMAP_SCALE = 9;
 
     public EventListAdapter(Context context, int viewListXML, ArrayList<Events> eventArray){//Example R.layout.event_list_item, events
         super(context, viewListXML, eventArray);

@@ -39,14 +39,19 @@
                 android:id="@+id/friend_username" />
 
         </LinearLayout>
-
+        
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".20"
+            android:id="@+id/friend_status_img"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceButton"
-            android:text="Capacity"
+            android:text="Status"
             android:layout_weight=".30"
-            android:id="@+id/friend_item_status" />
+            android:id="@+id/friend_status_text" />
 
 
     </LinearLayout>
