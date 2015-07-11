@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivityV2">
     <item
-        android:id="@+id/view_invites"
+        android:id="@+id/view_invites_action"
         android:title="@string/invitation"
         android:icon="@drawable/ic_action_new_event"
         app:showAsAction="ifRoom"
