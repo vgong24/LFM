@@ -1,5 +1,6 @@
 package com.bowen.victor.ciya.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -89,6 +90,19 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         setupMap();
         new SetUpBackground().execute(evnt);
 
+    }
+
+    public static void startEventDetails(Context context, Events eventSelect){
+        //Optimize: create a static method to start this activity
+        Intent i = new Intent(context.getApplicationContext(), EventDetails.class);
+        i.putExtra("EventId", eventSelect.getObjectId());
+        i.putExtra("EventDate", eventSelect.getDate().getTime());
+        i.putExtra("EventTitle", eventSelect.getDescr());
+        i.putExtra("EventLat", eventSelect.getLocation().getLatitude());
+        i.putExtra("EventLong", eventSelect.getLocation().getLongitude());
+        i.putExtra("EventHost", eventSelect.getHost().getObjectId());
+
+        context.startActivity(i);
     }
 
     //Initialize textviews, arraylists, Intent extras

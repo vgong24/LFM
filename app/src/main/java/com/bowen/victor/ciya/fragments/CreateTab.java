@@ -491,7 +491,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         attend.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                startEventDetailActivity();
+                startEventDetailActivity(createEvent);
             }
         });
         String eventTime = cEventDateTime.getTime() + "";
@@ -499,18 +499,10 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     }
 
     //Should have one static method that can be called from HomeTab as well to reduce redundancy
-    public void startEventDetailActivity(){
+    public void startEventDetailActivity(Events eventCreated){
         //Start Event Details activity
         //Pass field values into intent extras to save time in displaying information
-        Intent i = new Intent(context.getApplicationContext(), EventDetails.class);
-
-        i.putExtra("EventId", eventId);
-        i.putExtra("EventDate", eventDate.getTime());
-        i.putExtra("EventTitle",eventInfo);
-        i.putExtra("EventLat", eventLat);
-        i.putExtra("EventLong", eventLng);
-        i.putExtra("EventHost", ParseUser.getCurrentUser().getObjectId());
-        context.startActivity(i);
+        EventDetails.startEventDetails(context, eventCreated);
         activity.finish();
     }
 
