@@ -54,7 +54,6 @@ public class InviteFragment extends Fragment {
     InviteListAdapter profileAdapter;
 
     String currentUser;
-    String eventid;
     String reqType;
 
     List<FriendRequest> friendRequestList;
@@ -195,6 +194,7 @@ public class InviteFragment extends Fragment {
                     public void onClick(View v) {
                         searchedFriend.setText("");
                         searchedFriend.setVisibility(View.GONE);
+                        String eventid = getArguments().getString("eventId");
                         sendInvite(eventid, puser.getObjectId());
                     }
                 });
