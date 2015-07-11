@@ -393,7 +393,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                                 isKicked = true; break;
                             case Attendee.INVITED:
                                 currentlyJoined = false;
-
+                                isInvited = true;
 
                                 break;
                             default:currentlyJoined = true;

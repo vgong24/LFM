@@ -151,7 +151,7 @@ public class MainActivity_v2 extends ActionBarActivity{
         if(invitedEvents.size() > 0){
             item.setVisible(true);
         }
-        menu.findItem(R.id.emptyFriendDB).setVisible(false);
+        //menu.findItem(R.id.emptyFriendDB).setVisible(false);
 
         return true;
     }
