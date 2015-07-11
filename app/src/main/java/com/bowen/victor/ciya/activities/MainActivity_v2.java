@@ -4,9 +4,11 @@ package com.bowen.victor.ciya.activities;
  * Created by Victor on 4/6/2015.
  */
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
@@ -22,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.bowen.victor.ciya.adapters.EventListAdapter;
 import com.bowen.victor.ciya.dbHandlers.FriendListDBHandler;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.services.MessageServiceV2;
@@ -55,7 +58,7 @@ public class MainActivity_v2 extends ActionBarActivity{
     ParseUser currentUser;
     Handler threadHandler;
 
-    List<Events> invitedEvents;
+    ArrayList<Events> invitedEvents;
     CheckForInvites thread;
 
     private GoogleApiClient mGoogleApiClient;
@@ -158,6 +161,11 @@ public class MainActivity_v2 extends ActionBarActivity{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        if(id == R.id.view_invites_action){
+            //Display all invited events
+            invitesClick();
+        }
+
         if(id == R.id.create_event){
             Intent intent = new Intent(getApplicationContext(), CreateEvent.class);
             startActivity(intent);
@@ -189,6 +197,25 @@ public class MainActivity_v2 extends ActionBarActivity{
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //Click invites button
+    public void invitesClick(){
+        //Create alert dialog of list
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Invitations");
+
+        EventListAdapter eventListAdapter = new EventListAdapter(MainActivity_v2.this, R.layout.event_item_reddit, invitedEvents);
+        builder.setAdapter(eventListAdapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
     //show a loading spinner while the sinch client starts
@@ -249,6 +276,8 @@ public class MainActivity_v2 extends ActionBarActivity{
     * Back on resume, run it again to check for quick updates.
     */
     class CheckForInvites extends AsyncTask<Void, Void, List<Events>>{
+
+
         @Override
         protected void onPreExecute(){
             invitedEvents.clear();
@@ -283,8 +312,10 @@ public class MainActivity_v2 extends ActionBarActivity{
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        thread = new CheckForInvites();
-                        thread.execute();
+                        if(runThread) {
+                            thread = new CheckForInvites();
+                            thread.execute();
+                        }
                     }
                 }, 5* 60 * 1000);
 
