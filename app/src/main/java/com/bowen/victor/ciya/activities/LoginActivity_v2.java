@@ -38,6 +38,7 @@ public class LoginActivity_v2 extends Activity {
         if (currentUser != null) {
             //startService(serviceIntent);
             startActivity(intent);
+            finish();
         }
 
         setContentView(R.layout.activity_login_v2);

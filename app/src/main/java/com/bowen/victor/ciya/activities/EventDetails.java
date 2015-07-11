@@ -1,6 +1,8 @@
 package com.bowen.victor.ciya.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.AttendeeListAdapter;
+import com.bowen.victor.ciya.adapters.EventListAdapter;
 import com.bowen.victor.ciya.fragments.CustomMapFragment;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Events;
@@ -254,7 +258,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                     if (!isHost) {
                         Toast.makeText(getApplicationContext(), "Leaving group", Toast.LENGTH_SHORT).show();
                         //Leave event as attendee
-                        leaveEventAsAttendee(evnt);
+                        leaveEventAsAttendee(evnt, userAttendeeId);
                     } else {
                         Toast.makeText(getApplicationContext(), " Host Leaveing group (not implemented)", Toast.LENGTH_SHORT).show();
 
@@ -301,10 +305,10 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         });
     }
 
-    public void leaveEventAsAttendee(final Events eventLeaving){
+    public void leaveEventAsAttendee(final Events eventLeaving, String attendeeId){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Attendees");
-        Log.v("leaveEvent", "attendeeId: " + userAttendeeId);
-        query.getInBackground(userAttendeeId, new GetCallback<ParseObject>() {
+        Log.v("leaveEvent", "attendeeId: " + attendeeId);
+        query.getInBackground(attendeeId, new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {
                 if (e == null) {
@@ -326,10 +330,48 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
     }
 
-    private void populateList(ArrayList<Attendee> attArr){
+    private void populateList(final ArrayList<Attendee> attArr){
 
         attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(), R.layout.attendee_list_view, attArr);
         attendeeListView.setAdapter(attendeeListAdapter);
+        /*Set on click for each item
+           Give host options or guest option
+           Host: on click, can kick a player
+           Guest: no ideas yet
+           Future plans: Quick friend adding? nah
+         */
+
+        if(isHost){
+            attendeeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                    //check if selected attendee is the host
+                    if(hostId.equalsIgnoreCase(attArr.get(position).getUserID().getObjectId())){
+
+                    }else{
+                        AlertDialog.Builder builder = new AlertDialog.Builder(EventDetails.this);
+                        builder.setTitle("Kick Player?");
+                        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String kickingId = attArr.get(position).getObjectId();
+                                leaveEventAsAttendee(evnt, kickingId);
+                            }
+                        });
+
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+
+                }
+            });
+        }
     }
 
 
