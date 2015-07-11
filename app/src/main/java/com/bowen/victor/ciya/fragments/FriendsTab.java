@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -183,27 +184,24 @@ public class FriendsTab extends Fragment {
         friendlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*
-                FriendProfile friendProfile = friendNames.get(position);
-                String friendReqId = friendProfile.getFriendRequestId();
-                String friendprofileStatus = friendProfile.getStatus();
-                Log.v("OnClickFriend: ", friendprofileStatus + " " + friendReqId);
 
-                switch(friendprofileStatus){
-                    case REMOVE:
-                        Toast.makeText(context, "Removed Friend Request", Toast.LENGTH_SHORT).show();
-                        break;
-                    case ACCEPT:
-                        FriendRequest.approveFriendRequest(friendReqId);
-                        Toast.makeText(context, "Accepted Friend Request", Toast.LENGTH_SHORT).show();
-                        friendProfile.setStatus(REMOVE);
-                        break;
-                    case PENDING:
-                        break;
+                for (int i = 0; i <= parent.getLastVisiblePosition(); i++) {
+                    if (i != position) {
+                        friendlv.getChildAt(i).findViewById(R.id.friend_status_text).setVisibility(View.INVISIBLE);
+                        friendlv.getChildAt(i).findViewById(R.id.friend_status_img).setVisibility(View.INVISIBLE);
+                    }
                 }
+                TextView friendStatusText = (TextView) view.findViewById(R.id.friend_status_text);
+                ImageView friendStatusImg = (ImageView) view.findViewById(R.id.friend_status_img);
+                if (friendStatusText.getVisibility() == View.INVISIBLE) {
+                    friendStatusText.setVisibility(View.VISIBLE);
+                    friendStatusImg.setVisibility(View.VISIBLE);
+                } else {
+                    friendStatusText.setVisibility(View.INVISIBLE);
+                    friendStatusImg.setVisibility(View.INVISIBLE);
+                }
+                //Toast.makeText(context, view + "/" + friendlv.getChildAt(0), Toast.LENGTH_SHORT).show();
 
-                populateFriendList();
-                */
             }
         });
     }

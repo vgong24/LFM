@@ -21,6 +21,7 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
     Context context;
     int resourcexml;
     List<FriendProfile> friendProfiles;
+    int focus;
 
     public interface BtnClickListener {
         public abstract void onBtnClick(int position);
@@ -34,6 +35,10 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
         resourcexml = resource;
         friendProfiles = friendList;
         mClickListener = listener;
+    }
+
+    public List<FriendProfile> getFriends() {
+        return friendProfiles;
     }
 
     @Override
