@@ -238,8 +238,10 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                 public void onClick(View v) {
                     if(isInvited){
                         joinedAsInvitee(evnt);
+                    }else{
+                        joinEventAsAttendee(evnt);
                     }
-                    joinEventAsAttendee(evnt);
+
                 }
             });
 
@@ -262,7 +264,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         }
 
     }
-    public void joinedAsInvitee(Events eventJoining){
+    public void joinEventAsAttendee(final Events eventJoining){
         Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
         Attendee attend = new Attendee();
         attend.setEvent(eventJoining);
@@ -272,15 +274,16 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             @Override
             public void done(ParseException e) {
                 //once clicked, refresh page
-                new SetUpBackground().execute(evnt);
+                Log.v("JOINING", "JOINED");
+                new SetUpBackground().execute(eventJoining);
             }
         });
 
     }
-    public void joinEventAsAttendee(final Events eventJoining){
-        Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
+    public void joinedAsInvitee(final Events eventJoining){
+        Toast.makeText(getApplicationContext(), "Joining as invitee", Toast.LENGTH_SHORT).show();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Attendees");
-        Log.v("leaveEvent", "attendeeId: " + userAttendeeId);
+        Log.v("joinInvite", "attendeeId: " + userAttendeeId);
         query.getInBackground(userAttendeeId, new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject parseObject, ParseException e) {

@@ -291,9 +291,6 @@ public class FriendsTab extends Fragment {
                             friendNames.add(fp);
                         }
 
-
-
-
                     }
 
                 }

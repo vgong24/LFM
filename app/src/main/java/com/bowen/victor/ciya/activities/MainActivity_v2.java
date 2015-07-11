@@ -22,6 +22,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.bowen.victor.ciya.adapters.EventListAdapter;
@@ -150,6 +151,7 @@ public class MainActivity_v2 extends ActionBarActivity{
         if(invitedEvents.size() > 0){
             item.setVisible(true);
         }
+        menu.findItem(R.id.emptyFriendDB).setVisible(false);
 
         return true;
     }

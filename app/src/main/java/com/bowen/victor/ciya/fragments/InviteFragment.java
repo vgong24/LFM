@@ -2,15 +2,20 @@ package com.bowen.victor.ciya.fragments;
 
 import android.app.Activity;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +28,7 @@ import com.bowen.victor.ciya.adapters.InviteListAdapter;
 import com.bowen.victor.ciya.structures.FriendProfile;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -91,6 +97,7 @@ public class InviteFragment extends Fragment {
             friendNames.addAll(dbhandler.getAllFriendProfiles());
         }
         populateFriendList();
+        setupSearchView();
 
     }
 
@@ -112,6 +119,29 @@ public class InviteFragment extends Fragment {
         });
     }
 
+    //Set up Search functionality
+    private void setupSearchView() {
+        SearchManager searchManager = (SearchManager) context.getSystemService(Context.SEARCH_SERVICE);
+        final SearchView searchView = (SearchView) v.findViewById(R.id.searchView);
+        SearchableInfo searchableInfo = searchManager.getSearchableInfo(activity.getComponentName());
+        searchView.setSearchableInfo(searchableInfo);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("setupSearch", "query: " + query);
+                new SearchForFriend().execute(query);
+                //Display result
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+    }
+
     public void sendInvite(String eventJoining, String invitee){
         Toast.makeText(context, "Invite Sent", Toast.LENGTH_SHORT).show();
         Attendee attend = new Attendee();
@@ -125,6 +155,52 @@ public class InviteFragment extends Fragment {
                 //new SetUpBackground().execute(evnt);
             }
         });
+    }
+
+    //Async display username results
+    //Searches for a friend then will display friend name in listview
+    class SearchForFriend extends AsyncTask<String, Void, ParseUser> {
+
+        @Override
+        protected ParseUser doInBackground(String... params) {
+            String username = params[0];
+            //Find user with matching username
+            ParseQuery query = ParseQuery.getQuery("_User");
+            query.whereEqualTo("username", username);
+            try {
+                List<ParseUser> userObjs = query.find();
+                for(ParseUser parseUser: userObjs) {
+                    return parseUser;
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final ParseUser puser){
+            if(puser == null){
+                Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show();
+
+            }else{
+                final String friendUserName = puser.getUsername();
+                Log.v("searchFriend", "Found friend: "+friendUserName);
+                searchedFriend.setVisibility(View.VISIBLE);
+                searchedFriend.setText(friendUserName);
+                searchedFriend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        searchedFriend.setText("");
+                        searchedFriend.setVisibility(View.GONE);
+                        sendInvite(eventid, puser.getObjectId());
+                    }
+                });
+            }
+
+        }
     }
 
 
