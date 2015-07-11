@@ -127,10 +127,7 @@ public class HomeTab extends Fragment {
             public void done(List<Events> event, ParseException excep) {
                 //dialog.show();
                 if (excep == null) {
-                    for (int i = 0; i < event.size(); i++) {
-                        events.add(event.get(i));
-                        //Toast.makeText(context, "events.size is: "+events.size() + " ObjectId : " + events.get(i).getObjectId(), Toast.LENGTH_SHORT).show();
-                    }
+                    events = (ArrayList<Events>) event;
                 } else {
                     Toast.makeText(context.getApplicationContext(), "Nope", Toast.LENGTH_SHORT).show();
                 }
