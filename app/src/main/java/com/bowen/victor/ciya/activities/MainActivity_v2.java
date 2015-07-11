@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.bowen.victor.ciya.adapters.EventListAdapter;
@@ -33,6 +35,7 @@ import com.bowen.victor.ciya.slidingtab.SlidingTabLayout;
 import com.bowen.victor.ciya.slidingtab.ViewPagerAdapter;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Events;
+import com.bowen.victor.ciya.tools.WorkAround;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -70,6 +73,8 @@ public class MainActivity_v2 extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_v2);
+        WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
+
         currentUser = ParseUser.getCurrentUser();
         if(invitedEvents == null){
             invitedEvents = new ArrayList<>();

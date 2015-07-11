@@ -26,6 +26,7 @@ import com.bowen.victor.ciya.adapters.EventListAdapter;
 import com.bowen.victor.ciya.fragments.CustomMapFragment;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Events;
+import com.bowen.victor.ciya.tools.WorkAround;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -88,6 +89,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_details);
+        WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
         initFields();
         initToolBar();
         initEventDescription();

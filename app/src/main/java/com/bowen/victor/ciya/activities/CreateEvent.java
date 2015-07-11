@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.fragments.CreateTab;
 import com.bowen.victor.ciya.structures.Attendee;
+import com.bowen.victor.ciya.tools.WorkAround;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class CreateEvent extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+        WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
 
         fragment = CreateTab.newInstance(CreateEvent.this);
         progressBar = (ProgressBar) findViewById(R.id.chatRoomProgressBar);

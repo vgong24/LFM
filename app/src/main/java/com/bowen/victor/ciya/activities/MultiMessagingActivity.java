@@ -21,6 +21,7 @@ import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.MessageAdapter;
 import com.bowen.victor.ciya.services.MessageServiceV2;
 import com.bowen.victor.ciya.structures.Events;
+import com.bowen.victor.ciya.tools.WorkAround;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -63,6 +64,7 @@ public class MultiMessagingActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messaging);
+        WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
         initFields();
         initialize();
     }
