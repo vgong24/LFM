@@ -209,7 +209,7 @@ public class MainActivity_v2 extends ActionBarActivity{
         builder.setAdapter(eventListAdapter, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                
+                EventDetails.startEventDetails(MainActivity_v2.this, invitedEvents.get(which));
             }
         });
 

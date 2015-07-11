@@ -101,24 +101,7 @@ public class HomeTab extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Optimize: create a static method to start this activity
-                Intent i = new Intent(context.getApplicationContext(), EventDetails.class);
-                i.putExtra("EventId", events.get(position).getObjectId());
-                i.putExtra("EventDate", events.get(position).getDate().getTime());
-                i.putExtra("EventTitle", events.get(position).getDescr());
-                i.putExtra("EventLat", events.get(position).getLocation().getLatitude());
-                i.putExtra("EventLong", events.get(position).getLocation().getLongitude());
-                i.putExtra("EventHost", events.get(position).getHost().getObjectId());
-
-
-                if (events.size() != 0) {
-                    //Toast.makeText(context, "position: " + position + " EventId of " + events.get(position).getObjectId(), Toast.LENGTH_SHORT).show();
-
-                } else {
-                    Toast.makeText(context.getApplicationContext(), "Arraylist is empty", Toast.LENGTH_SHORT).show();
-
-                }
-
-                context.startActivity(i);
+                EventDetails.startEventDetails(context, events.get(position));
 
             }
         });
