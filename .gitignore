@@ -12,3 +12,5 @@ app/app.iml
 .idea/misc.xml
 
 LFM.iml
+
+gradle.properties

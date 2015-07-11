@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bowen.victor.ciya.structures.FriendProfile;
 import com.bowen.victor.ciya.R;
@@ -20,12 +21,24 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
     Context context;
     int resourcexml;
     List<FriendProfile> friendProfiles;
+    int focus;
 
-    public FriendListAdapter(Context context, int resource, List<FriendProfile> friendList) {
+    public interface BtnClickListener {
+        public abstract void onBtnClick(int position);
+    }
+
+    private BtnClickListener mClickListener = null;
+
+    public FriendListAdapter(Context context, int resource, List<FriendProfile> friendList, BtnClickListener listener) {
         super(context, resource, friendList);
         this.context = context;
         resourcexml = resource;
         friendProfiles = friendList;
+        mClickListener = listener;
+    }
+
+    public List<FriendProfile> getFriends() {
+        return friendProfiles;
     }
 
     @Override
@@ -42,6 +55,15 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
             holder.friendName = (TextView) view.findViewById(R.id.friend_username);
             holder.friendStatusText = (TextView) view.findViewById(R.id.friend_status_text);
             holder.friendStatusImg = (ImageView) view.findViewById(R.id.friend_status_img);
+            holder.friendStatusImg.setTag(position);
+            holder.friendStatusImg.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if (mClickListener != null)
+                        mClickListener.onBtnClick((Integer) v.getTag());
+                }
+            });
 
 
             view.setTag(holder);
@@ -59,7 +81,6 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
             case "pending":
                 holder.friendStatusText.setText("Pending");
                 break;
-
             case "request": //if someone sent you a request, you can approve it
                 holder.friendStatusText.setText("Accept");
                 holder.friendStatusImg.setImageResource(R.drawable.greenplus);
