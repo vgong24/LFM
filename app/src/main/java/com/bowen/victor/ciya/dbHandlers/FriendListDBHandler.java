@@ -41,15 +41,16 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.w("TaskDBAdapter", "Upgrading from version " + oldVersion + " to " + newVersion + ", which will destroy all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS);
-        onCreate(db);
     }
     public void dropDatabase(){
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FRIENDS);
+        db.close();
     }
     public void deleteDatabase(){
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLE_FRIENDS, null, null);
+        db.close();
     }
 
     public void createFriend(String friendObjectId, String friendId, String fname, String realName, String status){
@@ -71,6 +72,7 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(KEY_STATUS, status);
         db.update(TABLE_FRIENDS, cv, KEY_OBJECT_ID + " = " + "'" + friendObjId + "'", null);
+        db.close();
 
     }
 

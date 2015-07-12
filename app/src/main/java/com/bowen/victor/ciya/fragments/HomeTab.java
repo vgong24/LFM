@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -50,6 +51,7 @@ public class HomeTab extends Fragment {
     ProgressBar dialog;
     boolean _areEventsLoaded = false;
 
+
     /**
      * Alternate viewlist layouts
      * @param context
@@ -59,7 +61,7 @@ public class HomeTab extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     public static HomeTab newInstance(Context context) {
@@ -94,6 +96,16 @@ public class HomeTab extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshLayout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //refresh items
+                fillEventList();
+            }
+
+        });
 
         dialog = (ProgressBar) v.findViewById(R.id.eventsProgressBar);
     }
@@ -107,6 +119,8 @@ public class HomeTab extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         //readySelect();
+        //finished displaying so stop refresh listener
+        mSwipeRefreshLayout.setRefreshing(false);
 
     }
 
