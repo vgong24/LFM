@@ -16,6 +16,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,58 +41,9 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
     private List<Events> mDataset;
     private final double BITMAP_SCALE = 9;
     Context context;
-
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        // each data item is just a string in this case
-        public View mView;
-        public TextView capacity;
-        public TextView description;
-        public TextView date;
-        public ImageView imageView;
-        public Events eventClick;
-        public Context context;
-        private ClickListener clickListener;
+    private int lastPosition = -1;
 
 
-
-        public ViewHolder(View v, final Context context) {
-            super(v);
-            mView = v;
-            capacity = (TextView) v.findViewById(R.id.event_item_capacity);
-            description = (TextView) v.findViewById(R.id.event_item_title);
-            date = (TextView) v.findViewById(R.id.event_item_time);
-            imageView = (ImageView) v.findViewById(R.id.event_item_image);
-            this.context = context;
-            mView.setOnClickListener(this);
-
-        }
-        /* Interface for handling clicks - both normal and long ones. */
-        public interface ClickListener {
-
-            /**
-             * Called when the view is clicked.
-             *
-             * @param v view that is clicked
-             * @param position of the clicked item
-             * @param isLongClick true if long click, false otherwise
-             */
-            public void onClick(View v, int position, boolean isLongClick);
-
-        }
-        /* Setter for listener. */
-        public void setClickListener(ClickListener clickListener) {
-            this.clickListener = clickListener;
-        }
-
-
-        @Override
-        public void onClick(View v) {
-            clickListener.onClick(v, getPosition(), false);
-        }
-    }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public EventRecyclerAdapter(Context context, List<Events> myDataset) {
@@ -145,6 +98,9 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
                 EventDetails.startEventDetails(context, events);
             }
         });
+
+        //Set up animation
+        setAnimation(holder.mView, position);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -152,6 +108,75 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
     public int getItemCount() {
         return mDataset.size();
     }
+
+    /**
+     * Animate list population
+     */
+    private void setAnimation(View viewToAnimate, int position){
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+            animation.setDuration(2000);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+
+    }
+
+    /** VIEW HOLDER
+     * Provide a reference to the views for each data item
+    * Complex data items may need more than one view per item, and
+    * you provide access to all the views for a data item in a view holder
+    */
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        // each data item is just a string in this case
+        public View mView;
+        public TextView capacity;
+        public TextView description;
+        public TextView date;
+        public ImageView imageView;
+        public Events eventClick;
+        public Context context;
+        private ClickListener clickListener;
+
+        public ViewHolder(View v, final Context context) {
+            super(v);
+            mView = v;
+            capacity = (TextView) v.findViewById(R.id.event_item_capacity);
+            description = (TextView) v.findViewById(R.id.event_item_title);
+            date = (TextView) v.findViewById(R.id.event_item_time);
+            imageView = (ImageView) v.findViewById(R.id.event_item_image);
+            this.context = context;
+            mView.setOnClickListener(this);
+
+        }
+        /* Interface for handling clicks - both normal and long ones. */
+        public interface ClickListener {
+
+            /**
+             * Called when the view is clicked.
+             *
+             * @param v view that is clicked
+             * @param position of the clicked item
+             * @param isLongClick true if long click, false otherwise
+             */
+            public void onClick(View v, int position, boolean isLongClick);
+
+        }
+        /* Setter for listener. */
+        public void setClickListener(ClickListener clickListener) {
+            this.clickListener = clickListener;
+        }
+
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onClick(v, getPosition(), false);
+        }
+    }
+
     class ImageDownloaderTask extends AsyncTask<Events, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewWeakReference;
 
