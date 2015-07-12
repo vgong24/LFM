@@ -96,36 +96,37 @@ public class AttendeeListAdapter extends ArrayAdapter<Attendee> {
         protected Bitmap doInBackground(Attendee... params) {
 
             ParseFile thumbnail = null;
-            if ((thumbnail = params[0].getUserID().getParseFile("profilePicture")) != null) {
-                try {
-                    byte[] data = thumbnail.getData();
-                    Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    if (bmp != null) {
-                        //Scale bitmaps based on Device width
-                        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                        Display display = wm.getDefaultDisplay();
-                        Point size = new Point();
-                        display.getSize(size);
+            if ((thumbnail = params[0].getUserID().getParseFile("profilePic")) == null) {
+                if((thumbnail = params[0].getUserID().getParseFile("profilePicture")) == null){
 
-                        int width = size.x;
-                        int height = size.y;
-                        //Using ratio of 7.2 to get the correct size. 720 : 100
-                        int bitmapScale = (int) (width / BITMAP_SCALE);
-                        Log.v("Bitmap", "Bitmap width: " + width + " height: "+ height);
-
-
-                        Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, bitmapScale, bitmapScale, true);
-                        return resizedbitmap;
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
+            }
+            return getResizedBitmap(thumbnail);
+        }
+
+        public Bitmap getResizedBitmap(ParseFile thumbnail){
+            try {
+                byte[] data = thumbnail.getData();
+                Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                if (bmp != null) {
+                    //Scale bitmaps based on Device width
+                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                    Display display = wm.getDefaultDisplay();
+                    Point size = new Point();
+                    display.getSize(size);
+
+                    int width = size.x;
+                    int height = size.y;
+                    //Using ratio of 7.2 to get the correct size. 720 : 100
+                    int bitmapScale = (int) (width / BITMAP_SCALE);
+                    Log.v("Bitmap", "Bitmap width: " + width + " height: "+ height);
 
 
-            } else {
-                Log.e("parse file", " null");
-                //imageView.setPadding(10,10,10,10);
-
+                    Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, bitmapScale, bitmapScale, true);
+                    return resizedbitmap;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
             return null;
         }

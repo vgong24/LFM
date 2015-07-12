@@ -117,7 +117,7 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
         if (position > lastPosition)
         {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
-            animation.setDuration(2000);
+            animation.setDuration(1000);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
