@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import android.widget.ProgressBar;;
 import android.widget.Toast;
 
 import com.bowen.victor.ciya.activities.EventDetails;
+import com.bowen.victor.ciya.adapters.EventRecyclerAdapter;
 import com.bowen.victor.ciya.tools.GPSTracker;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.EventListAdapter;
@@ -47,13 +51,17 @@ public class HomeTab extends Fragment {
     ProgressBar dialog;
     boolean _areEventsLoaded = false;
 
+
     /**
      * Alternate viewlist layouts
      * @param context
      */
     //R.layout.event_list_view , R.layout.event_item_reddit
     private final int itemList_xml = R.layout.event_item_reddit;
-
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     public static HomeTab newInstance(Context context) {
@@ -83,21 +91,43 @@ public class HomeTab extends Fragment {
 
     public void initField() {
         events = new ArrayList<Events>();
-        eventListView = (ListView) v.findViewById(R.id.eventList);
+        //eventListView = (ListView) v.findViewById(R.id.eventList);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.event_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(context);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mSwipeRefreshLayout = (SwipeRefreshLayout)v.findViewById(R.id.swipeRefreshLayout);
+
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //refresh items
+                fillEventList();
+            }
+
+        });
+
         dialog = (ProgressBar) v.findViewById(R.id.eventsProgressBar);
     }
 
     private void populateList() {
+        /*
         eventListAdapter = new EventListAdapter(context, itemList_xml, events);
         eventListView.setAdapter(eventListAdapter);
+        */
+        mAdapter = new EventRecyclerAdapter(context, events);
+        mRecyclerView.setAdapter(mAdapter);
 
-        readySelect();
+        //readySelect();
+        //finished displaying so stop refresh listener
+        mSwipeRefreshLayout.setRefreshing(false);
 
     }
 
     //Select Event, take you to EventDetails Activity
     private void readySelect() {
-        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Optimize: create a static method to start this activity
@@ -127,10 +157,7 @@ public class HomeTab extends Fragment {
             public void done(List<Events> event, ParseException excep) {
                 //dialog.show();
                 if (excep == null) {
-                    for (int i = 0; i < event.size(); i++) {
-                        events.add(event.get(i));
-                        //Toast.makeText(context, "events.size is: "+events.size() + " ObjectId : " + events.get(i).getObjectId(), Toast.LENGTH_SHORT).show();
-                    }
+                    events = (ArrayList<Events>) event;
                 } else {
                     Toast.makeText(context.getApplicationContext(), "Nope", Toast.LENGTH_SHORT).show();
                 }

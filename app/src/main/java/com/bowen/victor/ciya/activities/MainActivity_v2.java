@@ -12,10 +12,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -23,16 +25,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.bowen.victor.ciya.adapters.EventListAdapter;
 import com.bowen.victor.ciya.dbHandlers.FriendListDBHandler;
 import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.fragments.FragmentDrawer;
 import com.bowen.victor.ciya.services.MessageServiceV2;
 import com.bowen.victor.ciya.slidingtab.SlidingTabLayout;
 import com.bowen.victor.ciya.slidingtab.ViewPagerAdapter;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Events;
+import com.bowen.victor.ciya.tools.WorkAround;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -42,13 +47,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity_v2 extends ActionBarActivity{
+public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer.FragmentDrawerListener{
 
     // Declaring Your View and Variables
 
     Toolbar toolbar;
     ViewPager pager;
     ViewPagerAdapter adapter;
+    FragmentDrawer drawerFragment;
     SlidingTabLayout tabs;
     CharSequence Titles[]={"Events","Party Chat", "Friends"};
     int Numboftabs = Titles.length;
@@ -70,6 +76,8 @@ public class MainActivity_v2 extends ActionBarActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_v2);
+        WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
+
         currentUser = ParseUser.getCurrentUser();
         if(invitedEvents == null){
             invitedEvents = new ArrayList<>();
@@ -79,11 +87,13 @@ public class MainActivity_v2 extends ActionBarActivity{
         showSpinner();
         sinchConnect();
 
-        fragmentManager = getSupportFragmentManager();
-
         // Creating The Toolbar and setting it as the Toolbar for the activity
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
+        drawerFragment = (FragmentDrawer)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
+        drawerFragment.setDrawerListener(this);
 
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs, MainActivity_v2.this);
@@ -270,6 +280,11 @@ public class MainActivity_v2 extends ActionBarActivity{
         serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
         //serviceIntent = new Intent(getApplicationContext(), MessageService.class);
         startService(serviceIntent);
+    }
+
+    @Override
+    public void onDrawerItemSelected(View view, int position) {
+
     }
 
     /* Every few minutes check for invitations

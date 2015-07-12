@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.fragments.InviteFragment;
 import com.bowen.victor.ciya.structures.Attendee;
+import com.bowen.victor.ciya.tools.WorkAround;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class InviteActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+        WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
 
         Intent prevIntent = getIntent();
         String eventID = prevIntent.getStringExtra("EventID");

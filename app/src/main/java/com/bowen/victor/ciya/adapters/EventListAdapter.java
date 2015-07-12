@@ -162,24 +162,6 @@ public class EventListAdapter extends ArrayAdapter<Events> {
         }
 
     }
-    /*Previous Bitmap reference
-                thumbnail.getDataInBackground(new GetDataCallback() {
-                    @Override
-                    public void done(byte[] data, ParseException e) {
-                        if (e == null) {
-                            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-                            if (bmp != null) {
-                                Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, 100, 100, true);
-                                //imageView.setImageBitmap(resizedbitmap);
-                            }
-                        } else {
-                            Log.e("paser after download", "null");
-
-                        }
-                    }
-                });
-                */
 
 
 }
