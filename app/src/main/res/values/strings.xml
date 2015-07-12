@@ -41,9 +41,10 @@
     <string name="action_search">Search</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
-    <string name="nav_item_home">Home</string>
-    <string name="nav_item_friends">Friends</string>
-    <string name="nav_item_notifications">Messages</string>
+
+    <string name="nav_item_home">PlaceHolder1</string>
+    <string name="nav_item_friends">PlaceHolder2</string>
+    <string name="nav_item_notifications">PlaceHolder3</string>
 
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
