@@ -284,7 +284,7 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
-        
+
     }
 
     /* Every few minutes check for invitations

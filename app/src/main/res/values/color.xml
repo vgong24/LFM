@@ -8,7 +8,7 @@
     <color name="ColorPrimary">#00e5ff</color>
     <color name="ColorPrimaryDark">#006064</color>
     -->
-    <color name="tabsScrollColor">#FF80AB</color>
+    <color name="tabsScrollColor">@color/colorAccent</color>
     <color name="attendeeItem">#0091EA</color>
 
 
