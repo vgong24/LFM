@@ -56,5 +56,7 @@
     <string name="title_messages">PlaceHolder3</string>
     <string name="title_friends">PlaceHolder2</string>
     <string name="title_home">PlaceHolder1</string>
+    <string name="search_locate">search</string>
+    <string name="location_select_hint">Search for location or drop pin</string>
 
 </resources>

@@ -26,6 +26,8 @@ ADDED from AndroidManifest.xml:12:5
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
 MERGED from com.android.support:support-v4:22.0.0:20:5
 MERGED from com.android.support:cardview-v7:21.0.3:15:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:15:5
+MERGED from com.android.support:support-v4:22.0.0:20:5
 MERGED from com.google.android.gms:play-services:7.0.0:18:5
 MERGED from com.google.android.gms:play-services-ads:7.0.0:18:5
 MERGED from com.google.android.gms:play-services-base:7.0.0:18:5
@@ -183,6 +185,8 @@ ADDED from AndroidManifest.xml:39:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
 MERGED from com.android.support:support-v4:22.0.0:22:5
 MERGED from com.android.support:cardview-v7:21.0.3:16:5
+MERGED from com.android.support:recyclerview-v7:21.0.3:17:5
+MERGED from com.android.support:support-v4:22.0.0:22:5
 MERGED from com.google.android.gms:play-services:7.0.0:19:5
 MERGED from com.google.android.gms:play-services-ads:7.0.0:19:5
 MERGED from com.google.android.gms:play-services-base:7.0.0:20:5
@@ -439,3 +443,9 @@ ADDED from AndroidManifest.xml:129:9
 		ADDED from AndroidManifest.xml:130:13
 	android:value
 		ADDED from AndroidManifest.xml:131:13
+activity#android.support.v7.widget.TestActivity
+ADDED from com.android.support:recyclerview-v7:21.0.3:18:9
+	android:label
+		ADDED from com.android.support:recyclerview-v7:21.0.3:18:19
+	android:name
+		ADDED from com.android.support:recyclerview-v7:21.0.3:18:60

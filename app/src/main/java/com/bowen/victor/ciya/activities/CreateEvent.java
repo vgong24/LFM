@@ -1,16 +1,32 @@
 package com.bowen.victor.ciya.activities;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.adapters.GooglePlacesAutoCompleteAdapter;
 import com.bowen.victor.ciya.fragments.CreateTab;
 import com.bowen.victor.ciya.structures.Attendee;
+import com.bowen.victor.ciya.structures.PlaceDetails;
 import com.bowen.victor.ciya.tools.WorkAround;
 
 import java.util.ArrayList;
@@ -18,12 +34,24 @@ import java.util.ArrayList;
 /**
  * Created by Victor on 6/10/2015.
  */
-public class CreateEvent extends FragmentActivity {
+public class CreateEvent extends ActionBarActivity {
 
     CreateTab createTab;
     FragmentTransaction transaction;
     Fragment fragment;
     ProgressBar progressBar;
+    Toolbar toolbar;
+    ActionBar actionBar;
+    AutoCompleteTextView autoCompView;
+    ArrayAdapter<PlaceDetails> autoAdapter;
+    ImageView cancelBtn;
+
+    private static final String[] COUNTRIES = new String[] { "Belgium",
+            "France", "France_", "Italy", "Germany", "Spain" };
+
+    public void setActionBarTitle(String title){
+        actionBar.setTitle(title);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +59,91 @@ public class CreateEvent extends FragmentActivity {
         setContentView(R.layout.activity_create_event);
         WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
 
+
+
         fragment = CreateTab.newInstance(CreateEvent.this);
         progressBar = (ProgressBar) findViewById(R.id.chatRoomProgressBar);
         progressBar.setVisibility(View.VISIBLE);
         transaction = getSupportFragmentManager().beginTransaction();
+        setUpActionBar();
+
+        //setActionBarTitle("TEST");
         new SetUpBackground().execute();
 
+    }
+
+    public void setUpActionBar(){
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+
+
+        LayoutInflater inflater = (LayoutInflater)this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v = inflater.inflate(R.layout.search_bar, null);
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        actionBar.setCustomView(v, layoutParams);
+
+        cancelBtn = (ImageView)actionBar.getCustomView().findViewById(R.id.cancel);
+        cancelBtn.setVisibility(View.GONE);
+        autoCompView = (AutoCompleteTextView) actionBar.getCustomView().findViewById(R.id.autoCompleteSearch);
+        autoCompView.setThreshold(0);
+
+        autoAdapter = new GooglePlacesAutoCompleteAdapter(this, R.layout.list_item);
+        autoCompView.setAdapter(autoAdapter);
+
+    }
+
+    public void initOnClickListener(){
+        autoCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PlaceDetails placeItem = (PlaceDetails) parent.getItemAtPosition(position);
+                callFragmentMethod(placeItem);
+
+                autoCompView.setText(placeItem.getName().toString());
+            }
+        });
+
+        autoCompView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 0) {
+                    cancelBtn.setVisibility(View.VISIBLE);
+                } else {
+                    cancelBtn.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                autoCompView.setText("");
+                cancelBtn.setVisibility(View.GONE);
+            }
+        });
+        //check if fields were entered, then display the X button
+
+
+    }
+    //call fragment method example
+    public void callFragmentMethod(PlaceDetails placeDetails){
+        CreateTab fragment = (CreateTab)getSupportFragmentManager().findFragmentById(R.id.createFrame);
+        fragment.relocatePinPoint(placeDetails);
 
     }
 
@@ -54,6 +161,7 @@ public class CreateEvent extends FragmentActivity {
         protected void onPostExecute(Void none){
             progressBar.setVisibility(View.GONE);
             transaction.commit();
+            initOnClickListener();
         }
     }
 

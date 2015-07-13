@@ -23,6 +23,10 @@ import java.util.ArrayList;
 /**
  * Created by Victor on 6/14/2015.
  * Resource: http://stackoverflow.com/questions/12460471/how-to-send-a-google-places-search-request-with-java
+ * Tool used to communicate with Google Places API and completing location based functions such as
+ * autocomplete, search, and details
+ *
+ * Also used to reposition the map used in CreateTab to the LatLng position of a place Detail
  */
 public class PlacesAPI {
     private static final String LOG_TAG = "Autocomplete";

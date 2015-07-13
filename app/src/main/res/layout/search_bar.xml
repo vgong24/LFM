@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="fill_parent"
+    android:layout_height="match_parent">
+
+
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteSearch"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:imeOptions="actionDone"
+        android:drawableLeft="@drawable/ic_action_search"
+        android:layout_toLeftOf="@+id/cancel"
+        android:hint="@string/location_select_hint"
+        android:inputType="textAutoComplete|textAutoCorrect"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#F0F8FF">
+
+        <requestFocus />
+    </AutoCompleteTextView>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:id="@+id/cancel"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/ic_action_cancel"
+        android:paddingTop="2dp"
+        android:clickable="true"/>
+
+</RelativeLayout>

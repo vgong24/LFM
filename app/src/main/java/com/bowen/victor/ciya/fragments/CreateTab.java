@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -28,6 +29,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bowen.victor.ciya.activities.CreateEvent;
 import com.bowen.victor.ciya.activities.EventDetails;
 import com.bowen.victor.ciya.tools.GPSTracker;
 import com.bowen.victor.ciya.activities.MainActivity_v2;
@@ -38,6 +40,7 @@ import com.bowen.victor.ciya.adapters.GooglePlacesAutoCompleteAdapter;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Category;
 import com.bowen.victor.ciya.structures.Events;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -143,6 +146,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.create_tab, container, false);
+       //((CreateEvent)activity).setActionBarTitle("TEST");
 
         initialize();
         return view;
@@ -280,33 +284,23 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         categoryArray = new ArrayList<>();
         cEventDateTime = Calendar.getInstance();
 
-        autoCompView = (AutoCompleteTextView) view.findViewById(R.id.create_auto_complete);
-        autoCompView.setThreshold(0);
-
-        autoAdapter = new GooglePlacesAutoCompleteAdapter(context, R.layout.list_item);
-        autoCompView.setAdapter(autoAdapter);
-
         placesAPI = new PlacesAPI();
 
 
     }
 
+    //Method to be called in Parent Activity when location has been selected
+    public void relocatePinPoint(PlaceDetails placeDetails){
+        String placeId = placeDetails.getId();
+
+        Log.v("ID", "Searching: " + placeId);
+        setUpMapIfNeeded();
+        //Repositions marker to selected location in async thread
+        placesAPI.getLatLngByID(mMap, placeId);
+
+    }
+
     public void initClickListeners(){
-        //After selecting auto complete item, map will zoom into that location
-        autoCompView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                PlaceDetails placeItem = (PlaceDetails) parent.getItemAtPosition(position);
-                String placeId = placeItem.getId();
-
-                Log.v("ID", "Searching: " + placeId);
-                setUpMapIfNeeded();
-                //Repositions marker to selected location in async thread
-                placesAPI.getLatLngByID(mMap, placeId);
-
-                autoCompView.setText(placeItem.getName().toString());
-            }
-        });
 
         timeView.setOnClickListener(new View.OnClickListener() {
             @Override
