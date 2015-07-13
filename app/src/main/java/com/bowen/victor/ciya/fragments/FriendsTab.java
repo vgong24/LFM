@@ -206,7 +206,7 @@ public class FriendsTab extends Fragment {
         */
         mRecyclerView.setAdapter(mAdapter);
         //friendlv.setAdapter(profileAdapter);
-        onFriendClick();
+        //onFriendClick();
     }
 
     //send a friend requests using usernames rather than object ids

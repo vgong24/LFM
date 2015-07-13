@@ -1,11 +1,19 @@
 package com.bowen.victor.ciya.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
@@ -16,10 +24,14 @@ import android.widget.Toast;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.activities.EventDetails;
 import com.bowen.victor.ciya.fragments.FriendsTab;
+import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Events;
 import com.bowen.victor.ciya.structures.FriendProfile;
 import com.bowen.victor.ciya.structures.FriendRequest;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -32,6 +44,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     List<FriendProfile> friendProfiles;
     BtnClickListener mClickListener = null;
     private int lastPosition = -1;
+    private final double BITMAP_SCALE = 7.2;
 
     public interface BtnClickListener {
         public abstract void onBtnClick(int position);
@@ -65,21 +78,11 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        final FriendProfile profiles = friendProfiles.get(position);
         holder.friendStatusImg.setTag(position);
-        holder.friendStatusImg.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (mClickListener != null)
-                    mClickListener.onBtnClick((Integer) v.getTag());
-            }
-        });
         FriendProfile friendProfile = friendProfiles.get(position);
         String fName = friendProfile.getUserName();
         holder.friendName.setText(fName);
         String statusBox = friendProfile.getStatus();
-
 
         switch(statusBox){
             case "pending":
@@ -103,15 +106,17 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         holder.setClickListener(new ViewHolder.ClickListener() {
             @Override
             public void onClick(View v, int position, boolean isLongClick) {
+
                 /*
-                for (int i = 0; i <= parent.getLastVisiblePosition(); i++) {
+                for (int i = 0; i < getItemCount(); i++) {
                     if (i != position) {
                         friendlv.getChildAt(i).findViewById(R.id.friend_status_text).setVisibility(View.INVISIBLE);
                         friendlv.getChildAt(i).findViewById(R.id.friend_status_img).setVisibility(View.INVISIBLE);
                     }
                 }
-                TextView friendStatusText = (TextView) view.findViewById(R.id.friend_status_text);
-                ImageView friendStatusImg = (ImageView) view.findViewById(R.id.friend_status_img);
+                */
+                TextView friendStatusText = (TextView) v.findViewById(R.id.friend_status_text);
+                ImageView friendStatusImg = (ImageView) v.findViewById(R.id.friend_status_img);
                 if (friendStatusText.getVisibility() == View.INVISIBLE) {
                     friendStatusText.setVisibility(View.VISIBLE);
                     friendStatusImg.setVisibility(View.VISIBLE);
@@ -119,8 +124,16 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
                     friendStatusText.setVisibility(View.INVISIBLE);
                     friendStatusImg.setVisibility(View.INVISIBLE);
                 }
-                */
-                Toast.makeText(context, "holder click listener", Toast.LENGTH_SHORT).show();
+
+                //Toast.makeText(context, "" + getItemCount(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        holder.friendStatusImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mClickListener != null)
+                    mClickListener.onBtnClick((Integer) v.getTag());
             }
         });
 
@@ -153,6 +166,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         public TextView friendName;
         public TextView friendStatusText;
         public ImageView friendStatusImg;
+        public ImageView friendProfile;
 
         public View mView;
         public Context context;
@@ -161,13 +175,12 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         public ViewHolder(View v, final Context context) {
             super(v);
             mView = v;
+            friendProfile = (ImageView) v.findViewById(R.id.friend_pro_pic);
             friendName = (TextView) v.findViewById(R.id.friend_username);
             friendStatusText = (TextView) v.findViewById(R.id.friend_status_text);
             friendStatusImg = (ImageView) v.findViewById(R.id.friend_status_img);
             this.context = context;
             mView.setOnClickListener(this);
-            friendStatusImg.setOnClickListener(this);
-
         }
 
         /* Interface for handling clicks - both normal and long ones. */
@@ -253,4 +266,5 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         return view;
     }
     */
+
 }
