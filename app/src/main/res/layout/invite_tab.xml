@@ -20,21 +20,15 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <!--
+
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/friendListView"
         android:layout_below="@+id/searchFriendView"
         android:layout_centerHorizontal="true" />
-    -->
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/friend_recycler_view"
-        android:layout_below="@+id/searchFriendView"
-        android:scrollbars="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
 
 
 </RelativeLayout>

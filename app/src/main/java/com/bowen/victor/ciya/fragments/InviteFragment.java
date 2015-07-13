@@ -72,7 +72,7 @@ public class InviteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //Use the layout of Friends tab because its pretty much the same
         //Only difference is the items
-        v = inflater.inflate(R.layout.friends_tab, container, false);
+        v = inflater.inflate(R.layout.invite_tab, container, false);
         initialize();
         //populateFriendList();
         //setupSearchView();

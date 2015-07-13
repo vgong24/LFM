@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,8 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bowen.victor.ciya.adapters.EventRecyclerAdapter;
+import com.bowen.victor.ciya.adapters.FriendRecyclerAdapter;
 import com.bowen.victor.ciya.dbHandlers.FriendListDBHandler;
 import com.bowen.victor.ciya.structures.FriendRequest;
 import com.bowen.victor.ciya.R;
@@ -54,6 +58,10 @@ public class FriendsTab extends Fragment {
 
     List<FriendRequest> friendRequestList;
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     //Regular friends tab
     public static FriendsTab newInstance(Context context){
         FriendsTab friendsTab = new FriendsTab();
@@ -73,11 +81,16 @@ public class FriendsTab extends Fragment {
     }
 
     public void initialize(){
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.friend_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(context);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         currentUser = ParseUser.getCurrentUser().getUsername();
         searchedFriend = (TextView) v.findViewById(R.id.searchFriendView);
         searchedFriend.setVisibility(View.GONE); //Hide the search results to not mess up FriendList
 
-        friendlv = (ListView) v.findViewById(R.id.friendListView);
+        //friendlv = (ListView) v.findViewById(R.id.friendListView);
         if(friendNames == null) {
             friendNames = new ArrayList<>();
         }else{
@@ -100,6 +113,17 @@ public class FriendsTab extends Fragment {
         final SearchView searchView = (SearchView) v.findViewById(R.id.searchView);
         SearchableInfo searchableInfo = searchManager.getSearchableInfo(activity.getComponentName());
         searchView.setSearchableInfo(searchableInfo);
+
+        searchView.setOnClickListener(new SearchView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.searchView:
+                        searchView.onActionViewExpanded();
+                        break;
+                }
+            }
+        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -132,6 +156,30 @@ public class FriendsTab extends Fragment {
 
     //Display Friendlist then set up onclick listeners
     public void populateFriendList(){
+        mAdapter = new FriendRecyclerAdapter(context, R.layout.friend_request_item, friendNames, new FriendRecyclerAdapter.BtnClickListener() {
+
+            @Override
+            public void onBtnClick(int position) {
+                FriendProfile friendProfile = friendNames.get(position);
+                String friendReqId = friendProfile.getFriendRequestId();
+                String friendProfileStatus = friendProfile.getStatus();
+
+                switch(friendProfileStatus){
+                    case REMOVE:
+                        Toast.makeText(context, "Removed Friend Request", Toast.LENGTH_SHORT).show();
+                        break;
+                    case ACCEPT:
+                        FriendRequest.approveFriendRequest(friendReqId);
+                        Toast.makeText(context, "Accepted Friend Request", Toast.LENGTH_SHORT).show();
+                        friendProfile.setStatus(REMOVE);
+                        break;
+                    case PENDING:
+                        break;
+                }
+                populateFriendList();
+            }
+        });
+        /*
         profileAdapter = new FriendListAdapter(context, R.layout.friend_request_item, friendNames, new FriendListAdapter.BtnClickListener() {
 
             @Override
@@ -155,7 +203,9 @@ public class FriendsTab extends Fragment {
                 populateFriendList();
             }
         });
-        friendlv.setAdapter(profileAdapter);
+        */
+        mRecyclerView.setAdapter(mAdapter);
+        //friendlv.setAdapter(profileAdapter);
         onFriendClick();
     }
 
@@ -181,6 +231,7 @@ public class FriendsTab extends Fragment {
     private int focus = -1;
 
     public void onFriendClick(){
+        /*
         friendlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -204,6 +255,7 @@ public class FriendsTab extends Fragment {
 
             }
         });
+        */
     }
 
     @Override
