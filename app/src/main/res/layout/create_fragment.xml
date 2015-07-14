@@ -62,7 +62,7 @@
 
                 <info.hoang8f.android.segmented.SegmentedGroup
                     android:checkedButton="@+id/public_btn"
-                    android:id="@+id/segmented2"
+                    android:id="@+id/privacySegment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -135,7 +135,8 @@
                         android:layout_height="wrap_content"
                         android:text="Group Size:"
                         android:textColor="#000"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:paddingLeft="6dp" />
 
                     <EditText
                         android:id="@+id/cTabMemberEdit"
@@ -226,10 +227,13 @@
         android:layout_weight="10">
         <Button
             android:id="@+id/cTabCreateBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textSize="@dimen/font_size"
             android:text="Create Event"
-            android:nestedScrollingEnabled="false" />
+            android:nestedScrollingEnabled="false"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
 
     </LinearLayout>
 

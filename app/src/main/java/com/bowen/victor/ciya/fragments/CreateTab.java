@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import info.hoang8f.android.segmented.SegmentedGroup;
+
 
 /**
  * Created by Victor on 4/6/2015.
@@ -81,16 +84,11 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     TextView timeView, dateView;
     EditText cMembers, cDescription;
     List<String> catNames;
-    ArrayList<Date> dates, searchDates;
     ArrayList<Category> searchCategories;
     ArrayList<Events> ev;
     ArrayList<Category> categoryArray;
 
-    GoogleMap map;
-    Marker marker;
     Calendar cEventDateTime;
-    LatLng loc;
-    Location myLocation;
     LatLng centerOfMap;
     private final int ZOOM_DISTANCE = 13;
 
@@ -98,21 +96,13 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
 
     Spinner categorySpin;
-    String selectedCategory, cater;
+    String selectedCategory;
 
-    AutoCompleteTextView autoCompView;
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
 
-    Button createEventBtn, timeBtn, dateBtn;
-
-    ArrayAdapter<PlaceDetails> autoAdapter;
-
+    Button createEventBtn;
     PlacesAPI placesAPI;
-
-    LocationListener locationListener;
-
-    Marker centerMarker;
 
     //Setup map
     LocationManager locationManager;
@@ -121,6 +111,14 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     View view;
     Bundle bundle;
+
+    //Privacy Setting Radio
+    SegmentedGroup segmentedGroup;
+    public final static String PUBLIC = "public";
+    public final static String FRIEND = "friend";
+    public final static String PRIVATE = "private";
+
+    String privacySetting;
 
     public static CreateTab newInstance(Context context, Bundle bundle){
         CreateTab createTab = new CreateTab();
@@ -243,7 +241,6 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     }
 
-
     //Bottom half fill in section ============================================================================
 
     public void initialize(){
@@ -272,6 +269,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         categorySpin = (Spinner) view.findViewById(R.id.cTabCatSpin);
 
         dateView = (TextView) view.findViewById(R.id.cTabDateView);
+        privacySetting = PUBLIC;
 
         if(catNames == null){
             catNames = new ArrayList<String>();
@@ -285,6 +283,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         cEventDateTime = Calendar.getInstance();
 
         placesAPI = new PlacesAPI();
+        segmentedGroup = (SegmentedGroup)view.findViewById(R.id.privacySegment);
 
 
     }
@@ -367,6 +366,28 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             }
         });
 
+        segmentedGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId){
+                    case R.id.public_btn:
+                        privacySetting = PUBLIC;
+                        break;
+                    case R.id.friend_btn:
+                        privacySetting = FRIEND;
+                        break;
+                    case R.id.private_btn:
+                        privacySetting = PRIVATE;
+                        break;
+                    default:
+                        privacySetting = PUBLIC;
+                        //public
+                        break;
+                }
+
+            }
+        });
+
 
 
     }
@@ -438,6 +459,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             createEvent = (Events) ParseObject.create("Events");
 
         }
+        createEvent.put("privacy", privacySetting);
 
         createEvent.put("Max", maxMember);
         createEvent.put("Description", eventInfo);

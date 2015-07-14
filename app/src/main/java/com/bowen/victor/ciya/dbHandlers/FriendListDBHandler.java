@@ -34,7 +34,7 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_FRIENDS + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_OBJECT_ID + " TEXT, "+ KEY_FRIEND_ID + " TEXT, " + KEY_NAME + " TEXT, " + KEY_REAL_NAME + " TEXT, " + KEY_STATUS + " TEXT )");
+        db.execSQL("CREATE TABLE " + TABLE_FRIENDS + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_OBJECT_ID + " TEXT, " + KEY_FRIEND_ID + " TEXT, " + KEY_NAME + " TEXT, " + KEY_REAL_NAME + " TEXT, " + KEY_STATUS + " TEXT )");
     }
 
     @Override
@@ -131,11 +131,20 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
 
     public int getFriendCount(){
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + KEY_OBJECT_ID + " FROM "+ TABLE_FRIENDS, null);
+        Cursor cursor = db.rawQuery("SELECT " + KEY_OBJECT_ID + " FROM " + TABLE_FRIENDS, null);
         int count = cursor.getCount();
         db.close();
         cursor.close();
         return count;
 
+    }
+
+    public int profileExists(String friendId){
+        SQLiteDatabase db = getReadableDatabase();
+        String[] args= {friendId};
+        Cursor cursor = db.rawQuery("SELECT " + KEY_OBJECT_ID + " FROM "+ TABLE_FRIENDS + " WHERE " + KEY_FRIEND_ID + " = ?", args);
+        int count = cursor.getCount();
+        db.close();
+        return count;
     }
 }

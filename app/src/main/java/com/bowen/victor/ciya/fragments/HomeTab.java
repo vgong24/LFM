@@ -18,8 +18,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;;
 import android.widget.Toast;
 
+import com.bowen.victor.ciya.activities.CreateEvent;
 import com.bowen.victor.ciya.activities.EventDetails;
 import com.bowen.victor.ciya.adapters.EventRecyclerAdapter;
+import com.bowen.victor.ciya.dbHandlers.FriendListDBHandler;
 import com.bowen.victor.ciya.tools.GPSTracker;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.EventListAdapter;
@@ -47,6 +49,7 @@ public class HomeTab extends Fragment {
 
     ListView eventListView;
     GPSTracker tracker;
+    FriendListDBHandler db;
 
     ProgressBar dialog;
     boolean _areEventsLoaded = false;
@@ -84,6 +87,7 @@ public class HomeTab extends Fragment {
 
     public void initialize() {
         tracker = new GPSTracker(context);
+        db = new FriendListDBHandler(context);
         initField();
         dialog.setVisibility(View.VISIBLE);
         fillEventList();
@@ -151,13 +155,40 @@ public class HomeTab extends Fragment {
         events.clear();
         ParseQuery<Events> query = e.getQuery();
         query.whereWithinKilometers("Location", geoPoint, 100);
+        query.whereNotEqualTo("privacy", CreateTab.PRIVATE);
         query.addAscendingOrder("Date");
         query.findInBackground(new FindCallback<Events>() {
 
             public void done(List<Events> event, ParseException excep) {
                 //dialog.show();
                 if (excep == null) {
-                    events = (ArrayList<Events>) event;
+                    //Check if privacy setting is friend, if not friend, don't add
+                    for(Events eventObject: event) {
+                        try {
+
+                            if (eventObject.getPrivacy().equalsIgnoreCase(CreateTab.FRIEND)) {
+                                //check if friend is yours
+                                try {
+                                    String hostId = eventObject.getHost().fetchIfNeeded().getObjectId();
+                                    if (db.profileExists(hostId) > 0) {
+                                        events.add(eventObject);
+                                    }
+
+                                } catch (ParseException e1) {
+                                    e1.printStackTrace();
+                                }
+
+                            } else {
+                                events.add(eventObject);
+                            }
+                        }catch (Exception e){
+                            //If privacy setting is null, assume public
+                            events.add(eventObject);
+                        }
+                    }
+
+
+
                 } else {
                     Toast.makeText(context.getApplicationContext(), "Nope", Toast.LENGTH_SHORT).show();
                 }

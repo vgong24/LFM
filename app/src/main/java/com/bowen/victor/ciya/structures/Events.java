@@ -31,6 +31,9 @@ public class Events extends ParseObject  {
         }
         return (Category) getParseObject("Category");
     }
+    public String getPrivacy(){
+        return getString("privacy");
+    }
     public void setCat(String cat) {
         put("Category", cat);
     }
