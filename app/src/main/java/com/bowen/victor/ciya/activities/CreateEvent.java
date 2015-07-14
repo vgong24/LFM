@@ -29,10 +29,14 @@ import com.bowen.victor.ciya.adapters.GooglePlacesAutoCompleteAdapter;
 import com.bowen.victor.ciya.fragments.CreateTab;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.PlaceDetails;
+import com.bowen.victor.ciya.tools.GPSTracker;
 import com.bowen.victor.ciya.tools.WorkAround;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 
@@ -50,11 +54,11 @@ public class CreateEvent extends ActionBarActivity implements GoogleApiClient.On
     AutoCompleteTextView autoCompView;
     ArrayAdapter<PlaceDetails> autoAdapter;
     ImageView cancelBtn;
+    GPSTracker tracker;
+    LatLngBounds latLngBounds;
 
     protected GoogleApiClient mGoogleApiClient;
 
-    private static final String[] COUNTRIES = new String[] { "Belgium",
-            "France", "France_", "Italy", "Germany", "Spain" };
 
     public void setActionBarTitle(String title){
         actionBar.setTitle(title);
@@ -65,6 +69,10 @@ public class CreateEvent extends ActionBarActivity implements GoogleApiClient.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
         WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
+        tracker = new GPSTracker(this);
+        latLngBounds = convertCenterAndRadiusToBounds(getLatLng(), 100);
+
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .build();
@@ -74,12 +82,27 @@ public class CreateEvent extends ActionBarActivity implements GoogleApiClient.On
         progressBar = (ProgressBar) findViewById(R.id.chatRoomProgressBar);
         progressBar.setVisibility(View.VISIBLE);
         transaction = getSupportFragmentManager().beginTransaction();
+
         setUpActionBar();
 
         //setActionBarTitle("TEST");
         new SetUpBackground().execute();
 
     }
+
+    public LatLng getLatLng(){
+        if(tracker.canGetLocation()){
+            return new LatLng(tracker.getLatitude(), tracker.getLongitude());
+        }
+        return null;
+    }
+
+    public LatLngBounds convertCenterAndRadiusToBounds(LatLng center, double radius) {
+        LatLng southwest = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 225);
+        LatLng northeast = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 45);
+        return new LatLngBounds(southwest, northeast);
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -91,6 +114,9 @@ public class CreateEvent extends ActionBarActivity implements GoogleApiClient.On
     protected void onStop() {
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
+        }
+        if(tracker.canGetLocation()){
+            tracker.stopUsingGPS();
         }
         super.onStop();
     }
@@ -116,7 +142,7 @@ public class CreateEvent extends ActionBarActivity implements GoogleApiClient.On
         autoCompView.setThreshold(0);
 
         //autoAdapter = new GooglePlacesAutoCompleteAdapter(this, R.layout.list_item);
-        autoAdapter = new GooglePlacesAutoCompleteAdapter(this, R.layout.list_item, mGoogleApiClient);
+        autoAdapter = new GooglePlacesAutoCompleteAdapter(this, R.layout.list_item, mGoogleApiClient, latLngBounds);
 
         autoCompView.setAdapter(autoAdapter);
 

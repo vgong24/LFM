@@ -28,5 +28,6 @@ dependencies {
     compile 'info.hoang8f:android-segmented:1.0.5'
     compile files('libs/Parse-1.8.2.jar')
     compile 'com.google.android.gms:play-services:7.0.0'
+    compile 'com.google.maps.android:android-maps-utils:0.3.4'
     compile files('libs/sinch-android-rtc-3.6.2.jar')
 }

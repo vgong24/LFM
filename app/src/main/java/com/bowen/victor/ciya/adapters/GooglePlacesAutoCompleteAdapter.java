@@ -15,6 +15,7 @@ import com.bowen.victor.ciya.tools.PlacesAPI;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.tools.PlacesAPI_v2;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.LatLngBounds;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class GooglePlacesAutoCompleteAdapter extends ArrayAdapter<PlaceDetails> 
     Context mContext;
     int mResource;
     GoogleApiClient mGoogleApiClient;
+    LatLngBounds latLngBounds;
 
     public GooglePlacesAutoCompleteAdapter(Context context, int resource) {
         super(context, resource);
@@ -35,12 +37,13 @@ public class GooglePlacesAutoCompleteAdapter extends ArrayAdapter<PlaceDetails> 
         mResource = resource;
         //mPlaceAPI = new PlacesAPI_v2(mContext);
     }
-    public GooglePlacesAutoCompleteAdapter(Context context, int resource, GoogleApiClient client) {
+    public GooglePlacesAutoCompleteAdapter(Context context, int resource, GoogleApiClient client, LatLngBounds latLngBounds) {
         super(context, resource);
         mContext = context;
         mResource = resource;
         mGoogleApiClient = client;
-        mPlaceAPI = new PlacesAPI_v2(mContext, mGoogleApiClient);
+        mPlaceAPI = new PlacesAPI_v2(mContext, mGoogleApiClient, latLngBounds);
+        this.latLngBounds = latLngBounds;
     }
 
     @Override

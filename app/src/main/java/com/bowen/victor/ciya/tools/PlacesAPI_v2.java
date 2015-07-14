@@ -28,9 +28,7 @@ public class PlacesAPI_v2 implements GoogleApiClient.ConnectionCallbacks, Google
     private GoogleApiClient mGoogleApiClient;
     private Context context;
     private ArrayList<PlaceDetails> placesList;
-    private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
-            new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
-
+    private LatLngBounds mLatLngBounds;
 
     public PlacesAPI_v2(Context context){
         this.context = context;
@@ -38,9 +36,10 @@ public class PlacesAPI_v2 implements GoogleApiClient.ConnectionCallbacks, Google
         setUpApiClient();
     }
 
-    public PlacesAPI_v2(Context context, GoogleApiClient mclient){
+    public PlacesAPI_v2(Context context, GoogleApiClient mclient, LatLngBounds mLatLngBounds){
         this.context = context;
         mGoogleApiClient = mclient;
+        this.mLatLngBounds = mLatLngBounds;
     }
 
     private void setUpApiClient(){
@@ -60,7 +59,7 @@ public class PlacesAPI_v2 implements GoogleApiClient.ConnectionCallbacks, Google
             return null;
         }
         PlaceDetails details = null;
-        PendingResult<AutocompletePredictionBuffer> results = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, input, BOUNDS_GREATER_SYDNEY, null);
+        PendingResult<AutocompletePredictionBuffer> results = Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, input, mLatLngBounds, null);
         AutocompletePredictionBuffer autocompletePredictions = results.await(60, TimeUnit.SECONDS);
 
         final Status status = autocompletePredictions.getStatus();
