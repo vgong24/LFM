@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.bowen.victor.ciya.structures.PlaceDetails;
 import com.bowen.victor.ciya.tools.PlacesAPI;
 import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.tools.PlacesAPI_v2;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 
@@ -21,14 +23,24 @@ import java.util.ArrayList;
  */
 public class GooglePlacesAutoCompleteAdapter extends ArrayAdapter<PlaceDetails> implements Filterable{
     private ArrayList<PlaceDetails> resultList;
-    PlacesAPI mPlaceAPI= new PlacesAPI();
+    //PlacesAPI mPlaceAPI= new PlacesAPI();
+    PlacesAPI_v2 mPlaceAPI;
     Context mContext;
     int mResource;
+    GoogleApiClient mGoogleApiClient;
 
     public GooglePlacesAutoCompleteAdapter(Context context, int resource) {
         super(context, resource);
         mContext = context;
         mResource = resource;
+        //mPlaceAPI = new PlacesAPI_v2(mContext);
+    }
+    public GooglePlacesAutoCompleteAdapter(Context context, int resource, GoogleApiClient client) {
+        super(context, resource);
+        mContext = context;
+        mResource = resource;
+        mGoogleApiClient = client;
+        mPlaceAPI = new PlacesAPI_v2(mContext, mGoogleApiClient);
     }
 
     @Override
@@ -95,6 +107,8 @@ public class GooglePlacesAutoCompleteAdapter extends ArrayAdapter<PlaceDetails> 
         };
         return filter;
     }
+
+    //Disconnect Places API v 21
 
 
 }

@@ -11,6 +11,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.GooglePlacesAutoCompleteAdapter;
@@ -28,13 +30,16 @@ import com.bowen.victor.ciya.fragments.CreateTab;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.PlaceDetails;
 import com.bowen.victor.ciya.tools.WorkAround;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
 
 import java.util.ArrayList;
 
 /**
  * Created by Victor on 6/10/2015.
  */
-public class CreateEvent extends ActionBarActivity {
+public class CreateEvent extends ActionBarActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     CreateTab createTab;
     FragmentTransaction transaction;
@@ -45,6 +50,8 @@ public class CreateEvent extends ActionBarActivity {
     AutoCompleteTextView autoCompView;
     ArrayAdapter<PlaceDetails> autoAdapter;
     ImageView cancelBtn;
+
+    protected GoogleApiClient mGoogleApiClient;
 
     private static final String[] COUNTRIES = new String[] { "Belgium",
             "France", "France_", "Italy", "Germany", "Spain" };
@@ -58,7 +65,9 @@ public class CreateEvent extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
         WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
-
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .build();
 
 
         fragment = CreateTab.newInstance(CreateEvent.this);
@@ -70,6 +79,20 @@ public class CreateEvent extends ActionBarActivity {
         //setActionBarTitle("TEST");
         new SetUpBackground().execute();
 
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
     }
 
     public void setUpActionBar(){
@@ -92,7 +115,9 @@ public class CreateEvent extends ActionBarActivity {
         autoCompView = (AutoCompleteTextView) actionBar.getCustomView().findViewById(R.id.autoCompleteSearch);
         autoCompView.setThreshold(0);
 
-        autoAdapter = new GooglePlacesAutoCompleteAdapter(this, R.layout.list_item);
+        //autoAdapter = new GooglePlacesAutoCompleteAdapter(this, R.layout.list_item);
+        autoAdapter = new GooglePlacesAutoCompleteAdapter(this, R.layout.list_item, mGoogleApiClient);
+
         autoCompView.setAdapter(autoAdapter);
 
     }
@@ -145,6 +170,16 @@ public class CreateEvent extends ActionBarActivity {
         CreateTab fragment = (CreateTab)getSupportFragmentManager().findFragmentById(R.id.createFrame);
         fragment.relocatePinPoint(placeDetails);
 
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e("CreateEventConnection", "onConnectionFailed: ConnectionResult.getErrorCode() = "
+                + connectionResult.getErrorCode());
+        // TODO(Developer): Check error code and notify the user of error state and resolution.
+        Toast.makeText(this,
+                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
+                Toast.LENGTH_SHORT).show();
     }
 
     private class SetUpBackground extends AsyncTask<Void, Void, Void> {

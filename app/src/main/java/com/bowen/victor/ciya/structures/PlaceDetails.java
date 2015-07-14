@@ -19,6 +19,14 @@ public class PlaceDetails implements Place {
     public CharSequence formatted_address, name, icon;
     LatLng latLng;
 
+    public PlaceDetails(String description, String place_id){
+        this.name = description;
+        this.place_id = place_id;
+    }
+    public PlaceDetails(){
+
+    }
+
 
     @Override
     public String getId() {
