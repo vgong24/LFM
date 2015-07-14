@@ -3,7 +3,7 @@
     xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     android:weightSum="100">
 
 
@@ -47,16 +47,17 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:layout_weight="45"
-        android:id="@+id/scrollView">
+        android:id="@+id/scrollView"
+        android:layout_margin="10dp">
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:orientation="horizontal" >
 
                 <info.hoang8f.android.segmented.SegmentedGroup
@@ -64,12 +65,12 @@
                     android:id="@+id/segmented2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
                     android:orientation="horizontal"
                     segmentedgroup:border_width="1dp"
                     segmentedgroup:corner_radius="10dp"
                     segmentedgroup:tint_color="@color/colorPrimary"
-                    segmentedgroup:checked_text_color="#FFFFFF">
+                    segmentedgroup:checked_text_color="#FFFFFF"
+                    android:layout_margin="6dp">
 
                     <RadioButton
                         android:id="@+id/public_btn"
@@ -103,20 +104,20 @@
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical" >
                 <!-- Category + Size -->
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal"
+                    android:layout_margin="6dp">
 
                     <TextView
                         android:id="@+id/cTabCatView"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dip"
                         android:text="Category"
                         android:textColor="#000"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -129,22 +130,23 @@
 
                     <TextView
                         android:id="@+id/cTabMemberView"
-                        android:layout_weight="1"
+                        android:layout_weight="1.25"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
                         android:text="Group Size:"
                         android:textColor="#000"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <EditText
                         android:id="@+id/cTabMemberEdit"
-                        android:layout_weight="1"
+                        android:layout_weight=".75"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:ems="10"
                         android:inputType="number"
-                        android:hint="8" />
+                        android:maxLength="2"
+                        android:hint="8"
+                        android:layout_marginLeft="6dp" />
 
 
                 </LinearLayout>
@@ -197,25 +199,21 @@
 
                 <LinearLayout
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal" >
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:background="@drawable/inputbox"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="16dp"
+                    android:layout_margin="6dp">
 
                     <EditText
                         android:id="@+id/cTabDescEdit"
                         android:layout_weight="1"
                         android:layout_width="0dip"
-                        android:layout_height="wrap_content"
-                        android:hint="Event Description" />
+                        android:layout_height="fill_parent"
+                        android:hint="Event Description"
+                        android:layout_marginLeft="8dp" />
                 </LinearLayout>
-
-                
-                <Spinner
-                    android:layout_weight=".5"
-                    android:layout_width="0dp"
-
-                    android:layout_height="wrap_content"
-                    android:id="@+id/cTabPPSpin" />
-
 
             </LinearLayout>
         </LinearLayout>

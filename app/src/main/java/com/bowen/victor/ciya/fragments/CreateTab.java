@@ -402,7 +402,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         categorySpin.setAdapter(adapt);
         categorySpin.setSelection(0);
 
-        fillPublicPrivateSpinner();
+        //fillPublicPrivateSpinner();
 
     }
 
