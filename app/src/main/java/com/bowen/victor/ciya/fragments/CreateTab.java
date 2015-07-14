@@ -145,7 +145,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.create_tab, container, false);
+        view = inflater.inflate(R.layout.create_fragment, container, false);
        //((CreateEvent)activity).setActionBarTitle("TEST");
 
         initialize();

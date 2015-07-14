@@ -58,5 +58,8 @@
     <string name="title_home">PlaceHolder1</string>
     <string name="search_locate">search</string>
     <string name="location_select_hint">Search for location or drop pin</string>
+    <string name="public_text">PUBLIC</string>
+    <string name="friends_text">FRIENDS</string>
+    <string name="private_text">PRIVATE</string>
 
 </resources>
