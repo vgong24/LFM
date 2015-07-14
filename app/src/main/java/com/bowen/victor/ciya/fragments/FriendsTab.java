@@ -156,7 +156,7 @@ public class FriendsTab extends Fragment {
 
     //Display Friendlist then set up onclick listeners
     public void populateFriendList(){
-        mAdapter = new FriendRecyclerAdapter(context, R.layout.friend_request_item, friendNames, new FriendRecyclerAdapter.BtnClickListener() {
+        mAdapter = new FriendRecyclerAdapter(context, R.layout.friend_request_item, friendNames, mLayoutManager, new FriendRecyclerAdapter.BtnClickListener() {
 
             @Override
             public void onBtnClick(int position) {

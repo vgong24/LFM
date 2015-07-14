@@ -41,6 +41,7 @@ import java.util.List;
 public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAdapter.ViewHolder> {
     Context context;
     int resourcexml;
+    RecyclerView.LayoutManager mLayoutManager;
     List<FriendProfile> friendProfiles;
     BtnClickListener mClickListener = null;
     private int lastPosition = -1;
@@ -50,12 +51,13 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         public abstract void onBtnClick(int position);
     }
 
-    public FriendRecyclerAdapter(Context context, int resource, List<FriendProfile> friendList, BtnClickListener listener) {
+    public FriendRecyclerAdapter(Context context, int resource, List<FriendProfile> friendList, RecyclerView.LayoutManager layoutManager, BtnClickListener listener) {
         //super(context, resource, friendList);
         this.context = context;
         resourcexml = resource;
         friendProfiles = friendList;
         mClickListener = listener;
+        mLayoutManager = layoutManager;
     }
 
     // Create new views (invoked by the layout manager)
@@ -84,6 +86,10 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         holder.friendName.setText(fName);
         String statusBox = friendProfile.getStatus();
 
+        if(holder.friendProfileImg != null){
+            //new ImageDownloaderTask(holder.friendProfileImg).execute(friendProfile);
+        }
+
         switch(statusBox){
             case "pending":
                 holder.friendStatusText.setText("Pending");
@@ -107,14 +113,14 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
             @Override
             public void onClick(View v, int position, boolean isLongClick) {
 
-                /*
+
                 for (int i = 0; i < getItemCount(); i++) {
                     if (i != position) {
-                        friendlv.getChildAt(i).findViewById(R.id.friend_status_text).setVisibility(View.INVISIBLE);
-                        friendlv.getChildAt(i).findViewById(R.id.friend_status_img).setVisibility(View.INVISIBLE);
+                        mLayoutManager.getChildAt(i).findViewById(R.id.friend_status_text).setVisibility(View.INVISIBLE);
+                        mLayoutManager.getChildAt(i).findViewById(R.id.friend_status_img).setVisibility(View.INVISIBLE);
                     }
                 }
-                */
+
                 TextView friendStatusText = (TextView) v.findViewById(R.id.friend_status_text);
                 ImageView friendStatusImg = (ImageView) v.findViewById(R.id.friend_status_img);
                 if (friendStatusText.getVisibility() == View.INVISIBLE) {
@@ -125,7 +131,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
                     friendStatusImg.setVisibility(View.INVISIBLE);
                 }
 
-                //Toast.makeText(context, "" + getItemCount(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "" + mLayoutManager.getChildAt(0).findViewById(R.id.friend_status_text).get, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -166,7 +172,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         public TextView friendName;
         public TextView friendStatusText;
         public ImageView friendStatusImg;
-        public ImageView friendProfile;
+        public ImageView friendProfileImg;
 
         public View mView;
         public Context context;
@@ -175,7 +181,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         public ViewHolder(View v, final Context context) {
             super(v);
             mView = v;
-            friendProfile = (ImageView) v.findViewById(R.id.friend_pro_pic);
+            friendProfileImg = (ImageView) v.findViewById(R.id.friend_pro_pic);
             friendName = (TextView) v.findViewById(R.id.friend_username);
             friendStatusText = (TextView) v.findViewById(R.id.friend_status_text);
             friendStatusImg = (ImageView) v.findViewById(R.id.friend_status_img);
@@ -266,5 +272,76 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         return view;
     }
     */
+
+    class ImageDownloaderTask extends AsyncTask<FriendRequest, Void, Bitmap> {
+        private final WeakReference<ImageView> imageViewWeakReference;
+
+        public ImageDownloaderTask(ImageView imageView) {
+            imageViewWeakReference = new WeakReference<ImageView>(imageView);
+        }
+
+
+        @Override
+        protected Bitmap doInBackground(FriendRequest... params) {
+
+            ParseFile thumbnail = null;
+            /*
+            if ((thumbnail = params[0].getUserID().getParseFile("profilePic")) == null) {
+                if((thumbnail = params[0].getUserID().getParseFile("profilePicture")) == null){
+
+                }
+            }
+            */
+            return getResizedBitmap(thumbnail);
+        }
+
+        public Bitmap getResizedBitmap(ParseFile thumbnail){
+            try {
+                byte[] data = thumbnail.getData();
+                Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                if (bmp != null) {
+                    //Scale bitmaps based on Device width
+                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                    Display display = wm.getDefaultDisplay();
+                    Point size = new Point();
+                    display.getSize(size);
+
+                    int width = size.x;
+                    int height = size.y;
+                    //Using ratio of 7.2 to get the correct size. 720 : 100
+                    int bitmapScale = (int) (width / BITMAP_SCALE);
+                    Log.v("Bitmap", "Bitmap width: " + width + " height: "+ height);
+
+
+                    Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, bitmapScale, bitmapScale, true);
+                    return resizedbitmap;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (isCancelled()) {
+                bitmap = null;
+            }
+            if (imageViewWeakReference != null) {
+                ImageView imageView = imageViewWeakReference.get();
+                if (imageView != null) {
+                    if (bitmap != null) {
+                        imageView.setImageBitmap(bitmap);
+                    } else {
+                        Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.reload);
+                        imageView.setImageDrawable(placeholder);
+                        imageView.setPadding(10, 10, 10, 10);
+                    }
+                }
+            }
+        }
+
+
+    }
 
 }
