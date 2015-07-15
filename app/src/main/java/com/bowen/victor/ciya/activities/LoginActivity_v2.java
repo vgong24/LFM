@@ -12,6 +12,7 @@ import com.parse.ParseUser;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity_v2 extends Activity {
@@ -20,6 +21,7 @@ public class LoginActivity_v2 extends Activity {
     private Button loginButton;
     private EditText usernameField;
     private EditText passwordField;
+    private TextView passwordReset;
     private String username;
     private String password;
     private Intent intent;
@@ -47,6 +49,7 @@ public class LoginActivity_v2 extends Activity {
         signUpButton = (Button) findViewById(R.id.signupButton);
         usernameField = (EditText) findViewById(R.id.loginUsername);
         passwordField = (EditText) findViewById(R.id.loginPassword);
+        passwordReset = (TextView) findViewById(R.id.passwordResetTextView);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +82,18 @@ public class LoginActivity_v2 extends Activity {
 
             }
         });
+
+        passwordReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity_v2.this, PasswordResetActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+            }
+        });
+
+
     }
 
     @Override

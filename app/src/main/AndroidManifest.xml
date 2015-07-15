@@ -63,6 +63,11 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".activities.PasswordResetActivity"
+            android:label="Password Reset Activity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activities.EventDetails"
             android:label="Event Details"
             android:configChanges="orientation|keyboardHidden|screenSize"

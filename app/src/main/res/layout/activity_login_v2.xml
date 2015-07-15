@@ -56,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="5dp"
             android:inputType="textPassword"
             android:textSize="32sp"
             android:padding="10dp"
@@ -65,6 +65,15 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp">
         </EditText>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Forgot your password?"
+            android:layout_marginBottom="35dp"
+            android:id="@+id/passwordResetTextView"
+            android:layout_gravity="center_horizontal"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -88,6 +97,7 @@
             android:text="OR"
             android:id="@+id/orTextView"
             android:layout_gravity="center_horizontal" />
+
     </LinearLayout>
 
     <Button
@@ -97,4 +107,5 @@
         android:background="@drawable/button_signup"
         android:layout_below="@+id/linearLayout3"
         android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
