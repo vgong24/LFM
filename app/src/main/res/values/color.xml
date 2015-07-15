@@ -15,8 +15,8 @@
     <color name="ColorPrimaryDetail">#009688</color>
     <color name="ColorPrimaryMessage">#F50057</color>
 
-    <color name="RedExit">#FF6E40</color>
-    <color name="GreenJoin">#CCFF90</color>
+    <color name="JoinButton">#448AFF</color>
+    <color name="LeaveButton">#FF5252</color>
 
     <color name="sinch_purple">#ff63029d</color>
     <color name="off_white">#fffafafa</color>

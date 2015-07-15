@@ -238,7 +238,8 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
         }else if(!hasJoined && !isHost){
             joinTxtView.setText("Join");
-            joinTxtView.setBackgroundResource(R.color.GreenJoin);
+            joinTxtView.setTextAppearance(getApplicationContext(), R.style.JoinButton);
+            joinTxtView.setBackgroundResource(R.color.JoinButton);
             joinTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -253,7 +254,8 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
         }else{
             joinTxtView.setText("Leave");
-            joinTxtView.setBackgroundResource(R.color.RedExit);
+            joinTxtView.setTextAppearance(getApplicationContext(), R.style.LeaveButton);
+            joinTxtView.setBackgroundResource(R.color.LeaveButton);
             joinTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
