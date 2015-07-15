@@ -446,7 +446,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         EditText temp;
         temp = (EditText) view.findViewById(R.id.cTabMemberEdit);
         if(temp.getText().toString().equalsIgnoreCase("")){
-            temp.setText("0");
+            temp.setText("4");
         }
 
         int maxMember = Integer.parseInt(temp.getText().toString());
