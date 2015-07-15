@@ -92,7 +92,10 @@ public class CreateEvent extends ActionBarActivity implements GoogleApiClient.On
 
     public LatLng getLatLng(){
         if(tracker.canGetLocation()){
-            return new LatLng(tracker.getLatitude(), tracker.getLongitude());
+            double lat = tracker.getLatitude();
+            double lon = tracker.getLongitude();
+            tracker.stopUsingGPS();
+            return new LatLng(lat, lon);
         }
         return null;
     }
@@ -223,6 +226,9 @@ public class CreateEvent extends ActionBarActivity implements GoogleApiClient.On
             progressBar.setVisibility(View.GONE);
             transaction.commit();
             initOnClickListener();
+            if(tracker.canGetLocation()){
+                tracker.stopUsingGPS();
+            }
         }
     }
 

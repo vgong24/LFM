@@ -212,6 +212,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         if(gpsTracker.canGetLocation()){
             latitude = gpsTracker.getLatitude();
             longitude = gpsTracker.getLongitude();
+            gpsTracker.stopUsingGPS();
         }else{
             gpsTracker.showSettingsAlert();
             latitude = 21.3000;
@@ -419,7 +420,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         }
 
         ArrayAdapter<String> adapt = new ArrayAdapter<String>(context,
-                android.R.layout.simple_spinner_item, catNames);
+                android.R.layout.simple_list_item_1, catNames);
         categorySpin.setAdapter(adapt);
         categorySpin.setSelection(0);
 

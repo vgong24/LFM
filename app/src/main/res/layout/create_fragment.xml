@@ -113,6 +113,8 @@
                     android:orientation="horizontal"
                     android:layout_margin="6dp">
 
+                    <!--
+
                     <TextView
                         android:id="@+id/cTabCatView"
                         android:layout_weight="1"
@@ -122,8 +124,10 @@
                         android:textColor="#000"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+                        -->
+
                     <Spinner
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:id="@+id/cTabCatSpin" />
