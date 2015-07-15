@@ -243,6 +243,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             joinTxtView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    joinTxtView.setEnabled(false);
                     if(isInvited){
                         joinedAsInvitee(evnt);
                     }else{

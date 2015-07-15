@@ -283,7 +283,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         categoryArray = new ArrayList<>();
         cEventDateTime = Calendar.getInstance();
 
-        placesAPI = new PlacesAPI();
+        placesAPI = new PlacesAPI(context);
         segmentedGroup = (SegmentedGroup)view.findViewById(R.id.privacySegment);
 
 
