@@ -1,8 +1,11 @@
 package com.bowen.victor.ciya.tools;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.structures.PlaceDetails;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,7 +40,14 @@ public class PlacesAPI {
     private static final String TYPE_SEARCH = "/search";
 
     private static final String OUT_JSON = "/json";
-    private static final String API_KEY = "AIzaSyCP6IKn015BJ-pwpuGayJtuDGwJuT5oi9I";
+    private static String API_KEY;
+
+    private Context context;
+
+    public PlacesAPI(Context context){
+        this.context = context;
+        API_KEY = context.getResources().getString(R.string.placesApiKey);
+    }
 
     public static ArrayList<PlaceDetails> autocomplete(String input){
         ArrayList<PlaceDetails> resultList = null;

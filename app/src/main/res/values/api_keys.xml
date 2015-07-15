@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="geoAPIkey">AIzaSyAnjCTrTz2R8w7WQOjB9JVetHAeKrqeLWo</string>
+    <string name="placesApiKey">AIzaSyCP6IKn015BJ-pwpuGayJtuDGwJuT5oi9I</string>
 
 </resources>
