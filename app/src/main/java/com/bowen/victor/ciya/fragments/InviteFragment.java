@@ -26,6 +26,7 @@ import com.bowen.victor.ciya.structures.FriendRequest;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.InviteListAdapter;
 import com.bowen.victor.ciya.structures.FriendProfile;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -110,10 +111,11 @@ public class InviteFragment extends Fragment {
         friendlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FriendProfile fp = friendNames.get(position);
-                String eventid = getArguments().getString("eventId");
-                //send invite to person. at this point probably multiple invites
-                sendInvite(eventid, fp.getUserId());
+                final FriendProfile fp = friendNames.get(position);
+                final String eventid = getArguments().getString("eventId");
+                //Check to see if invite was sent then send it
+                checkSendInvite(fp.getUserId(), eventid);
+                view.setEnabled(false);
             }
         });
     }
@@ -139,6 +141,32 @@ public class InviteFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    /**
+     * Check to see if invitee is already an attendee for the event
+     * If so, let the user know. If not, send out an invitation
+     * @param userId
+     * @param eventid
+     */
+    public void checkSendInvite(final String userId, final String eventid){
+        ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
+        ParseObject friendUser = ParseObject.createWithoutData("_User", userId);
+        ParseObject eventPointer = ParseObject.createWithoutData("Events", eventid);
+
+        query.whereEqualTo("User", friendUser);
+        query.whereEqualTo("Event", eventPointer);
+        query.findInBackground(new FindCallback<Attendee>() {
+            @Override
+            public void done(List<Attendee> list, ParseException e) {
+                if (list.size() > 0) {
+                    Toast.makeText(context, "Already invited", Toast.LENGTH_SHORT).show();
+                } else {
+                    sendInvite(eventid, userId);
+                }
+            }
+        });
+
     }
 
     public void sendInvite(String eventJoining, String invitee){
@@ -195,7 +223,7 @@ public class InviteFragment extends Fragment {
                         searchedFriend.setText("");
                         searchedFriend.setVisibility(View.GONE);
                         String eventid = getArguments().getString("eventId");
-                        sendInvite(eventid, puser.getObjectId());
+                        checkSendInvite(puser.getObjectId(), eventid);
                     }
                 });
             }
