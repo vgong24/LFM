@@ -336,33 +336,19 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     }
 
     private void populateList(final ArrayList<Attendee> attArr){
-
-        attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(), R.layout.attendee_list_view, attArr, objId , isHost, hostId, this);
+        //Dangerously long list of parameters
+        attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(),
+                R.layout.attendee_list_view,
+                attArr,
+                objId ,
+                isHost,
+                hostId,
+                this);
         attendeeListView.setAdapter(attendeeListAdapter);
-        /*Set on click for each item
-           Give host options or guest option
-           Host: on click, can kick a player
-           Guest: no ideas yet
-           Future plans: Quick friend adding? nah
-         */
 
-        if(isHost){
-            attendeeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                    //check if selected attendee is the host
-                    if(hostId.equalsIgnoreCase(attArr.get(position).getUserID().getObjectId())){
-
-                    }else{
-                        String kickingId = attArr.get(position).getObjectId();
-                        //onKickDialog(evnt, kickingId);
-                    }
-
-                }
-            });
-        }
     }
 
+    //Will be called in attendeeListAdapter
     public void onKickDialog(final Events eventObj, final String attendeeId){
         AlertDialog.Builder builder = new AlertDialog.Builder(EventDetails.this);
         builder.setTitle("Kick Player?");
@@ -417,6 +403,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
             ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
             query.whereEqualTo("Event", params[0]);
+            query.addAscendingOrder("updatedAt");
             try {
 
                 List<Attendee> tempList = query.find();

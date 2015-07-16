@@ -42,9 +42,9 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <string name="nav_item_home">PlaceHolder1</string>
-    <string name="nav_item_friends">PlaceHolder2</string>
-    <string name="nav_item_notifications">PlaceHolder3</string>
+    <string name="nav_item_home">Not</string>
+    <string name="nav_item_friends">Implemented</string>
+    <string name="nav_item_notifications">Yet</string>
 
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">

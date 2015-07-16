@@ -17,7 +17,7 @@
 
     <color name="JoinButton">#448AFF</color>
     <color name="LeaveButton">#FF5252</color>
-    <color name="HostRow">@color/colorPrimaryDark</color>
+    <color name="HostRow">#448AFF</color>
 
     <color name="sinch_purple">#ff63029d</color>
     <color name="off_white">#fffafafa</color>
