@@ -337,7 +337,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
 
     private void populateList(final ArrayList<Attendee> attArr){
 
-        attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(), R.layout.attendee_list_view, attArr);
+        attendeeListAdapter= new AttendeeListAdapter(getApplicationContext(), R.layout.attendee_list_view, attArr, objId , isHost, hostId, this);
         attendeeListView.setAdapter(attendeeListAdapter);
         /*Set on click for each item
            Give host options or guest option
@@ -354,29 +354,34 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                     if(hostId.equalsIgnoreCase(attArr.get(position).getUserID().getObjectId())){
 
                     }else{
-                        AlertDialog.Builder builder = new AlertDialog.Builder(EventDetails.this);
-                        builder.setTitle("Kick Player?");
-                        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String kickingId = attArr.get(position).getObjectId();
-                                leaveEventAsAttendee(evnt, kickingId);
-                            }
-                        });
-
-                        AlertDialog alert = builder.create();
-                        alert.show();
+                        String kickingId = attArr.get(position).getObjectId();
+                        //onKickDialog(evnt, kickingId);
                     }
 
                 }
             });
         }
+    }
+
+    public void onKickDialog(final Events eventObj, final String attendeeId){
+        AlertDialog.Builder builder = new AlertDialog.Builder(EventDetails.this);
+        builder.setTitle("Kick Player?");
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                leaveEventAsAttendee(eventObj, attendeeId);
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+
     }
 
 

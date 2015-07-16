@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/LinearLayout01"
     android:orientation="horizontal"
-    android:background="@drawable/attend_list_selector"
+    android:background="@color/colorAccent"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
@@ -25,14 +25,24 @@
             android:text="Name"
             android:id="@+id/attendeeListViewName"/>
 
-        <TextView
+        <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingRight="10dp"
+            android:layout_height="match_parent"
+            android:paddingRight="16dp"
+            android:layout_toLeftOf="@+id/attendeeKick"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Add"
+            android:id="@+id/attendeeAddFriend"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:paddingRight="16dp"
             android:layout_alignParentRight="true"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Ready or not"
-            android:id="@+id/attendeeListViewReady"
+            android:text="Kick"
+            android:id="@+id/attendeeKick"
             />
 
 </RelativeLayout>
