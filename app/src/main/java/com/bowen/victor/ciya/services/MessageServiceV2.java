@@ -62,6 +62,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
 
         sinchClient.setSupportMessaging(true);
         sinchClient.setSupportActiveConnectionInBackground(true);
+        sinchClient.setSupportPushNotifications(true);
 
         sinchClient.checkManifest();
         sinchClient.start();
@@ -115,6 +116,14 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
         }
     }
 
+    public void sendMessage(String recipientUserId, String textBody) {
+        if (messageClient != null) {
+            WritableMessage message = new WritableMessage(recipientUserId, textBody);
+            messageClient.send(message);
+
+        }
+    }
+
     public void addMessageClientListener(MessageClientListener listener) {
         if (messageClient != null) {
             messageClient.addMessageClientListener(listener);
@@ -138,6 +147,10 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
 
     public class MessageServiceInterface extends Binder {
         public void sendMessage(List<String> recipientUserId, String textBody) {
+            MessageServiceV2.this.sendMessage(recipientUserId, textBody);
+        }
+
+        public void sendMessage(String recipientUserId, String textBody) {
             MessageServiceV2.this.sendMessage(recipientUserId, textBody);
         }
 

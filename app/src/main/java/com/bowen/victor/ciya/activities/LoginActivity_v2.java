@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.services.MessageServiceV2;
 import com.parse.LogInCallback;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
 import android.view.View;
@@ -60,6 +61,11 @@ public class LoginActivity_v2 extends Activity {
                 ParseUser.logInInBackground(username, password, new LogInCallback() {
                     public void done(ParseUser user, com.parse.ParseException e) {
                         if (user != null) {
+
+                            ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
+                            parseInstallation.put("UserId", user.getObjectId());
+                            parseInstallation.saveEventually();
+
                             //startService(serviceIntent);
                             startActivity(intent);
                         } else {

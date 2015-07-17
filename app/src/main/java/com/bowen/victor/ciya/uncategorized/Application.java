@@ -1,5 +1,7 @@
 package com.bowen.victor.ciya.uncategorized;
 
+import android.util.Log;
+
 import com.bowen.victor.ciya.structures.Assets;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Category;
@@ -9,7 +11,10 @@ import com.bowen.victor.ciya.structures.Interests;
 import com.bowen.victor.ciya.structures.Reviews;
 import com.bowen.victor.ciya.structures._User;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
+import com.parse.SaveCallback;
 
 public class Application extends android.app.Application {
   // Debugging switch
@@ -36,10 +41,19 @@ public class Application extends android.app.Application {
     ParseObject.registerSubclass(Assets.class);
     ParseObject.registerSubclass(FriendRequest.class);
     Parse.initialize(this, "aTeqCcZ5KEMR72fG8kiZED2Rxeb2r7ruWtqBSVa6",
-        "JPdPZXMcR4ESbXNly1vuP19EFoYK3upi8sopk282");
+            "JPdPZXMcR4ESbXNly1vuP19EFoYK3upi8sopk282");
 
 
-
+    ParsePush.subscribeInBackground("", new SaveCallback() {
+      @Override
+      public void done(ParseException e) {
+        if (e == null) {
+          Log.d("com.parse.push", "successfully subscribed to the broadcast channel.");
+        } else {
+          Log.e("com.parse.push", "failed to subscribe for push", e);
+        }
+      }
+    });
 
   }
 

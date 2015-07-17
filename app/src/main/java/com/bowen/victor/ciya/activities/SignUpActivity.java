@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.bowen.victor.ciya.R;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -130,6 +131,10 @@ public class SignUpActivity extends Activity {
                     // Show the error message
                     Toast.makeText(SignUpActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
+
+                    ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
+                    parseInstallation.put("UserId", user.getObjectId());
+                    parseInstallation.saveEventually();
 
                     Intent intent = new Intent(SignUpActivity.this, LoginActivity_v2.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
