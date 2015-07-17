@@ -24,10 +24,13 @@ import com.bowen.victor.ciya.structures.Events;
 import com.bowen.victor.ciya.tools.WorkAround;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SendCallback;
 import com.sinch.android.rtc.PushPair;
 import com.sinch.android.rtc.messaging.Message;
 import com.sinch.android.rtc.messaging.MessageClient;
@@ -226,11 +229,27 @@ public class MultiMessagingActivity extends ActionBarActivity {
             public void done(ParseException e) {
                 if(e == null) {
                     //If message was properly saved, send message to everyone else using sinch.
+                    //Try sending messages individually
+
+                    for(int i = 0; i < recipientIDs.size(); i++){
+                        if(!recipientIDs.get(i).equalsIgnoreCase(currentUserId)){
+                            final WritableMessage writableMessage = new WritableMessage(recipientIDs.get(i), messageBody);
+
+                            messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
+
+                            messageService.sendMessage(recipientIDs.get(i), groupID + " " + currentName + " " + messageBody);
+                        }
+
+                    }
+
+                    /*
                     final WritableMessage writableMessage = new WritableMessage(recipientIDs, messageBody);
 
                     messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
 
                     messageService.sendMessage(recipientIDs, groupID + " " + currentName + " " + messageBody);
+
+                    */
                     messageBodyField.setText("");
 
                 }else{
@@ -295,9 +314,56 @@ public class MultiMessagingActivity extends ActionBarActivity {
         }
 
         @Override
-        public void onMessageDelivered(MessageClient client, MessageDeliveryInfo deliveryInfo) {}
+        public void onMessageDelivered(MessageClient client, MessageDeliveryInfo deliveryInfo) {
+            Log.v("DELIVERED", "Message delivered: " + deliveryInfo.getRecipientId());
+        }
 
         @Override
-        public void onShouldSendPushData(MessageClient client, Message message, List<PushPair> pushPairs) {}
+        public void onShouldSendPushData(MessageClient client, final Message message, List<PushPair> pushPairs) {
+            Log.v("SEND PUSH", "Sending push to: " + message.getRecipientIds().get(0));
+
+
+            final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
+
+                //Async send
+                ParseQuery userQuery = ParseUser.getQuery();
+                userQuery.whereEqualTo("objectId", writableMessage.getRecipientIds().get(0));
+                ParseQuery pushQuery = ParseInstallation.getQuery();
+                pushQuery.whereMatchesQuery("UserId", userQuery);
+
+                // Send push notification to query
+                ParsePush push = new ParsePush();
+                push.setQuery(pushQuery); // Set our Installation query
+                push.setMessage("sent you a message");
+                push.sendInBackground(new SendCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        Log.v("SEND PUSH", "Sending push to: " + message.getRecipientIds().get(0));
+                        if (e == null) {
+
+                        } else {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                });
+
+
+
+        }
+    }
+
+    /**AsyncTask Send Push Data
+     *
+     *
+     */
+    class SendPushData extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            return null;
+        }
     }
 }
