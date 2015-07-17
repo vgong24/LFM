@@ -63,7 +63,7 @@ public class LoginActivity_v2 extends Activity {
                         if (user != null) {
 
                             ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
-                            parseInstallation.put("UserId", user.getObjectId());
+                            parseInstallation.put("pUser", user);
                             parseInstallation.saveEventually();
 
                             //startService(serviceIntent);

@@ -232,21 +232,18 @@ public class MultiMessagingActivity extends ActionBarActivity {
                     final WritableMessage writableMessage = new WritableMessage(recipientIDs, messageBody);
                     messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
 
+
                     //Try sending messages individually
                     for(int i = 0; i < recipientIDs.size(); i++){
                         if(!recipientIDs.get(i).equalsIgnoreCase(currentUserId)){
                             messageService.sendMessage(recipientIDs.get(i), groupID + " " + currentName + " " + messageBody);
+                            //Test push
                         }
 
                     }
 
                     /*
-                    final WritableMessage writableMessage = new WritableMessage(recipientIDs, messageBody);
-
-                    messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
-
                     messageService.sendMessage(recipientIDs, groupID + " " + currentName + " " + messageBody);
-
                     */
                     messageBodyField.setText("");
 
@@ -321,33 +318,11 @@ public class MultiMessagingActivity extends ActionBarActivity {
             Log.v("SEND PUSH", "Sending push to: " + message.getRecipientIds().get(0));
 
                 //Async send
-                ParseQuery userQuery = ParseUser.getQuery();
-                userQuery.whereEqualTo("objectId", message.getRecipientIds().get(0));
-                ParseQuery pushQuery = ParseInstallation.getQuery();
-                pushQuery.whereMatchesQuery("UserId", userQuery);
-
-                // Send push notification to query
-                ParsePush push = new ParsePush();
-                push.setQuery(pushQuery); // Set our Installation query
-                push.setMessage("sent you a message");
-                push.sendInBackground(new SendCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        Log.v("SEND PUSH", "Sending push to: " + message.getRecipientIds().get(0));
-                        if (e == null) {
-
-                        } else {
-                            e.printStackTrace();
-                        }
-
-
-                    }
-                });
-
-
-
+                //WorkAround.pushToRecipient(currentUserId, "received a message");
         }
     }
+
+
 
     /**AsyncTask Send Push Data
      *

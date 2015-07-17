@@ -12,8 +12,10 @@ import com.bowen.victor.ciya.structures.Reviews;
 import com.bowen.victor.ciya.structures._User;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
+import com.parse.PushService;
 import com.parse.SaveCallback;
 
 public class Application extends android.app.Application {
@@ -42,6 +44,7 @@ public class Application extends android.app.Application {
     ParseObject.registerSubclass(FriendRequest.class);
     Parse.initialize(this, "aTeqCcZ5KEMR72fG8kiZED2Rxeb2r7ruWtqBSVa6",
             "JPdPZXMcR4ESbXNly1vuP19EFoYK3upi8sopk282");
+    //ParseInstallation.getCurrentInstallation().saveInBackground();
 
 
     ParsePush.subscribeInBackground("", new SaveCallback() {

@@ -133,7 +133,7 @@ public class SignUpActivity extends Activity {
                 } else {
 
                     ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();
-                    parseInstallation.put("UserId", user.getObjectId());
+                    parseInstallation.put("pUser", user);
                     parseInstallation.saveEventually();
 
                     Intent intent = new Intent(SignUpActivity.this, LoginActivity_v2.class);

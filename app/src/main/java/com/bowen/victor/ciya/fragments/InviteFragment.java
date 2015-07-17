@@ -26,6 +26,7 @@ import com.bowen.victor.ciya.structures.FriendRequest;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.InviteListAdapter;
 import com.bowen.victor.ciya.structures.FriendProfile;
+import com.bowen.victor.ciya.tools.WorkAround;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -169,7 +170,7 @@ public class InviteFragment extends Fragment {
 
     }
 
-    public void sendInvite(String eventJoining, String invitee){
+    public void sendInvite(String eventJoining, final String invitee){
         Toast.makeText(context, "Invite Sent", Toast.LENGTH_SHORT).show();
         Attendee attend = new Attendee();
         attend.setEvent(eventJoining);
@@ -180,6 +181,8 @@ public class InviteFragment extends Fragment {
             public void done(ParseException e) {
                 //once clicked, refresh page
                 //new SetUpBackground().execute(evnt);
+                //Send push notification of invitation
+                WorkAround.pushToRecipient(invitee, "You received an invitation!");
             }
         });
     }
