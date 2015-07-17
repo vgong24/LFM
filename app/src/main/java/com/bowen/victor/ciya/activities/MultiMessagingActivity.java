@@ -229,14 +229,12 @@ public class MultiMessagingActivity extends ActionBarActivity {
             public void done(ParseException e) {
                 if(e == null) {
                     //If message was properly saved, send message to everyone else using sinch.
-                    //Try sending messages individually
+                    final WritableMessage writableMessage = new WritableMessage(recipientIDs, messageBody);
+                    messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
 
+                    //Try sending messages individually
                     for(int i = 0; i < recipientIDs.size(); i++){
                         if(!recipientIDs.get(i).equalsIgnoreCase(currentUserId)){
-                            final WritableMessage writableMessage = new WritableMessage(recipientIDs.get(i), messageBody);
-
-                            messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
-
                             messageService.sendMessage(recipientIDs.get(i), groupID + " " + currentName + " " + messageBody);
                         }
 
@@ -310,7 +308,7 @@ public class MultiMessagingActivity extends ActionBarActivity {
 
         @Override
         public void onMessageSent(MessageClient client, Message message, final String recipientIdextra) {
-
+            Log.v("DELIVERED", "Message sent: " + message.getRecipientIds().get(0));
         }
 
         @Override
@@ -322,12 +320,9 @@ public class MultiMessagingActivity extends ActionBarActivity {
         public void onShouldSendPushData(MessageClient client, final Message message, List<PushPair> pushPairs) {
             Log.v("SEND PUSH", "Sending push to: " + message.getRecipientIds().get(0));
 
-
-            final WritableMessage writableMessage = new WritableMessage(message.getRecipientIds().get(0), message.getTextBody());
-
                 //Async send
                 ParseQuery userQuery = ParseUser.getQuery();
-                userQuery.whereEqualTo("objectId", writableMessage.getRecipientIds().get(0));
+                userQuery.whereEqualTo("objectId", message.getRecipientIds().get(0));
                 ParseQuery pushQuery = ParseInstallation.getQuery();
                 pushQuery.whereMatchesQuery("UserId", userQuery);
 
