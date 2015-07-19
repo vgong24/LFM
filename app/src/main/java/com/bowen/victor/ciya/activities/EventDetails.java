@@ -107,7 +107,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         i.putExtra("EventLat", eventSelect.getLocation().getLatitude());
         i.putExtra("EventLong", eventSelect.getLocation().getLongitude());
         i.putExtra("EventHost", eventSelect.getHost().getObjectId());
-
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);
     }
 
@@ -205,8 +205,9 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             getMenuInflater().inflate(R.menu.details_toolbar_host, menu);
         }else{
             getMenuInflater().inflate(R.menu.details_toolbar, menu);
-
         }
+        MenuItem chatBtn = menu.findItem(R.id.action_switch_chat);
+        chatBtn.setVisible(false);
         return true;
     }
     @Override
@@ -246,6 +247,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                     joinTxtView.setEnabled(false);
                     if(isInvited){
                         joinedAsInvitee(evnt);
+                        isInvited = false;
                     }else{
                         joinEventAsAttendee(evnt);
                     }

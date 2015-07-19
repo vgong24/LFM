@@ -51,6 +51,6 @@ public class ChatListAdapter extends ArrayAdapter<Events> {
     static class ViewHolderChat {
         TextView chatRoomName;
 
-
     }
+
 }

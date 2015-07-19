@@ -37,18 +37,13 @@ import java.util.List;
 public class ChatTab extends Fragment {
     Context context;
     Activity activity;
-    private String currentUserId;
-    private ArrayAdapter<String> namesArrayAdapter;
     private ChatListAdapter eventsArrayAdapter;
 
     private ArrayList<String> names;
     private ArrayList<Events> events;
     private ListView usersListView;
     private ProgressBar progressBar;
-    private BroadcastReceiver receiver = null;
     private View v;
-
-    private SetUpChatList chatList;
 
 
     public static ChatTab newInstance(Context context){
@@ -83,54 +78,38 @@ public class ChatTab extends Fragment {
 
     }
 
-    //open a conversation with multiple people
-    //Send the event object ID which will represent the universal recipient
+    /**
+     * Starts the MultiMessagingActivity with GroupID (Events ObjectID)
+     * @param eventsArrayList
+     * @param pos
+     */
     public void openChatRoom(ArrayList<Events> eventsArrayList, int pos){
 
         final String eventIDString = eventsArrayList.get(pos).getObjectId();
 
-        //Experiment
-        ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
-        query.whereEqualTo("Event", eventsArrayList.get(pos));
-        query.findInBackground(new FindCallback<Attendee>() {
-            @Override
-            public void done(List<Attendee> list, ParseException e) {
-                if (e == null) {
+        Intent intent = new Intent(context, MultiMessagingActivity.class);
+        intent.putExtra("GROUP_ID", eventIDString);
+        intent.putExtra("TITLE", eventsArrayList.get(pos).getDescr());
 
-                    Intent intent = new Intent(context, MultiMessagingActivity.class);
-                    intent.putExtra("GROUP_ID", eventIDString);
-                    intent.putExtra("RECIPIENT_SIZE", list.size());
-                    Log.v("SIZE", "SIZE : " + list.size());
-                    for(int i = 0 ; i < list.size(); i++){
-                        //add all the recipients to arraylist
-                        try {
-                            list.get(i).getUserID().fetchIfNeeded();
-                            ParseUser userObj = list.get(i).getUserID();
-                            intent.putExtra("RECIPIENT_ID" + i, userObj.getObjectId());
-                        } catch (ParseException e1) {
-                            e1.printStackTrace();
-                        }
-
-                    }
-
-                    context.startActivity(intent);
-                }
-            }
-        });
-
+        context.startActivity(intent);
 
     }
 
+    /**
+     * Displays list of Events joined
+     * TODO: Change variable name userListView to avoid confusion
+     * @param eventsArrayList
+     */
     public void populateList(ArrayList<Events> eventsArrayList){
         progressBar.setVisibility(View.GONE);
         eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, eventsArrayList);
-        //usersListView = (ListView) activity.findViewById(R.id.usersListView);
         usersListView.setAdapter(eventsArrayAdapter);
         usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 openChatRoom(events, position);
+
             }
         });
 
@@ -139,8 +118,6 @@ public class ChatTab extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        //setChatList();
         initialize();
         new SetUpChatList().execute();
 
@@ -157,9 +134,7 @@ public class ChatTab extends Fragment {
 
         @Override
         protected void onPreExecute(){
-            currentUserId = ParseUser.getCurrentUser().getObjectId();
-            //usersListView = (ListView) activity.findViewById(R.id.usersListView);
-            //usersListView.setVisibility(View.GONE);
+            if(events != null)
             events.clear();
 
         }
@@ -168,12 +143,8 @@ public class ChatTab extends Fragment {
         protected ArrayList<Events> doInBackground(Void... params) {
 
             ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
-            ParseObject userObject = ParseObject.createWithoutData("User", ParseUser.getCurrentUser().getObjectId());
-            //CHANGE
-            //query.whereEqualTo("User", userObject);
             query.whereEqualTo("User", ParseUser.getCurrentUser());
             query.whereEqualTo("inviteStatus", Attendee.JOINED);
-            //query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ONLY);
             try {
 
                 List<Attendee> tempList = query.find();
@@ -198,8 +169,6 @@ public class ChatTab extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<Events> eventsArr) {
             Log.v("Array Length", "Array length: " + eventsArr.size());
- //           Log.v("current USer", "ID: " + ParseUser.getCurrentUser().getObjectId());
-            //usersListView.setVisibility(View.VISIBLE);
             populateList(eventsArr);
 
 

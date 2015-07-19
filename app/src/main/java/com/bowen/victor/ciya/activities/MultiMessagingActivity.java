@@ -20,8 +20,10 @@ import android.widget.Toast;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.MessageAdapter;
 import com.bowen.victor.ciya.services.MessageServiceV2;
+import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Events;
 import com.bowen.victor.ciya.tools.WorkAround;
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseInstallation;
@@ -45,6 +47,7 @@ import java.util.List;
 public class MultiMessagingActivity extends ActionBarActivity {
 
     private String groupID;
+    private String groupName;
     private List<String> recipientIDs;
     private int recipientSize;
     private EditText messageBodyField;
@@ -84,31 +87,28 @@ public class MultiMessagingActivity extends ActionBarActivity {
 
         recipientIDs = new ArrayList<>();
         Intent intent = getIntent();
-        //ChatRoomID
+        //ChatRoomID and name
         groupID = intent.getStringExtra("GROUP_ID");
-        recipientSize = intent.getIntExtra("RECIPIENT_SIZE", 0);
+        groupName = intent.getStringExtra("TITLE");
+        ab.setTitle(groupName);
 
-        //Add all recipients
-        for(int i = 0 ; i < recipientSize; i++){
-            String rid = intent.getStringExtra("RECIPIENT_ID" + i);
-            recipientIDs.add(rid);
-        }
         ParseUser pu = ParseUser.getCurrentUser();
         currentUserId = pu.getObjectId();
         currentName = pu.getUsername();
-        messagesList = (ListView) findViewById(R.id.listMessages);
-        messageAdapter = new MessageAdapter(this);
-        messagesList.setAdapter(messageAdapter);
+        new SetUpRecipientsInBackGround().execute(groupID);
     }
 
     public void initialize(){
 
         bindService(new Intent(this, MessageServiceV2.class), serviceConnection, BIND_AUTO_CREATE);
 
-        //populateMessageHistory();
+        //Populates Message History
         new SetupHistory().execute();
 
         messageBodyField = (EditText) findViewById(R.id.messageBodyField);
+        messagesList = (ListView) findViewById(R.id.listMessages);
+        messageAdapter = new MessageAdapter(this);
+        messagesList.setAdapter(messageAdapter);
 
         findViewById(R.id.sendButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,22 +146,19 @@ public class MultiMessagingActivity extends ActionBarActivity {
         query.getInBackground(eventId, new GetCallback<Events>() {
             @Override
             public void done(Events events, ParseException e) {
-                Intent i = new Intent(getApplicationContext(), EventDetails.class);
-                i.putExtra("EventId", events.getObjectId());
-                i.putExtra("EventDate", events.getDate().getTime());
-                i.putExtra("EventTitle", events.getDescr());
-                i.putExtra("EventLat", events.getLocation().getLatitude());
-                i.putExtra("EventLong", events.getLocation().getLongitude());
-                i.putExtra("EventHost", events.getHost().getObjectId());
-                startActivity(i);
+
+                EventDetails.startEventDetails(getApplicationContext(), events);
+
             }
         });
 
 
     }
 
-    //get previous messages from parse & display
-    //Populate MessageHistory in background thread
+    /**
+     * Retrieves chatroom messages from parse and displays in background thread
+     *
+     */
     class SetupHistory extends AsyncTask<Void, Void, List<ParseObject>>{
 
         @Override
@@ -223,7 +220,6 @@ public class MultiMessagingActivity extends ActionBarActivity {
         //Make recipientID the EventID so chats can stay with their respective rooms
         parseMessage.put("recipientId", eventObject);
         parseMessage.put("messageText", messageBody);
-        //parseMessage.put("sinchId", writableMessage.getMessageId());
         parseMessage.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -231,8 +227,6 @@ public class MultiMessagingActivity extends ActionBarActivity {
                     //If message was properly saved, send message to everyone else using sinch.
                     final WritableMessage writableMessage = new WritableMessage(recipientIDs, messageBody);
                     messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
-
-
                     //Try sending messages individually
                     for(int i = 0; i < recipientIDs.size(); i++){
                         if(!recipientIDs.get(i).equalsIgnoreCase(currentUserId)){
@@ -287,10 +281,12 @@ public class MultiMessagingActivity extends ActionBarActivity {
         @Override
         public void onIncomingMessage(MessageClient client, Message message) {
             Log.v("onIncomingMessage", "Message Received from " + message.getSenderId());
-            //Break down message
-            //Check first token to see which recipient it is for
-            //If it is for currently opened Event activity, then post it
-            //PROTOCOL TECHNIQUE
+            /**
+             * PROTOCOL:
+             * 1. ChatRoomId represented by Events ObjectId
+             * 2. SenderName
+             * 3. MsgBody
+             */
             String messageTextBody = message.getTextBody();
             String arr[] = messageTextBody.split(" ", 3);
             String chatRoomID = arr[0];
@@ -328,12 +324,45 @@ public class MultiMessagingActivity extends ActionBarActivity {
      *
      *
      */
-    class SendPushData extends AsyncTask<Void, Void, Void>{
+    class SetUpRecipientsInBackGround extends AsyncTask<String, Void, Void>{
+        @Override
+        protected void onPreExecute(){
+            if(recipientIDs != null){
+                recipientIDs.clear();
+            }
+        }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
+            Events eventItem = (Events) ParseObject.createWithoutData("Events", params[0]);
+            ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
+            query.whereEqualTo("Event", eventItem);
+            try {
+                List<Attendee> results = query.find();
 
+                Log.v("SIZE", "SIZE : " + results.size());
+                for (int i = 0; i < results.size(); i++) {
+                    //add all the recipients to arraylist
+                    try {
+                        results.get(i).getUserID().fetchIfNeeded();
+                        ParseUser userObj = results.get(i).getUserID();
+                        recipientIDs.add(userObj.getObjectId());
+
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                    }
+
+                }
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void nothing){
+
         }
     }
 }
