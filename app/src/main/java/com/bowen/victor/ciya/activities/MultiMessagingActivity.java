@@ -42,6 +42,8 @@ import com.sinch.android.rtc.messaging.MessageFailureInfo;
 import com.sinch.android.rtc.messaging.WritableMessage;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MultiMessagingActivity extends ActionBarActivity {
@@ -121,6 +123,8 @@ public class MultiMessagingActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.chat_room_toolbar, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_settings);
+        menuItem.setVisible(false);
         return true;
     }
     @Override
@@ -130,7 +134,6 @@ public class MultiMessagingActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_switch_details) {
-            Toast.makeText(getApplicationContext(), "meep", Toast.LENGTH_SHORT).show();
             //Activity EventDetails
             startEventDetailActivity(groupID);
 
@@ -186,13 +189,16 @@ public class MultiMessagingActivity extends ActionBarActivity {
             for (int i = 0; i < messageList.size(); i++) {
                 WritableMessage message = new WritableMessage(messageList.get(i).get("recipientId").toString(), messageList.get(i).get("messageText").toString());
                 String username = messageList.get(i).getString("senderName");
+                //Get time HH:MM ap of message sent
+                Date time = messageList.get(i).getCreatedAt();
+
                 //Check which direction the message came from. currentUser or other recipients
                 if (messageList.get(i).get("senderId").toString().equals(currentUserId)) {
                     //Pass current username
-                    messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, username);
+                    messageAdapter.addMessage(message, MessageAdapter.DIRECTION_OUTGOING, username, time);
                 } else {
                     //Pass sender username
-                    messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING, username);
+                    messageAdapter.addMessage(message, MessageAdapter.DIRECTION_INCOMING, username, time);
                 }
             }
         }
@@ -211,7 +217,7 @@ public class MultiMessagingActivity extends ActionBarActivity {
         }
         //Store message to parse first
         //Send to all recipients (use list)
-        //PROTOCOL: ChatRoom + " "  + senderName +" " + restOfMessage
+        //PROTOCOL: ChatRoom + " "  + senderName + " " + restOfMessage
 
         ParseObject parseMessage = new ParseObject("ParseMessage");
         ParseObject eventObject = ParseObject.createWithoutData("Events", groupID);
@@ -226,7 +232,10 @@ public class MultiMessagingActivity extends ActionBarActivity {
                 if(e == null) {
                     //If message was properly saved, send message to everyone else using sinch.
                     final WritableMessage writableMessage = new WritableMessage(recipientIDs, messageBody);
-                    messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName);
+
+                    //add current time
+
+                    messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_OUTGOING, currentName, Calendar.getInstance().getTime());
                     //Try sending messages individually
                     for(int i = 0; i < recipientIDs.size(); i++){
                         if(!recipientIDs.get(i).equalsIgnoreCase(currentUserId)){
@@ -295,7 +304,7 @@ public class MultiMessagingActivity extends ActionBarActivity {
 
             if (groupID.equals(chatRoomID)) {
                 WritableMessage writableMessage = new WritableMessage(message.getRecipientIds(), msgBody);
-                messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING, senderName);
+                messageAdapter.addMessage(writableMessage, MessageAdapter.DIRECTION_INCOMING, senderName, Calendar.getInstance().getTime());
             }
         }
 

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bowen.victor.ciya.activities.CreateEvent;
@@ -42,10 +43,10 @@ import java.util.List;
 public class HomeTab extends Fragment {
     View v;
     ArrayList<Events> events;
-    EventListAdapter eventListAdapter;
 
     Activity activity;
     Context context;
+    ParseGeoPoint geoPoint = null;
 
     ListView eventListView;
     GPSTracker tracker;
@@ -53,6 +54,7 @@ public class HomeTab extends Fragment {
 
     ProgressBar dialog;
     boolean _areEventsLoaded = false;
+    TextView emptyMessage;
 
 
     /**
@@ -93,7 +95,14 @@ public class HomeTab extends Fragment {
         fillEventList();
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        //fillEventList();
+    }
+
     public void initField() {
+        emptyMessage = (TextView) v.findViewById(R.id.emptyEventsTxt);
         events = new ArrayList<Events>();
         //eventListView = (ListView) v.findViewById(R.id.eventList);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.event_recycler_view);
@@ -115,20 +124,21 @@ public class HomeTab extends Fragment {
     }
 
     private void populateList() {
-        /*
-        eventListAdapter = new EventListAdapter(context, itemList_xml, events);
-        eventListView.setAdapter(eventListAdapter);
-        */
+        if(events.size() > 0){
+            emptyMessage.setVisibility(View.GONE);
+        }else{
+            emptyMessage.setVisibility(View.VISIBLE);
+        }
+
         mAdapter = new EventRecyclerAdapter(context, events);
         mRecyclerView.setAdapter(mAdapter);
-
-        //readySelect();
-        //finished displaying so stop refresh listener
         mSwipeRefreshLayout.setRefreshing(false);
 
     }
 
     //Select Event, take you to EventDetails Activity
+    //*************Ready Select Deprecated. Onclickers set in Recycler Adapter
+
     private void readySelect() {
         //eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -142,7 +152,6 @@ public class HomeTab extends Fragment {
     }
 
     public void fillEventList() {
-        ParseGeoPoint geoPoint = null;
 
         //Filter contents by gps coordinates
         if(tracker.canGetLocation()){

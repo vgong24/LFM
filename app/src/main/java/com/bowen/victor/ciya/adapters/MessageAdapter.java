@@ -1,6 +1,7 @@
 package com.bowen.victor.ciya.adapters;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.tools.WorkAround;
 import com.sinch.android.rtc.messaging.WritableMessage;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MessageAdapter extends BaseAdapter {
@@ -18,19 +23,28 @@ public class MessageAdapter extends BaseAdapter {
     public static final int DIRECTION_INCOMING = 0;
     public static final int DIRECTION_OUTGOING = 1;
 
-    private List<Triple<WritableMessage, Integer, String>> messages;
+    private List<Quadruple<WritableMessage, Integer, String, Date>> messages;
     private List<String> senderNames;
     private LayoutInflater layoutInflater;
+
+    SimpleDateFormat timeFormat = new SimpleDateFormat();
+    SimpleDateFormat dateFormat = new SimpleDateFormat();
+    Calendar firstDate = null;
+    Calendar checkDate = Calendar.getInstance();
 
     public MessageAdapter(Activity activity) {
         layoutInflater = activity.getLayoutInflater();
         //messages = new ArrayList<Pair<WritableMessage, Integer>>();
-        messages = new ArrayList<Triple<WritableMessage, Integer, String>>();
+        messages = new ArrayList<Quadruple<WritableMessage, Integer, String, Date>>();
 
     }
 
     public void addMessage(WritableMessage message, int direction, String senderName) {
-        messages.add(new Triple(message, direction, senderName));
+        messages.add(new Quadruple(message, direction, senderName, null));
+        notifyDataSetChanged();
+    }
+    public void addMessage(WritableMessage message, int direction, String senderName, Date time) {
+        messages.add(new Quadruple(message, direction, senderName, time));
         notifyDataSetChanged();
     }
 
@@ -85,18 +99,48 @@ public class MessageAdapter extends BaseAdapter {
         TextView txtSender = (TextView) convertView.findViewById(R.id.txtSender);
         txtSender.setText(messages.get(i).third);
 
+        //Include date
+        TextView txtdate = (TextView) convertView.findViewById(R.id.txtDate);
+        Date date = messages.get(i).fourth;
+        Date date2;
+        if(date != null){
+            //If first messege
+            String formattedDate = "";
+            if(i == 0){
+                dateFormat.applyLocalizedPattern("M/d/yy h:mm a");
+                formattedDate = dateFormat.format(date);
+            }else{
+                //compare previous message to see if same day
+                date2 = messages.get(i-1).fourth;
+                if(WorkAround.isSameDay(date, date2)){
+                    timeFormat.applyLocalizedPattern("h:mm a");
+                    formattedDate = timeFormat.format(date);
+                }else{
+                    dateFormat.applyLocalizedPattern("M/d/yy h:mm a");
+                    formattedDate = dateFormat.format(date);
+
+                }
+
+            }
+            txtdate.setText(formattedDate);
+
+        }
+
+
         return convertView;
     }
 
-    private class Triple <F, S, T>{
+    private class Quadruple <F, S, T, D>{
         private F first;
         private S second;
         private T third;
+        private D fourth;
 
-        public Triple(F first, S second, T third){
+        public Quadruple(F first, S second, T third, D fourth){
             this.first = first;
             this.second = second;
             this.third = third;
+            this.fourth = fourth;
         }
 
 

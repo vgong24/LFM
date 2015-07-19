@@ -60,7 +60,7 @@ public class ChatTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         v = inflater.inflate(R.layout.chat_room_list, container, false);
-        //initialize();
+        initialize();
         //new SetUpChatList().execute();
 
         return v;
@@ -118,7 +118,7 @@ public class ChatTab extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        initialize();
+        //initialize();
         new SetUpChatList().execute();
 
     }
@@ -126,8 +126,7 @@ public class ChatTab extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-
-
+        
     }
 
     private class SetUpChatList extends AsyncTask<Void, Void, ArrayList<Events>> {

@@ -208,6 +208,8 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         }
         MenuItem chatBtn = menu.findItem(R.id.action_switch_chat);
         chatBtn.setVisible(false);
+        MenuItem settings = menu.findItem(R.id.action_settings);
+        settings.setVisible(false);
         return true;
     }
     @Override
