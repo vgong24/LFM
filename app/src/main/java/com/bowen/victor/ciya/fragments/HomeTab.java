@@ -172,7 +172,7 @@ public class HomeTab extends Fragment {
                 //dialog.show();
                 if (excep == null) {
                     //Check if privacy setting is friend, if not friend, don't add
-                    for(Events eventObject: event) {
+                    for (Events eventObject : event) {
                         try {
 
                             if (eventObject.getPrivacy().equalsIgnoreCase(CreateTab.FRIEND)) {
@@ -190,12 +190,11 @@ public class HomeTab extends Fragment {
                             } else {
                                 events.add(eventObject);
                             }
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             //If privacy setting is null, assume public
                             events.add(eventObject);
                         }
                     }
-
 
 
                 } else {
@@ -227,6 +226,12 @@ public class HomeTab extends Fragment {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+
+        super.onSaveInstanceState(savedInstanceState);
     }
 
 

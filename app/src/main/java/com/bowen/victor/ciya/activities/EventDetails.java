@@ -281,6 +281,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         Toast.makeText(getApplicationContext(), "Joining", Toast.LENGTH_SHORT).show();
         Attendee attend = new Attendee();
         attend.setEvent(eventJoining);
+        attend.setStartTime(evnt.getDate());
         attend.setUser(currentUserId);
         attend.setAttendeeStatus(Attendee.JOINED);
         attend.saveInBackground(new SaveCallback() {

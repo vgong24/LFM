@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bowen.victor.ciya.activities.MultiMessagingActivity;
 import com.bowen.victor.ciya.R;
@@ -43,6 +44,7 @@ public class ChatTab extends Fragment {
     private ArrayList<Events> events;
     private ListView usersListView;
     private ProgressBar progressBar;
+    private TextView emptyTxt;
     private View v;
 
 
@@ -69,6 +71,8 @@ public class ChatTab extends Fragment {
     public void initialize(){
         progressBar = (ProgressBar) v.findViewById(R.id.chatRoomProgressBar);
         progressBar.setVisibility(View.VISIBLE);
+        emptyTxt = (TextView) v.findViewById(R.id.emptyTxt);
+
         if(events == null){
             events = new ArrayList<Events>();
         }
@@ -102,6 +106,13 @@ public class ChatTab extends Fragment {
      */
     public void populateList(ArrayList<Events> eventsArrayList){
         progressBar.setVisibility(View.GONE);
+
+        if(eventsArrayList.size() > 0){
+            emptyTxt.setVisibility(View.GONE);
+        }else{
+            emptyTxt.setVisibility(View.VISIBLE);
+        }
+
         eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, eventsArrayList);
         usersListView.setAdapter(eventsArrayAdapter);
         usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -126,7 +137,14 @@ public class ChatTab extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-        
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+
+
+        super.onSaveInstanceState(savedInstanceState);
     }
 
     private class SetUpChatList extends AsyncTask<Void, Void, ArrayList<Events>> {
@@ -143,6 +161,7 @@ public class ChatTab extends Fragment {
 
             ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
             query.whereEqualTo("User", ParseUser.getCurrentUser());
+            query.addAscendingOrder("startTime");
             query.whereEqualTo("inviteStatus", Attendee.JOINED);
             try {
 

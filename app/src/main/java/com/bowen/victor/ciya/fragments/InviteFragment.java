@@ -153,7 +153,7 @@ public class InviteFragment extends Fragment {
     public void checkSendInvite(final String userId, final String eventid){
         ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
         ParseObject friendUser = ParseObject.createWithoutData("_User", userId);
-        ParseObject eventPointer = ParseObject.createWithoutData("Events", eventid);
+        final Events eventPointer = (Events) ParseObject.createWithoutData("Events", eventid);
 
         query.whereEqualTo("User", friendUser);
         query.whereEqualTo("Event", eventPointer);
@@ -163,17 +163,18 @@ public class InviteFragment extends Fragment {
                 if (list.size() > 0) {
                     Toast.makeText(context, "Already invited", Toast.LENGTH_SHORT).show();
                 } else {
-                    sendInvite(eventid, userId);
+                    sendInvite(eventPointer, userId);
                 }
             }
         });
 
     }
 
-    public void sendInvite(String eventJoining, final String invitee){
+    public void sendInvite(Events eventJoining, final String invitee){
         Toast.makeText(context, "Invite Sent", Toast.LENGTH_SHORT).show();
         Attendee attend = new Attendee();
         attend.setEvent(eventJoining);
+        attend.setStartTime(eventJoining.getDate());
         attend.setUser(invitee);
         attend.setAttendeeStatus(Attendee.INVITED);
         attend.saveInBackground(new SaveCallback() {

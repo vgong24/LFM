@@ -276,6 +276,8 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
         //stop thread
     }
 
+
+
     public void sinchConnect(){
         serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
         //serviceIntent = new Intent(getApplicationContext(), MessageService.class);

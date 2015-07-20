@@ -38,7 +38,12 @@ public class Events extends ParseObject  {
         put("Category", cat);
     }
     public Date getDate() {
-        return getDate("Date");
+        try {
+            this.fetchIfNeeded();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return(Date) getDate("Date");
     }
     public void setDate(Date date) {
         put("Date", date);

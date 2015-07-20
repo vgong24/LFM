@@ -504,6 +504,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         Attendee attend = new Attendee();
         attend.setEvent((Events)createEvent);
         attend.setUser(currentUserId);
+        attend.setStartTime(eventDate);
         attend.setAttendeeStatus(Attendee.JOINED);
         attend.saveInBackground(new SaveCallback() {
             @Override

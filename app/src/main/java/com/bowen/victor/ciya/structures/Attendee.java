@@ -6,6 +6,8 @@ package com.bowen.victor.ciya.structures;
 
 import com.parse.*;
 
+import java.util.Date;
+
 @ParseClassName("Attendees")
 public class Attendee extends ParseObject {
     public final static String JOINED = "joined";
@@ -31,6 +33,10 @@ public class Attendee extends ParseObject {
 
         }
         return (_User) getParseObject("User");
+    }
+
+    public void setStartTime(Date startTime){
+        put("startTime", startTime);
     }
     public ParseUser getUserID(){
         return (ParseUser) getParseUser("User");
