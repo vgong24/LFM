@@ -69,6 +69,10 @@ public class ChatTab extends Fragment {
     }
 
     public void initialize(){
+        if(context == null){
+            context = this.getActivity();
+        }
+
         progressBar = (ProgressBar) v.findViewById(R.id.chatRoomProgressBar);
         progressBar.setVisibility(View.VISIBLE);
         emptyTxt = (TextView) v.findViewById(R.id.emptyTxt);

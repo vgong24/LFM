@@ -88,6 +88,9 @@ public class HomeTab extends Fragment {
 
 
     public void initialize() {
+        if(context == null){
+            context = this.getActivity();
+        }
         tracker = new GPSTracker(context);
         db = new FriendListDBHandler(context);
         initField();

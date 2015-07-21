@@ -138,6 +138,13 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     }
 
+    @Override
+    public void onCreate(Bundle bundle){
+        super.onCreate(bundle);
+        setRetainInstance(true);
+
+    }
+
 
 
     @Override
@@ -188,7 +195,12 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
         if(!activity.isFinishing()) {
             if (mMap != null) {
-                MainActivity_v2.fragmentManager.beginTransaction().remove(getChildFragmentManager().findFragmentById(R.id.map2)).commitAllowingStateLoss();
+                try{
+                    MainActivity_v2.fragmentManager.beginTransaction().remove(getChildFragmentManager().findFragmentById(R.id.map2)).commitAllowingStateLoss();
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
+
                 mMap = null;
                 mMapFragment = null;
             }
@@ -246,6 +258,12 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     public void initialize(){
         //Init location
+        if(context == null){
+            context = this.getActivity();
+        }
+        if(activity == null){
+            activity = this.getActivity();
+        }
         gpsTracker = new GPSTracker(context);
         setUpMapIfNeeded();
 

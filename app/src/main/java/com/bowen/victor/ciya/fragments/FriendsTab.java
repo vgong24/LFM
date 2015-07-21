@@ -72,6 +72,12 @@ public class FriendsTab extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.friends_tab, container, false);
         initialize();
@@ -81,6 +87,12 @@ public class FriendsTab extends Fragment {
     }
 
     public void initialize(){
+        if(context == null){
+            context = this.getActivity();
+        }
+        if(activity == null){
+            activity = this.getActivity();
+        }
         mRecyclerView = (RecyclerView) v.findViewById(R.id.friend_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(context);
@@ -96,11 +108,14 @@ public class FriendsTab extends Fragment {
         }else{
             friendNames.clear();
         }
+        try{
+            dbhandler = new FriendListDBHandler(context);
+            if(dbhandler.getFriendCount() != 0){
+                friendNames.addAll(dbhandler.getAllFriendProfiles());
+            }
 
-        dbhandler = new FriendListDBHandler(context);
-
-        if(dbhandler.getFriendCount() != 0){
-            friendNames.addAll(dbhandler.getAllFriendProfiles());
+        }catch (NullPointerException e){
+            e.printStackTrace();
         }
 
         new UpdateFriendList().execute(currentUser);
