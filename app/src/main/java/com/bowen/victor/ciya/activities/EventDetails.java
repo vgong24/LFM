@@ -326,6 +326,9 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                         @Override
                         public void done(ParseException e) {
                             Log.v("deleted", "deleted attendee");
+                            //Finish MultiMessagingActivity if it is previous activity
+                            if(MultiMessagingActivity.mma != null)
+                                MultiMessagingActivity.mma.finish();
                             new SetUpBackground().execute(eventLeaving);
                         }
                     });

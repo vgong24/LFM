@@ -64,7 +64,7 @@ public class MultiMessagingActivity extends ActionBarActivity {
 
     private ServiceConnection serviceConnection;
     private MessageClientListener messageClientListener;
-    private boolean isSent;
+    public static MultiMessagingActivity mma;
 
     private ArrayList<Pair<String, String>> recipientInfo;
 
@@ -72,6 +72,7 @@ public class MultiMessagingActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messaging);
+        mma = this;
         WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
         initFields();
         initialize();
