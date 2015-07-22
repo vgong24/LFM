@@ -90,6 +90,8 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
         // Creating The Toolbar and setting it as the Toolbar for the activity
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
+
+        //Setting up DrawerFragment
         drawerFragment = (FragmentDrawer)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
@@ -203,9 +205,13 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
         }
         //Empties database (for testing)
         if(id == R.id.emptyFriendDB){
+            /*
             FriendListDBHandler db = new FriendListDBHandler(getApplicationContext());
             db.deleteDatabase();
             //db.dropDatabase();
+            */
+            Intent intent = new Intent(getApplicationContext(), ProfileSettings.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -286,7 +292,7 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
 
     @Override
     public void onDrawerItemSelected(View view, int position) {
-
+        Log.v("DrawerSelect", "Drawer item: "+ position);
     }
 
     /* Every few minutes check for invitations
