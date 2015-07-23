@@ -4,6 +4,7 @@ package com.bowen.victor.ciya.activities;
  * Created by Victor on 4/6/2015.
  */
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -60,8 +61,8 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
     int Numboftabs = Titles.length;
     public static FragmentManager fragmentManager;
     private ProgressDialog progressDialog;
-    private BroadcastReceiver receiver = null;
-    Intent serviceIntent;
+    private static BroadcastReceiver receiver = null;
+    static Intent serviceIntent;
     ParseUser currentUser;
     Handler threadHandler;
 
@@ -347,6 +348,42 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
             }
 
         }
+    }
+    //Log out of current user and return to login page
+    public static void logOut(Context context){
+        context.stopService(serviceIntent);
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
+        receiver = null;
+
+        //Delete friends from db
+        FriendListDBHandler db = new FriendListDBHandler(context);
+        db.deleteDatabase();
+
+        ParseUser.logOut();
+        Intent intent = new Intent(context, LoginActivity_v2.class);
+        Activity activity = (Activity) context;
+        activity.finish();
+        context.startActivity(intent);
+    }
+    //Confirm logout dialog
+    public static void logOutConfirm(final Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Sign out of Ciya?");
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                logOut(context);
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 

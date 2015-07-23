@@ -203,7 +203,7 @@ public class AttendeeListAdapter extends ArrayAdapter<Attendee> {
             Bitmap bitmap = WorkAround.getResizedBitmap(context, thumbnail, BITMAP_SCALE);
             return WorkAround.getRoundedCornerBitmap(bitmap, 20);
         }
-        
+
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {

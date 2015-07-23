@@ -323,5 +323,14 @@ public class ProfileSettings extends Activity {
         return uri.getPath();
     }
 
+    /**
+     * Static method to start ProfileSettings Activity
+     */
+    public static void startProfileSettingsActivity(Context context){
+        Intent i = new Intent(context.getApplicationContext(), ProfileSettings.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
+    }
+
 
 }

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="geoAPIkey">AIzaSyAnjCTrTz2R8w7WQOjB9JVetHAeKrqeLWo</string>
-    <string name="placesApiKey">AIzaSyCP6IKn015BJ-pwpuGayJtuDGwJuT5oi9I</string>
+    <string name="geoAPIkey">AIzaSyDr4EjhzlunKV3kEmC9DSaLSwcAJ-b3zTc</string>
+    <string name="placesApiKey">AIzaSyBFaMVmpBgfX3KsCjPEE-fy3poI8Aikaaw</string>
+    <string name="sinchAPPKey">15fa33c9-20d1-498b-8fec-5759f41a8039</string>
+    <string name="sinchAPPSecret">KoOg+I0v6UqCFI9wVogcbA==</string>
 
 </resources>

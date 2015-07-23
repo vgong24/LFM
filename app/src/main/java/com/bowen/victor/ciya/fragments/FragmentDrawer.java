@@ -82,7 +82,7 @@ public class FragmentDrawer extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 drawerListener.onDrawerItemSelected(view, position);
-                mDrawerLayout.closeDrawer(containerView);
+                //mDrawerLayout.closeDrawer(containerView);
             }
 
             @Override
@@ -93,6 +93,7 @@ public class FragmentDrawer extends Fragment {
 
         return layout;
     }
+    
 
 
     public void setUp(int fragmentId, DrawerLayout drawerLayout, final Toolbar toolbar) {

@@ -42,15 +42,19 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <string name="nav_item_home">Not</string>
-    <string name="nav_item_friends">Implemented</string>
-    <string name="nav_item_notifications">Yet</string>
+    <string name="nav_item_profile_page">Edit Profile</string>
+    <string name="nav_item_preferences">Event Filter (ni)</string>
+    <string name="nav_item_settings">Settings (ni)</string>
+    <string name="nav_item_about">About</string>
+    <string name="nav_item_logout">Log out</string>
 
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
-        <item>@string/nav_item_home</item>
-        <item>@string/nav_item_friends</item>
-        <item>@string/nav_item_notifications</item>
+        <item>@string/nav_item_profile_page</item>
+        <item>@string/nav_item_preferences</item>
+        <item>@string/nav_item_settings</item>
+        <item>@string/nav_item_about</item>
+        <item>@string/nav_item_logout</item>
     </string-array>
 
     <string name="title_messages">PlaceHolder3</string>

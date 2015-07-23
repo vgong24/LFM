@@ -5,11 +5,16 @@ package com.bowen.victor.ciya.adapters;
  */
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.activities.MainActivity_v2;
+import com.bowen.victor.ciya.activities.ProfileSettings;
+import com.bowen.victor.ciya.fragments.FragmentDrawer;
 import com.bowen.victor.ciya.model.NavDrawerItem;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
@@ -26,10 +31,12 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     private LayoutInflater inflater;
     private Context context;
 
+
     public NavigationDrawerAdapter(Context context, List<NavDrawerItem> data) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.data = data;
+
     }
 
     public void delete(int position) {
@@ -46,9 +53,40 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         NavDrawerItem current = data.get(position);
         holder.title.setText(current.getTitle());
+        holder.setClickListener(new MyViewHolder.ClickListener() {
+            @Override
+            public void onClick(View v, int position, boolean isLongClick) {
+                String itemClickedText = holder.title.getText().toString();
+
+                Log.v("NAVCLICK", "Position: "+ position);
+                /**
+                 * Edit Profile 0
+                 * Event Filter 1
+                 * Settings     2
+                 * About        3
+                 * Logout       4
+                 */
+                switch (position){
+                    case 0: //profilePage
+                        ProfileSettings.startProfileSettingsActivity(context);
+                        break;
+                    case 1: //Filter
+                        break;
+                    case 2: //Settings
+                        break;
+                    case 3:
+                        break;
+                    case 4: //Log out Ask to be sure
+                        MainActivity_v2.logOutConfirm(context);
+                        break;
+
+                }
+            }
+        });
+
     }
 
     @Override
@@ -56,12 +94,37 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
         return data.size();
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
+        private ClickListener clickListener;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
+            itemView.setOnClickListener(this);
+        }
+
+
+        public interface ClickListener {
+
+            /**
+             * Called when the view is clicked.
+             *
+             * @param v           view that is clicked
+             * @param position    of the clicked item
+             * @param isLongClick true if long click, false otherwise
+             */
+            public void onClick(View v, int position, boolean isLongClick);
+
+        }
+
+        /* Setter for listener. */
+        public void setClickListener(ClickListener clickListener) {
+            this.clickListener = clickListener;
+        }
+        @Override
+        public void onClick(View v) {
+            clickListener.onClick(v, getPosition(), false);
         }
     }
 }
