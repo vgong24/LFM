@@ -25,6 +25,7 @@ import com.bowen.victor.ciya.dbHandlers.FriendListDBHandler;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.structures.Events;
+import com.bowen.victor.ciya.tools.WorkAround;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -198,35 +199,11 @@ public class AttendeeListAdapter extends ArrayAdapter<Attendee> {
 
                 }
             }
-            return getResizedBitmap(thumbnail);
+
+            Bitmap bitmap = WorkAround.getResizedBitmap(context, thumbnail, BITMAP_SCALE);
+            return WorkAround.getRoundedCornerBitmap(bitmap, 20);
         }
-
-        public Bitmap getResizedBitmap(ParseFile thumbnail){
-            try {
-                byte[] data = thumbnail.getData();
-                Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                if (bmp != null) {
-                    //Scale bitmaps based on Device width
-                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                    Display display = wm.getDefaultDisplay();
-                    Point size = new Point();
-                    display.getSize(size);
-
-                    int width = size.x;
-                    int height = size.y;
-                    //Using ratio of 7.2 to get the correct size. 720 : 100
-                    int bitmapScale = (int) (width / BITMAP_SCALE);
-                    Log.v("Bitmap", "Bitmap width: " + width + " height: "+ height);
-
-
-                    Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, bitmapScale, bitmapScale, true);
-                    return resizedbitmap;
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
+        
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
