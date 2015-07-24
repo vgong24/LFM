@@ -132,9 +132,14 @@ public class HomeTab extends Fragment {
         }else{
             emptyMessage.setVisibility(View.VISIBLE);
         }
+        if(mAdapter == null){
+            mAdapter = new EventRecyclerAdapter(context, events);
+            mRecyclerView.setAdapter(mAdapter);
+        }else{
+            mAdapter.notifyDataSetChanged();
+            mRecyclerView.setAdapter(mAdapter);
+        }
 
-        mAdapter = new EventRecyclerAdapter(context, events);
-        mRecyclerView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setRefreshing(false);
 
     }

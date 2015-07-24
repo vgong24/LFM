@@ -134,7 +134,7 @@
 
                     <TextView
                         android:id="@+id/cTabMemberView"
-                        android:layout_weight="1.25"
+                        android:layout_weight="1.5"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:text="Group Size:"
@@ -144,7 +144,7 @@
 
                     <EditText
                         android:id="@+id/cTabMemberEdit"
-                        android:layout_weight=".75"
+                        android:layout_weight=".5"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:ems="10"
