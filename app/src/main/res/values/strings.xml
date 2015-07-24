@@ -46,7 +46,7 @@
     <string name="nav_item_preferences">Event Filter (ni)</string>
     <string name="nav_item_settings">Settings (ni)</string>
     <string name="nav_item_about">About</string>
-    <string name="nav_item_logout">Log out</string>
+    <string name="nav_item_logout">Sign Out</string>
 
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
@@ -65,5 +65,7 @@
     <string name="public_text">PUBLIC</string>
     <string name="friends_text">FRIENDS</string>
     <string name="private_text">PRIVATE</string>
+
+    <string name="action_create_new">new event</string>
 
 </resources>

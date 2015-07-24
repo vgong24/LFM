@@ -78,6 +78,7 @@
         <activity android:name=".activities.ProfileSettings"
             android:label="Profile Settings"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateHidden"
             />
 
         <activity

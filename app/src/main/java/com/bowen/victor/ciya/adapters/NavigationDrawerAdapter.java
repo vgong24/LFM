@@ -6,6 +6,7 @@ package com.bowen.victor.ciya.adapters;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.bowen.victor.ciya.activities.ProfileSettings;
 import com.bowen.victor.ciya.fragments.FragmentDrawer;
 import com.bowen.victor.ciya.model.NavDrawerItem;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -56,6 +58,25 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         NavDrawerItem current = data.get(position);
         holder.title.setText(current.getTitle());
+        switch (position){
+            case 0: //profilePage
+                holder.icon.setImageResource(R.drawable.ic_action_person);
+                break;
+            case 1: //Filter
+                holder.icon.setImageResource(R.drawable.ic_checkbox_multiple_marked_outline);
+                break;
+            case 2: //Settings
+                holder.icon.setImageResource(R.drawable.ic_action_settings);
+                break;
+            case 3: //About
+                holder.icon.setImageResource(R.drawable.ic_action_about);
+                break;
+            case 4: //Log out Ask to be sure
+                holder.icon.setImageResource(R.drawable.ic_logout);
+                break;
+
+        }
+
         holder.setClickListener(new MyViewHolder.ClickListener() {
             @Override
             public void onClick(View v, int position, boolean isLongClick) {
@@ -77,7 +98,7 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                         break;
                     case 2: //Settings
                         break;
-                    case 3:
+                    case 3: //About
                         break;
                     case 4: //Log out Ask to be sure
                         MainActivity_v2.logOutConfirm(context);
@@ -96,11 +117,13 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
+        ImageView icon;
         private ClickListener clickListener;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
+            icon = (ImageView) itemView.findViewById(R.id.icon);
             itemView.setOnClickListener(this);
         }
 
