@@ -171,29 +171,35 @@ public class FriendsTab extends Fragment {
 
     //Display Friendlist then set up onclick listeners
     public void populateFriendList(){
-        mAdapter = new FriendRecyclerAdapter(context, R.layout.friend_request_item, friendNames, mLayoutManager, new FriendRecyclerAdapter.BtnClickListener() {
 
-            @Override
-            public void onBtnClick(int position) {
-                FriendProfile friendProfile = friendNames.get(position);
-                String friendReqId = friendProfile.getFriendRequestId();
-                String friendProfileStatus = friendProfile.getStatus();
+        if(mAdapter == null){
+            mAdapter = new FriendRecyclerAdapter(context, R.layout.friend_request_item, friendNames, mLayoutManager, new FriendRecyclerAdapter.BtnClickListener() {
 
-                switch(friendProfileStatus){
-                    case REMOVE:
-                        Toast.makeText(context, "Removed Friend Request", Toast.LENGTH_SHORT).show();
-                        break;
-                    case ACCEPT:
-                        FriendRequest.approveFriendRequest(friendReqId);
-                        Toast.makeText(context, "Accepted Friend Request", Toast.LENGTH_SHORT).show();
-                        friendProfile.setStatus(REMOVE);
-                        break;
-                    case PENDING:
-                        break;
+                @Override
+                public void onBtnClick(int position) {
+                    FriendProfile friendProfile = friendNames.get(position);
+                    String friendReqId = friendProfile.getFriendRequestId();
+                    String friendProfileStatus = friendProfile.getStatus();
+
+                    switch(friendProfileStatus){
+                        case REMOVE:
+                            Toast.makeText(context, "Removed Friend Request", Toast.LENGTH_SHORT).show();
+                            break;
+                        case ACCEPT:
+                            FriendRequest.approveFriendRequest(friendReqId);
+                            Toast.makeText(context, "Accepted Friend Request", Toast.LENGTH_SHORT).show();
+                            friendProfile.setStatus(REMOVE);
+                            break;
+                        case PENDING:
+                            break;
+                    }
+                    populateFriendList();
                 }
-                populateFriendList();
-            }
-        });
+            });
+        }else{
+            mAdapter.notifyDataSetChanged();
+        }
+
         /*
         profileAdapter = new FriendListAdapter(context, R.layout.friend_request_item, friendNames, new FriendListAdapter.BtnClickListener() {
 
