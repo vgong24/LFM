@@ -114,13 +114,14 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
      */
     private void setAnimation(View viewToAnimate, int position){
         // If the bound view wasn't previously displayed on screen, it's animated
+        /*
         if (position > lastPosition)
         {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
-            animation.setDuration(1000);
+            animation.setDuration(500);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
-        }
+        }*/
 
     }
 
