@@ -390,6 +390,7 @@ public class FriendsTab extends Fragment {
                             Log.v("AddingFriend", "Adding friend");
                             friendNames.add(fp);
                         }
+                        Collections.sort(friendNames);
 
                     }
 
@@ -408,7 +409,7 @@ public class FriendsTab extends Fragment {
             //Add new friends to db
             if(newFriends){
                 Log.v("Add", "populating list again");
-                Collections.sort(friendNames);
+
                 populateFriendList();
             }
 
