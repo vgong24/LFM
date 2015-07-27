@@ -106,18 +106,22 @@ public class ChatTab extends Fragment {
     /**
      * Displays list of Events joined
      * TODO: Change variable name userListView to avoid confusion
-     * @param eventsArrayList
+     *
      */
-    public void populateList(ArrayList<Events> eventsArrayList){
+    public void populateList(){
         progressBar.setVisibility(View.GONE);
 
-        if(eventsArrayList.size() > 0){
+        if(events.size() > 0){
             emptyTxt.setVisibility(View.GONE);
         }else{
             emptyTxt.setVisibility(View.VISIBLE);
         }
-
-        eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, eventsArrayList);
+        if(eventsArrayAdapter == null){
+            eventsArrayAdapter = new ChatListAdapter(context, R.layout.chat_list_item, events);
+        }else{
+            eventsArrayAdapter.notifyDataSetChanged();
+        }
+        
         usersListView.setAdapter(eventsArrayAdapter);
         usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -133,7 +137,6 @@ public class ChatTab extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //initialize();
         new SetUpChatList().execute();
 
     }
@@ -152,16 +155,13 @@ public class ChatTab extends Fragment {
     }
 
     private class SetUpChatList extends AsyncTask<Void, Void, ArrayList<Events>> {
-
-        @Override
-        protected void onPreExecute(){
-            if(events != null)
-            events.clear();
-
-        }
+        ArrayList<Events> eventsArrayList;
 
         @Override
         protected ArrayList<Events> doInBackground(Void... params) {
+            if(eventsArrayList == null){
+                eventsArrayList = new ArrayList<>();
+            }else eventsArrayList.clear();
 
             ParseQuery<Attendee> query = ParseQuery.getQuery("Attendees");
             query.whereEqualTo("User", ParseUser.getCurrentUser());
@@ -173,7 +173,7 @@ public class ChatTab extends Fragment {
                 for (Attendee attend : tempList) {
                     try{
                         Events ev = attend.getEventObject().fetchIfNeeded();
-                        events.add(ev);
+                        eventsArrayList.add(ev);
                         Log.v("Attendee", "found: " + ev.getObjectId());
                     }catch (ParseException e){
                         e.printStackTrace();
@@ -185,14 +185,15 @@ public class ChatTab extends Fragment {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            return events;
+            return eventsArrayList;
         }
 
         @Override
         protected void onPostExecute(ArrayList<Events> eventsArr) {
             Log.v("Array Length", "Array length: " + eventsArr.size());
-            populateList(eventsArr);
-
+            events.clear();
+            events.addAll(eventsArr);
+            populateList();
 
         }
 
