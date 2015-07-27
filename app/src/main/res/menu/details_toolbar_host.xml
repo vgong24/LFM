@@ -20,7 +20,7 @@
         android:id="@+id/action_invite"
         android:orderInCategory="50"
         android:title="@string/action_invite_friend"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 
 </menu>

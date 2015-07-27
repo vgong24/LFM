@@ -98,6 +98,7 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), toolbar);
         drawerFragment.setDrawerListener(this);
 
+
         // Creating The ViewPagerAdapter and Passing Fragment Manager, Titles fot the Tabs and Number Of Tabs.
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs, MainActivity_v2.this);
 
@@ -281,6 +282,15 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
         super.onPause();
         runThread = false;
         //stop thread
+    }
+
+    @Override
+    public void onBackPressed(){
+        if(drawerFragment.isVisible()){
+            drawerFragment.closeDrawer();
+        }else{
+            super.onBackPressed();
+        }
     }
 
 

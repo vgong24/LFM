@@ -93,6 +93,13 @@ public class FragmentDrawer extends Fragment {
 
         return layout;
     }
+
+    //Close drawer from parent activity
+    public void closeDrawer(){
+        if(mDrawerLayout != null){
+            mDrawerLayout.closeDrawer(containerView);
+        }
+    }
     
 
 
@@ -127,7 +134,9 @@ public class FragmentDrawer extends Fragment {
             }
         });
 
+
     }
+
 
     public static interface ClickListener {
         public void onClick(View view, int position);
