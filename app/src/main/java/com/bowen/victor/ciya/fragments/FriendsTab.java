@@ -36,6 +36,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -81,7 +83,6 @@ public class FriendsTab extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.friends_tab, container, false);
         initialize();
-        //populateFriendList();
         setupSearchView();
         return v;
     }
@@ -112,6 +113,7 @@ public class FriendsTab extends Fragment {
             dbhandler = new FriendListDBHandler(context);
             if(dbhandler.getFriendCount() != 0){
                 friendNames.addAll(dbhandler.getAllFriendProfiles());
+                Collections.sort(friendNames);
             }
 
         }catch (NullPointerException e){
@@ -193,7 +195,7 @@ public class FriendsTab extends Fragment {
                         case PENDING:
                             break;
                     }
-                    populateFriendList();
+                    //populateFriendList();
                 }
             });
         }else{
@@ -406,6 +408,7 @@ public class FriendsTab extends Fragment {
             //Add new friends to db
             if(newFriends){
                 Log.v("Add", "populating list again");
+                Collections.sort(friendNames);
                 populateFriendList();
             }
 
