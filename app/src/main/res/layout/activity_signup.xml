@@ -7,7 +7,8 @@
     <ScrollView
         android:id="@+id/signup_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:measureAllChildren="false">
 
         <LinearLayout
             style="@style/LoginFormContainer"
@@ -34,34 +35,6 @@
 
 
             <EditText
-                android:id="@+id/password_again_edit_text"
-                style="@style/LoginField"
-                android:hint="@string/prompt_password_again"
-                android:inputType="textPassword"
-                android:background="@drawable/inputbox"
-                android:imeActionId="@+id/edittext_action_signup"
-                android:imeActionLabel="@string/signup"
-                android:imeOptions="actionUnspecified">
-            </EditText>
-
-
-            <EditText
-                android:id="@+id/name_edit_text"
-                style="@style/LoginField"
-                android:hint="@string/prompt_name"
-                android:background="@drawable/inputbox">
-                <requestFocus/>
-            </EditText>
-
-            <EditText
-                android:id="@+id/birthday_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/birthdate"
-                android:inputType="date"
-                android:maxLines="1"
-                android:singleLine="true" />
-            <EditText
                 android:id="@+id/emailTxt"
                 style="@style/LoginField"
                 android:hint="@string/emailAddress"
@@ -74,11 +47,8 @@
                 android:id="@+id/action_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="16dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
-                android:text="@string/signup" />
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_signup" />
         </LinearLayout>
     </ScrollView>
 

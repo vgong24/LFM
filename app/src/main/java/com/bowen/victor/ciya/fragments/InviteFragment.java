@@ -35,6 +35,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -96,6 +97,7 @@ public class InviteFragment extends Fragment {
         dbhandler = new FriendListDBHandler(context);
         if(dbhandler.getFriendCount() != 0){
             friendNames.addAll(dbhandler.getAllFriendProfiles());
+            Collections.sort(friendNames);
         }
         populateFriendList();
         setupSearchView();

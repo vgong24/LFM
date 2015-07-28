@@ -59,6 +59,9 @@ public class ProfileSettings extends Activity {
         lastNameET = (EditText) findViewById(R.id.lastNameEdit);
         fullName = new StringBuilder("");
         firstname = parseUser.getString("firstName");
+        if(firstname == null){
+            firstname = "";
+        }
 
         lastname = parseUser.getString("lastName");
         if(lastname == null){
@@ -95,8 +98,15 @@ public class ProfileSettings extends Activity {
 
     public void showCurrentUserInfo(){
         emailET.setText(emailAddr);
+        fullName.setLength(0);
+
         firstNameET.setText(firstname);
         lastNameET.setText(lastname);
+
+        if(firstname.equalsIgnoreCase("")){
+            fullName.append("(none)");
+        }
+
         fullName.append(firstname + " " + lastname);
         fullNameTV.setText(fullName);
         if(pPic != null){
@@ -190,7 +200,7 @@ public class ProfileSettings extends Activity {
                     @Override
                     public void done(ParseException e) {
                         Toast.makeText(getApplicationContext(), "Saved data", Toast.LENGTH_SHORT);
-
+                        showCurrentUserInfo();
 
                     }
                 });

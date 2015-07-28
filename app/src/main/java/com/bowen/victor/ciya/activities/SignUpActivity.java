@@ -41,6 +41,7 @@ public class SignUpActivity extends Activity {
         usernameEditText = (EditText) findViewById(R.id.username_edit_text);
 
         passwordEditText = (EditText) findViewById(R.id.password_edit_text);
+        /*
         passwordAgainEditText = (EditText) findViewById(R.id.password_again_edit_text);
         passwordAgainEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -56,6 +57,7 @@ public class SignUpActivity extends Activity {
         firstName = (EditText) findViewById(R.id.name_edit_text);
         bday = (EditText) findViewById(R.id.birthday_edit_text);
         bday.setVisibility(View.GONE);
+        */
         email = (EditText) findViewById(R.id.emailTxt);
 
         // Set up the submit button click handler
@@ -70,8 +72,8 @@ public class SignUpActivity extends Activity {
     private void signup() {
         String username = usernameEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
-        String passwordAgain = passwordAgainEditText.getText().toString().trim();
-        String fn = firstName.getText().toString();
+        //String passwordAgain = passwordAgainEditText.getText().toString().trim();
+        //String fn = firstName.getText().toString();
         String emailAddr = email.getText().toString().trim();
 
         // Validate the sign up data
@@ -88,13 +90,13 @@ public class SignUpActivity extends Activity {
             validationError = true;
             validationErrorMessage.append(getString(R.string.error_blank_password));
         }
-        if (!password.equals(passwordAgain)) {
+        /*if (!password.equals(passwordAgain)) {
             if (validationError) {
                 validationErrorMessage.append(getString(R.string.error_join));
             }
             validationError = true;
             validationErrorMessage.append(getString(R.string.error_mismatched_passwords));
-        }
+        }*/
         if(!Patterns.EMAIL_ADDRESS.matcher(emailAddr).matches()){
             if(!validationError) {
                 validationError = true;
@@ -120,7 +122,7 @@ public class SignUpActivity extends Activity {
         user.setUsername(username);
         user.setPassword(password);
         user.setEmail(emailAddr);
-        user.put("firstName", fn);
+        //user.put("firstName", fn);
 
         // Call the Parse signup method
         user.signUpInBackground(new SignUpCallback() {

@@ -8,8 +8,8 @@ android {
         applicationId "com.bowen.victor.ciya"
         minSdkVersion 11
         targetSdkVersion 19
-        versionCode 16
-        versionName "1.39"
+        versionCode 17
+        versionName "1.40"
     }
     buildTypes {
         release {
