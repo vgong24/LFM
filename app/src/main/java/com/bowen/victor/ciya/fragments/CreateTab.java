@@ -58,6 +58,7 @@ import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -414,6 +415,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     public void initCategories(){
         ParseQuery<Category> query = ParseQuery.getQuery("Category");
+        query.addAscendingOrder("Name");
         query.findInBackground(new FindCallback<Category>() {
             @Override
             public void done(List<Category> categories, ParseException e) {
@@ -443,14 +445,6 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
         categorySpin.setSelection(0);
 
         //fillPublicPrivateSpinner();
-
-    }
-
-    //Fill spinner public or private
-    private void fillPublicPrivateSpinner(){
-        Spinner spinner = (Spinner) view.findViewById(R.id.cTabPPSpin);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context, R.array.public_private, android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
 
     }
 

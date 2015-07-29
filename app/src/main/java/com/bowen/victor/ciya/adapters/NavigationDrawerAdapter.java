@@ -5,6 +5,7 @@ package com.bowen.victor.ciya.adapters;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.media.Image;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bowen.victor.ciya.R;
+import com.bowen.victor.ciya.activities.AboutActivity;
 import com.bowen.victor.ciya.activities.MainActivity_v2;
 import com.bowen.victor.ciya.activities.ProfileSettings;
 import com.bowen.victor.ciya.fragments.FragmentDrawer;
@@ -99,6 +101,8 @@ public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDraw
                     case 2: //Settings
                         break;
                     case 3: //About
+                        Intent i = new Intent(context, AboutActivity.class);
+                        context.startActivity(i);
                         break;
                     case 4: //Log out Ask to be sure
                         MainActivity_v2.logOutConfirm(context);

@@ -67,5 +67,13 @@
     <string name="private_text">PRIVATE</string>
 
     <string name="action_create_new">new event</string>
+    <string name="versionNumber">1.4.0</string>
+    <string name="rate_app_link">Rate this app.</string>
+    <string name="license">Licenses</string>
+    <string name="apache_license">Apache License, Version 2.0</string>
+    <string name="icon_credit">Icon made by Freepik from www.flaticon.com is licensed under CC BY 3.0</string>
+    <string name="icon_credit2">Icon provided by icons8 as Creative Commons Attribution-NoDerivs 3.0 Unported</string>
+    <string name="attributions">Attributions</string>
+
 
 </resources>
