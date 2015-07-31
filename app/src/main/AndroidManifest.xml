@@ -73,11 +73,14 @@
 
         <activity android:name=".activities.AboutActivity"
             />
+        <activity android:name=".activities.LicensesActivity"
+            />
 
         <activity
             android:name=".activities.PasswordResetActivity"
             android:label="Password Reset Activity"
             android:screenOrientation="portrait" />
+        
         <activity android:name=".activities.ProfileSettings"
             android:label="Profile Settings"
             android:configChanges="orientation|keyboardHidden|screenSize"
