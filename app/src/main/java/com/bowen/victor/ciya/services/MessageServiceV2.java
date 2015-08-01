@@ -35,6 +35,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
     private final MessageServiceInterface serviceInterface = new MessageServiceInterface();
     private SinchClient sinchClient = null;
     private MessageClient messageClient = null;
+    private String regId;
     private String currentUserId;
     private LocalBroadcastManager broadcaster;
     private Intent broadcastIntent = new Intent("com.bowen.victor.ciya.activities.MainActivity_v2");
@@ -43,6 +44,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         currentUserId = ParseUser.getCurrentUser().getObjectId();
+        regId = intent.getStringExtra("regId");
 
         if (currentUserId != null && !isSinchClientStarted()) {
             startSinchClient(currentUserId);
@@ -63,6 +65,7 @@ public class MessageServiceV2  extends Service implements SinchClientListener {
         sinchClient.setSupportMessaging(true);
         sinchClient.setSupportActiveConnectionInBackground(true);
         sinchClient.setSupportPushNotifications(true);
+        sinchClient.registerPushNotificationData(regId.getBytes());
 
         sinchClient.checkManifest();
         sinchClient.start();

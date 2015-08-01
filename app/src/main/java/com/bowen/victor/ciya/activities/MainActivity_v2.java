@@ -40,10 +40,12 @@ import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Events;
 import com.bowen.victor.ciya.tools.WorkAround;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +72,7 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
     CheckForInvites thread;
 
     private GoogleApiClient mGoogleApiClient;
+    GoogleCloudMessaging gcm;
 
     public static boolean runThread;
 
@@ -78,6 +81,7 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_v2);
         WorkAround.setNotificationBarColor(this, R.color.colorPrimaryDark);
+        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
 
         currentUser = ParseUser.getCurrentUser();
         if(invitedEvents == null){
@@ -263,7 +267,8 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
     @Override
     public void onDestroy(){
         super.onDestroy();
-        stopService(serviceIntent);
+        if(serviceIntent!= null)
+            stopService(serviceIntent);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
         receiver = null;
         thread.cancel(true);
@@ -296,9 +301,9 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
 
 
     public void sinchConnect(){
-        serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
-        //serviceIntent = new Intent(getApplicationContext(), MessageService.class);
-        startService(serviceIntent);
+        new RegisterGcmTask().execute();
+        //serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
+        //startService(serviceIntent);
     }
 
     @Override
@@ -361,7 +366,10 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
     }
     //Log out of current user and return to login page
     public static void logOut(Context context){
-        context.stopService(serviceIntent);
+        if(serviceIntent != null)
+            context.stopService(serviceIntent);
+
+
         LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver);
         receiver = null;
 
@@ -397,6 +405,24 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
     }
 
 
-
+    class RegisterGcmTask extends AsyncTask<Void, Void, String> {
+        String msg = "";
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                msg = gcm.register("372417304699");
+            } catch (IOException ex) {
+                msg = "Error :" + ex.getMessage();
+            }
+            return msg;
+        }
+        @Override
+        protected void onPostExecute(String msg) {
+            serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
+            serviceIntent.putExtra("regId", msg);
+            Log.v("gmcID", msg);
+            startService(serviceIntent);
+        }
+    }
 
 }
