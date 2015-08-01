@@ -25,6 +25,7 @@ import com.bowen.victor.ciya.dbHandlers.FriendListDBHandler;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.structures.Events;
+import com.bowen.victor.ciya.structures.FriendRequest;
 import com.bowen.victor.ciya.tools.WorkAround;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -117,11 +118,13 @@ public class AttendeeListAdapter extends ArrayAdapter<Attendee> {
 
     }
 
-    public void setButtons(View view, ViewHolder holder, ParseUser player, final Attendee attendee){
+    public void setButtons(View view, final ViewHolder holder, final ParseUser player, final Attendee attendee){
         holder.attendeeAddFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Request Friend(Not implemented)", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Friend Request Sent.", Toast.LENGTH_SHORT).show();
+                FriendRequest.sendFriendRequest(currentUser.getUsername(), player.getUsername());
+                holder.attendeeAddFriend.setVisibility(View.GONE);
             }
         });
 
