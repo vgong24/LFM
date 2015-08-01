@@ -42,6 +42,7 @@
                 android:layout_width="fill_parent"
                 android:layout_weight="1"
                 android:layout_height="0dp"
+                android:paddingTop="8dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Large Text"
                 android:maxLines="5"
@@ -58,7 +59,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingTop="4dp"
+            android:paddingTop="12dp"
             android:textAppearance="?android:attr/textAppearanceButton"
             android:text="Status"
             android:layout_weight=".30"
