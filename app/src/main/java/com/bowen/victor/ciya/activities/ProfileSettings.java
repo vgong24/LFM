@@ -28,6 +28,9 @@ import com.parse.SaveCallback;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by Victor on 7/21/2015.
@@ -35,15 +38,17 @@ import java.io.InputStream;
 public class ProfileSettings extends Activity {
     private static final int SELECT_PICTURE = 1;
     private String selectedImagePath;
-    TextView fullNameTV, usernameTV, saveTV;
-    EditText firstNameET, lastNameET, phoneNumET, emailET;
+    TextView fullNameTV, usernameTV, saveTV, birthdayTV;
+    EditText firstNameET, lastNameET, phoneNumET, emailET, birthdayET;
     StringBuilder fullName;
-    String username, emailAddr, firstname, lastname;
-    private static boolean fnameChanged, lnameChanged, ppicChanged;
+    String username, emailAddr, firstname, lastname, birthdayStr;
+    Date birthdayDate;
+    private static boolean fnameChanged, lnameChanged, ppicChanged, bdayChanged;
     ParseUser parseUser = ParseUser.getCurrentUser();
     ImageView profilePicture;
     ParseFile pPic;
     Uri selectedImageUri;
+    DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
     @Override
     protected void onCreate(Bundle saveInstanceState){
@@ -68,6 +73,15 @@ public class ProfileSettings extends Activity {
             lastname = "";
         }
 
+        birthdayET = (EditText) findViewById(R.id.birthdayEditText);
+        birthdayTV = (TextView) findViewById(R.id.birthdayTextView);
+        birthdayDate = parseUser.getDate("birthday");
+        if (birthdayDate == null) {
+            birthdayStr = "";
+        } else {
+            birthdayStr = df.format(birthdayDate);
+        }
+
 
         fullNameTV = (TextView) findViewById(R.id.fullname_display);
         usernameTV = (TextView) findViewById(R.id.username_display);
@@ -89,6 +103,7 @@ public class ProfileSettings extends Activity {
 
         fnameChanged = false;
         lnameChanged = false;
+        bdayChanged = false;
         ppicChanged = false;
 
         setUpClickListeners();
@@ -102,6 +117,7 @@ public class ProfileSettings extends Activity {
 
         firstNameET.setText(firstname);
         lastNameET.setText(lastname);
+        birthdayET.setText(birthdayStr);
 
         if(firstname.equalsIgnoreCase("")){
             fullName.append("(none)");
@@ -160,6 +176,27 @@ public class ProfileSettings extends Activity {
             }
         });
 
+        birthdayET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!birthdayStr.equalsIgnoreCase(s.toString())) {
+                    bdayChanged = true;
+                } else
+                    bdayChanged = false;
+                showSave();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
     }
 
@@ -184,12 +221,23 @@ public class ProfileSettings extends Activity {
             public void onClick(View v) {
                 firstname = firstNameET.getText().toString();
                 lastname = lastNameET.getText().toString();
+                birthdayStr = birthdayET.getText().toString();
                 fnameChanged = false;
                 lnameChanged = false;
                 ppicChanged = false;
+                bdayChanged = false;
                 showSave();
                 parseUser.put("firstName", firstname);
                 parseUser.put("lastName", lastname);
+
+                try {
+                    birthdayDate = df.parse(birthdayStr.trim());
+                    parseUser.put("birthday", birthdayDate);
+                } catch (java.text.ParseException e) {
+                    Toast.makeText(getApplicationContext(), "Invalid date", Toast.LENGTH_SHORT);
+                }
+
+
 
                 if (selectedImageUri != null) {
                     ParseFile file = new ParseFile(username + ".jpg", convertImageToBytes(selectedImageUri));
@@ -272,7 +320,7 @@ public class ProfileSettings extends Activity {
 
     //Display whether or not the save button should be shown based on changed settings
     public boolean showSave(){
-        if(fnameChanged || lnameChanged || ppicChanged){
+        if(fnameChanged || lnameChanged || ppicChanged || bdayChanged){
             saveTV.setVisibility(View.VISIBLE);
             return true;
         }

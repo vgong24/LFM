@@ -107,7 +107,7 @@
             </LinearLayout>
 
             <View
-                android:id="@+id/name_divider"
+                android:id="@+id/name_divider1"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
                 android:background="@color/button_material_light"
@@ -136,7 +136,74 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
 
+            <View
+                android:id="@+id/name_divider2"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/button_material_light"
+                android:layout_marginBottom="12dp"
+                android:layout_below="@+id/profile_display" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone Number"
+                android:id="@+id/phoneNumberTextView" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_display"
+                android:weightSum="2"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/linearLayout3"
+                android:paddingBottom="12dp" >
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:inputType="phone"
+                    android:hint="+1(XXX)XXX-XXXX"
+                    android:paddingRight="6dp"
+                    android:ems="10"
+                    android:id="@+id/phoneNumberEdit" />
+
+                <Button
+                    android:id="@+id/loginButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Verify"/>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/name_divider3"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/button_material_light"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/birthdate"
+                android:id="@+id/birthdayTextView"
+                android:paddingBottom="12dp" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:id="@+id/birthdayEditText"
+                android:text="MM/DD/YYYY"
+                android:enabled="true" />
+
         </LinearLayout>
+
+
+
     </ScrollView>
 
 </RelativeLayout>
