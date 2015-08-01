@@ -28,8 +28,13 @@ import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Events;
 import com.bowen.victor.ciya.structures.FriendProfile;
 import com.bowen.victor.ciya.structures.FriendRequest;
+import com.bowen.victor.ciya.structures._User;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
@@ -77,7 +82,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     private final String PENDING = "pending";
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.friendStatusImg.setTag(position);
@@ -86,9 +91,23 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         holder.friendName.setText(fName);
         String statusBox = friendProfile.getStatus();
 
+
         if(holder.friendProfileImg != null){
-            //new ImageDownloaderTask(holder.friendProfileImg).execute(friendProfile);
+            ParseQuery query = ParseQuery.getQuery("_User");
+            query.whereEqualTo("username", fName);
+            query.getFirstInBackground(new GetCallback() {
+                @Override
+                public void done(ParseObject parseObject, ParseException e) {
+                    if (e == null) {
+                        ParseUser user = (ParseUser) parseObject;
+                        Toast.makeText(context, user.getUsername(), Toast.LENGTH_SHORT).show();
+                        new ImageDownloaderTask(holder.friendProfileImg).execute(user);
+                    }
+                }
+            });
+
         }
+
 
         switch(statusBox){
             case "pending":
@@ -113,8 +132,8 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
             @Override
             public void onClick(View v, int position, boolean isLongClick) {
 
-
                 for (int i = 0; i < getItemCount(); i++) {
+                    //Toast.makeText(context, i + " " + mLayoutManager.getChildAt(i).findViewById(R.id.friend_status_img).getVisibility() , Toast.LENGTH_SHORT).show();
                     if (i != position) {
                         mLayoutManager.getChildAt(i).findViewById(R.id.friend_status_text).setVisibility(View.INVISIBLE);
                         mLayoutManager.getChildAt(i).findViewById(R.id.friend_status_img).setVisibility(View.INVISIBLE);
@@ -273,7 +292,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     }
     */
 
-    class ImageDownloaderTask extends AsyncTask<FriendRequest, Void, Bitmap> {
+    class ImageDownloaderTask extends AsyncTask<ParseUser, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewWeakReference;
 
         public ImageDownloaderTask(ImageView imageView) {
@@ -282,16 +301,17 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
 
 
         @Override
-        protected Bitmap doInBackground(FriendRequest... params) {
+        protected Bitmap doInBackground(ParseUser... params) {
 
             ParseFile thumbnail = null;
-            /*
-            if ((thumbnail = params[0].getUserID().getParseFile("profilePic")) == null) {
-                if((thumbnail = params[0].getUserID().getParseFile("profilePicture")) == null){
+
+            if ((thumbnail = params[0].getParseFile("profilePic")) == null) {
+                if((thumbnail = params[0].getParseFile("profilePicture")) == null){
 
                 }
             }
-            */
+
+
             return getResizedBitmap(thumbnail);
         }
 
