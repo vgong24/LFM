@@ -61,7 +61,7 @@ public class FriendsTab extends Fragment {
     List<FriendRequest> friendRequestList;
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private FriendRecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     //Regular friends tab
@@ -174,6 +174,7 @@ public class FriendsTab extends Fragment {
     //Display Friendlist then set up onclick listeners
     public void populateFriendList(){
 
+
         if(mAdapter == null){
             mAdapter = new FriendRecyclerAdapter(context, R.layout.friend_request_item, friendNames, mLayoutManager, new FriendRecyclerAdapter.BtnClickListener() {
 
@@ -200,6 +201,7 @@ public class FriendsTab extends Fragment {
             });
         }else{
             mAdapter.notifyDataSetChanged();
+            mAdapter.updateLayoutManager(mLayoutManager);
         }
 
         /*

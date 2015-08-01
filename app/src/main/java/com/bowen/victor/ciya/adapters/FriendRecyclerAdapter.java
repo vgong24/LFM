@@ -100,7 +100,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
                 public void done(ParseObject parseObject, ParseException e) {
                     if (e == null) {
                         ParseUser user = (ParseUser) parseObject;
-                        Toast.makeText(context, user.getUsername(), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, user.getUsername(), Toast.LENGTH_SHORT).show();
                         new ImageDownloaderTask(holder.friendProfileImg).execute(user);
                     }
                 }
@@ -185,6 +185,10 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
             lastPosition = position;
         }
 
+    }
+
+    public void updateLayoutManager(RecyclerView.LayoutManager layoutManager) {
+        mLayoutManager = layoutManager;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
