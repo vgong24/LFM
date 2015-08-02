@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
@@ -26,6 +28,7 @@ import com.parse.SendCallback;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by Victor on 7/11/2015.
@@ -40,6 +43,8 @@ public class WorkAround {
     }
 
     public static void pushToRecipient(final String userId, final String message){
+        //http://blog.parse.com/learn/engineering/the-dangerous-world-of-client-push/
+        /*
         ParseQuery userQuery = ParseUser.getQuery();
         userQuery.whereEqualTo("objectId", userId);
 
@@ -64,6 +69,21 @@ public class WorkAround {
 
             }
         });
+        */
+
+        HashMap<String, Object> params = new HashMap<String, Object>();
+        params.put("recipientId", userId);
+        params.put("message", message);
+        ParseCloud.callFunctionInBackground("sendPushToUser", params, new FunctionCallback<String>() {
+            public void done(String success, ParseException e) {
+                if (e == null) {
+                    // Push sent successfully
+                    Log.v("Push", "UserId: " + userId + " message: " + message);
+                }
+            }
+        });
+
+
     }
 
     /** isSameDay - CODE USED FROM https://github.com/exabakr/android-app/blob/master/YourAppIdea/src/main/java/org/michenux/android/lang/DateUtils.java

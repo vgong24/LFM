@@ -301,9 +301,9 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
 
 
     public void sinchConnect(){
-        new RegisterGcmTask().execute();
-        //serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
-        //startService(serviceIntent);
+        //new RegisterGcmTask().execute();
+        serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
+        startService(serviceIntent);
     }
 
     @Override
