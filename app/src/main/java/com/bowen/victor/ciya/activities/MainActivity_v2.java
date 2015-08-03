@@ -42,6 +42,7 @@ import com.bowen.victor.ciya.tools.WorkAround;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -301,9 +302,9 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
 
 
     public void sinchConnect(){
-        //new RegisterGcmTask().execute();
-        serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
-        startService(serviceIntent);
+        new RegisterGcmTask().execute();
+        //serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
+        //startService(serviceIntent);
     }
 
     @Override
@@ -409,18 +410,13 @@ public class MainActivity_v2 extends ActionBarActivity implements FragmentDrawer
         String msg = "";
         @Override
         protected String doInBackground(Void... voids) {
-            try {
-                msg = gcm.register("372417304699");
-            } catch (IOException ex) {
-                msg = "Error :" + ex.getMessage();
-            }
+
+            msg = ParseInstallation.getCurrentInstallation().getString("deviceToken");
             return msg;
         }
         @Override
         protected void onPostExecute(String msg) {
             serviceIntent = new Intent(getApplicationContext(), MessageServiceV2.class);
-            serviceIntent.putExtra("regId", msg);
-            Log.v("gmcID", msg);
             startService(serviceIntent);
         }
     }

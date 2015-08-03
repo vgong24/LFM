@@ -322,10 +322,8 @@ public class MultiMessagingActivity extends ActionBarActivity {
         @Override
         public void onShouldSendPushData(MessageClient client, final Message message, List<PushPair> pushPairs) {
             Log.v("SEND PUSH", "Sending push to: " + message.getRecipientIds().get(0));
-                WorkAround.pushToRecipient(message.getRecipientIds().get(0), "received a message");
+                WorkAround.pushToRecipient(message.getRecipientIds().get(0), currentName + " sent a message");
 
-                //Async send
-                //WorkAround.pushToRecipient(currentUserId, "received a message");
         }
     }
 
