@@ -129,7 +129,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
+        <receiver android:name=".receivers.ParsePushReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />

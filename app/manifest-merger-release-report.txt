@@ -398,7 +398,7 @@ action#android.intent.action.USER_PRESENT
 ADDED from AndroidManifest.xml:128:17
 	android:name
 		ADDED from AndroidManifest.xml:128:25
-receiver#com.parse.ParsePushBroadcastReceiver
+receiver#com.bowen.victor.ciya.receivers.ParsePushReceiver
 ADDED from AndroidManifest.xml:132:9
 	android:exported
 		ADDED from AndroidManifest.xml:133:13
