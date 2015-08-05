@@ -20,7 +20,7 @@ import org.json.JSONObject;
 public class ParsePushReceiver extends ParsePushBroadcastReceiver{
     private final String TAG = ParsePushReceiver.class.getSimpleName();
     private Intent parseIntent;
-    private NotificationUtils notificationUtils;
+    private static NotificationUtils notificationUtils;
 
     public ParsePushReceiver(){
         super();
@@ -42,7 +42,7 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver{
 
     @Override
     public void onPushReceive(Context context, Intent intent) {
-        super.onPushReceive(context, intent);
+        //super.onPushReceive(context, intent);
 
         if (intent == null)
             return;
@@ -67,12 +67,14 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver{
      */
     private void parsePushJson(Context context, JSONObject json) {
         try {
-            boolean isBackground = json.getBoolean("is_background");
-            JSONObject data = json.getJSONObject("data");
+
+            JSONObject data = json;
+            boolean isBackground = data.getBoolean("is_background");
             String title = data.getString("title");
             String message = data.getString("message");
 
             if (!isBackground) {
+                Log.v(TAG, "showing notification: msg " + message);
                 Intent resultIntent = new Intent(context, MainActivity_v2.class);
                 showNotificationMessage(context, title, message, resultIntent);
             }
@@ -93,15 +95,13 @@ public class ParsePushReceiver extends ParsePushBroadcastReceiver{
      * @param intent
      */
     private void showNotificationMessage(Context context, String title, String message, Intent intent) {
-
-        if(notificationUtils == null){
+        if(notificationUtils == null) {
             notificationUtils = new NotificationUtils(context);
+            Log.v(TAG, "setting notification Utils");
         }
-
         intent.putExtras(parseIntent.getExtras());
-
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
+        Log.v(TAG, "Notification Utils");
         notificationUtils.showNotificationMessage(title, message, intent);
     }
 

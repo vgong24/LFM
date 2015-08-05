@@ -12,6 +12,7 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.uncategorized.AppConfig;
@@ -27,9 +28,10 @@ public class NotificationUtils {
 
     private Context mContext;
     private NotificationCompat.InboxStyle inboxStyle;
-    private NotificationCompat.Builder mBuilder;
-    private boolean firstTime = true;
-    private NotificationManager notificationManager;
+    private static NotificationCompat.Builder mBuilder;
+    private static boolean firstTime;
+    private static NotificationManager notificationManager;
+
 
 
 
@@ -38,14 +40,13 @@ public class NotificationUtils {
 
     public NotificationUtils(Context mContext) {
         this.mContext = mContext;
+        firstTime = true;
     }
 
     public void showNotificationMessage(String title, String message, Intent intent) {
-
         // Check for empty push message
         if (TextUtils.isEmpty(message))
             return;
-
         if (isAppIsInBackground(mContext)) {
             // notification icon
             int icon = R.drawable.ic_launcher;
@@ -59,29 +60,39 @@ public class NotificationUtils {
                             intent,
                             PendingIntent.FLAG_CANCEL_CURRENT
                     );
-            if(inboxStyle == null)
-                inboxStyle = new NotificationCompat.InboxStyle();
-            if(mBuilder == null)
-                mBuilder = new NotificationCompat.Builder(mContext);
+            Log.v(TAG, "Forth Step");
+            //First Time
+            if(firstTime) {
+                Log.v(TAG, "First time set up");
+                NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 
-            if(firstTime){
-                mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
+                mBuilder = new NotificationCompat.Builder(
+                        mContext);
+                mBuilder.setSmallIcon(R.drawable.ic_launcher).setTicker(message).setWhen(0)
                         .setAutoCancel(true)
-                        .setOnlyAlertOnce(true)
                         .setContentTitle(title)
+                        .setOnlyAlertOnce(true)
                         .setStyle(inboxStyle)
                         .setContentIntent(resultPendingIntent)
                         .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                        .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon));
+                        .setContentText(message);
+
+                notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
                 firstTime = false;
             }
-            mBuilder.setContentText(message);
 
-            if(notificationManager == null)
-                notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-
+            Log.v(TAG, "second time");
+            mBuilder.setContentTitle(title)
+                    .setContentText(message)
+                    .setStyle(new NotificationCompat.InboxStyle()
+                            .addLine(message))
+                    .setTicker(message);
             notificationManager.notify(mNotificationId, mBuilder.build());
+
+
+
         } else {
+            Log.v(TAG, "Else...");
             intent.putExtra("title", title);
             intent.putExtra("message", message);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -119,4 +130,5 @@ public class NotificationUtils {
 
         return isInBackground;
     }
+
 }

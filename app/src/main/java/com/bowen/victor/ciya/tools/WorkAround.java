@@ -49,7 +49,8 @@ public class WorkAround {
         HashMap<String, Object> params = new HashMap<String, Object>();
         params.put("recipientId", userId);
         params.put("message", message);
-        params.put("title", "Title");
+        params.put("title", "Notification");
+        params.put("isBackground", false);
         ParseCloud.callFunctionInBackground("sendPushToUser", params, new FunctionCallback<String>() {
             public void done(String success, ParseException e) {
                 if (e == null) {
