@@ -47,7 +47,7 @@ public class NotificationUtils {
         // Check for empty push message
         if (TextUtils.isEmpty(message))
             return;
-        if (isAppIsInBackground(mContext)) {
+        //if (isAppIsInBackground(mContext)) { //Doesn't matter if its in background because the triggered event is when its sent
             // notification icon
             int icon = R.drawable.ic_launcher;
 
@@ -90,14 +90,16 @@ public class NotificationUtils {
             notificationManager.notify(mNotificationId, mBuilder.build());
 
 
-
+        /*
         } else {
             Log.v(TAG, "Else...");
+            /*
             intent.putExtra("title", title);
             intent.putExtra("message", message);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             mContext.startActivity(intent);
-        }
+
+        }*/
     }
 
     /**
@@ -121,11 +123,26 @@ public class NotificationUtils {
                 }
             }
         } else {
+
+            List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
+                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    for (String activeProcess : processInfo.pkgList) {
+                        if (activeProcess.equals(context.getPackageName())) {
+                            isInBackground = false;
+                        }
+                    }
+                }
+            }
+
+            /*
+
             List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
             ComponentName componentInfo = taskInfo.get(0).topActivity;
             if (componentInfo.getPackageName().equals(context.getPackageName())) {
                 isInBackground = false;
             }
+            */
         }
 
         return isInBackground;
