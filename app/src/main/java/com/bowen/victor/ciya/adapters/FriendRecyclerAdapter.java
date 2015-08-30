@@ -51,6 +51,9 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     BtnClickListener mClickListener = null;
     private int lastPosition = -1;
     private final double BITMAP_SCALE = 7.2;
+    private static int current_position;
+    private static ViewHolder last_clicked = null;
+
 
     public interface BtnClickListener {
         public abstract void onBtnClick(int position);
@@ -82,7 +85,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     private final String PENDING = "pending";
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.friendStatusImg.setTag(position);
@@ -90,7 +93,6 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         String fName = friendProfile.getUserName();
         holder.friendName.setText(fName);
         String statusBox = friendProfile.getStatus();
-
 
         if(holder.friendProfileImg != null){
             ParseQuery query = ParseQuery.getQuery("_User");
@@ -129,17 +131,18 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
 
         //Set onclicks
         holder.setClickListener(new ViewHolder.ClickListener() {
-            @Override
-            public void onClick(View v, int position, boolean isLongClick) {
 
-                for (int i = 0; i < getItemCount(); i++) {
-                    //Toast.makeText(context, i + " " + mLayoutManager.getChildAt(i).findViewById(R.id.friend_status_img).getVisibility() , Toast.LENGTH_SHORT).show();
-                    if (i != position) {
-                        mLayoutManager.getChildAt(i).findViewById(R.id.friend_status_text).setVisibility(View.INVISIBLE);
-                        mLayoutManager.getChildAt(i).findViewById(R.id.friend_status_img).setVisibility(View.INVISIBLE);
-                    }
+            @Override
+            public void onClick(View v, int view_position, boolean isLongClick) {
+                if(last_clicked == null){
+                    last_clicked = holder;
+                }else if(last_clicked != holder){
+                    last_clicked.friendStatusImg.setVisibility(View.INVISIBLE);
+                    last_clicked.friendStatusText.setVisibility(View.INVISIBLE);
+                    last_clicked = holder;
                 }
 
+                //Selected view
                 TextView friendStatusText = (TextView) v.findViewById(R.id.friend_status_text);
                 ImageView friendStatusImg = (ImageView) v.findViewById(R.id.friend_status_img);
                 if (friendStatusText.getVisibility() == View.INVISIBLE) {
@@ -149,9 +152,8 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
                     friendStatusText.setVisibility(View.INVISIBLE);
                     friendStatusImg.setVisibility(View.INVISIBLE);
                 }
-
-                //Toast.makeText(context, "" + mLayoutManager.getChildAt(0).findViewById(R.id.friend_status_text).get, Toast.LENGTH_SHORT).show();
             }
+
         });
 
         holder.friendStatusImg.setOnClickListener(new View.OnClickListener() {
@@ -172,18 +174,27 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         return friendProfiles.size();
     }
 
+    public int getCurrentlySelected(){
+        if(current_position < 0){
+            return -1;
+        }else{
+            return current_position;
+        }
+    }
+
     /**
      * Animate list population
      */
     private void setAnimation(View viewToAnimate, int position){
         // If the bound view wasn't previously displayed on screen, it's animated
+        /*
         if (position > lastPosition)
         {
             Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
             animation.setDuration(1000);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
-        }
+        }*/
 
     }
 
