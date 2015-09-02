@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivityV2">
+    <item
+        android:id="@+id/view_invites_action"
+        android:title="@string/invitation"
+        android:icon="@drawable/ic_action_new_event"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/create_event"
+        android:title="@string/action_create_new"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="2"
+        />
+
+
+
+
+</menu>

@@ -1,20 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="100"
+    >
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1.0"
+        android:layout_height="0dp"
+        android:layout_weight="50"
         android:orientation="vertical" >
 
-
-        <FrameLayout xmlns:map="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/map2"
-            android:name="com.google.android.gms.maps.MapFragment"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:elevation="1dp"
+            >
+
+            <FrameLayout xmlns:map="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/map2"
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+            </FrameLayout>
+
+            <ImageButton
+                android:layout_width="42dp"
+                android:layout_height="84dp"
+                android:background="@drawable/marker"
+                android:id="@+id/staticMarker"
+                android:layout_centerInParent="true"
+                android:maxWidth="20dp"
+                android:maxHeight="20dp"
+                android:scaleType="fitXY"
+                />
+
+        </RelativeLayout>
+
 
 
         <TextView
@@ -39,8 +63,9 @@
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:orientation="vertical"
+        android:layout_weight="40"
         android:id="@+id/scrollView">
 
         <LinearLayout
@@ -64,10 +89,19 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <Spinner
-                    android:layout_weight="1"
-                    android:layout_width="0dip"
+                    android:layout_weight=".5"
+                    android:layout_width="0dp"
+
                     android:layout_height="wrap_content"
                     android:id="@+id/cTabCatSpin" />
+
+                <Spinner
+                    android:layout_weight=".5"
+                    android:layout_width="0dp"
+
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cTabPPSpin" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -80,23 +114,36 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <Button
-                        android:id="@+id/cTabDateBtn"
-                        android:layout_width="120dp"
-                        android:layout_height="35dp"
-                        android:layout_marginLeft="10dp"
-                        android:paddingRight="16dp"
-                        android:text="Set Date"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                    <android.support.v7.widget.CardView
+                        style="@style/MaterialButton">
 
-                    <TextView
-                        android:id="@+id/cTabDateView"
-                        android:layout_width="235dp"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="30dp"
-                        android:hint="MM/DD/YYYY"
-                        android:textColor="#000"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        <TextView
+                            android:id="@+id/cTabDateView"
+                            style="@style/MaterialButtonTextView"
+                            android:background="@drawable/button_click_selector"
+                            android:hint="MM/DD/YYYY"
+                            android:textColor="#000"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+                    </android.support.v7.widget.CardView>
+                    <android.support.v7.widget.CardView
+                        style="@style/MaterialButton"
+                        >
+                        <TextView
+                            android:id="@+id/cTabTimeView"
+                            style="@style/MaterialButtonTextView"
+                            android:background="@drawable/button_click_selector"
+                            android:hint="hh:mm a"
+                            android:textColor="#000"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    </android.support.v7.widget.CardView>
+
+
+
+
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -104,23 +151,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal" >
 
-                    <Button
-                        android:id="@+id/cTabTimeBtn"
-                        android:layout_width="120dp"
-                        android:layout_height="35dp"
-                        android:layout_marginLeft="10dp"
-                        android:paddingRight="16dp"
-                        android:text="Set Time"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <TextView
-                        android:id="@+id/cTabTimeView"
-                        android:layout_width="235dp"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="30dp"
-                        android:hint="hh:mm a"
-                        android:textColor="#000"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -171,13 +201,23 @@
                         android:hint="Info" />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/cTabCreateBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Create Event"
-                    android:nestedScrollingEnabled="false" />
+
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:layout_weight="10">
+        <Button
+            android:id="@+id/cTabCreateBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create Event"
+            android:nestedScrollingEnabled="false" />
+
+    </LinearLayout>
+
 </LinearLayout>

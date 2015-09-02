@@ -6,7 +6,6 @@
     android:padding="10dp">
 
     <RelativeLayout android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
         android:layout_alignParentTop="true">
 
         <TextView
@@ -24,18 +23,17 @@
 
         <TextView
             android:id="@+id/txtDate"
-            android:layout_alignParentRight="true"
             android:textColor="@color/sinch_purple"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="2dp"
             android:paddingBottom="6dp"
+            android:layout_centerInParent="true"
             android:textSize="12sp"
-            android:text=""
+            android:text="time"
             android:layout_alignBottom="@+id/txtSender"/>
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/txtSender"
             android:layout_alignParentLeft="true"

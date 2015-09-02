@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:id="@+id/profile_display"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:background="@color/colorPrimary"
+        android:padding="12dp">
+
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:id="@+id/image_display"
+            android:src="@drawable/default_profile"
+            android:layout_marginRight="12dp"
+            android:layout_marginLeft="6dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/image_display"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="First Last"
+            android:textColor="@color/off_white"
+            android:id="@+id/fullname_display"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fullname_display"
+            android:textColor="@color/off_white"
+            android:layout_toRightOf="@+id/image_display"
+            android:text="Username"
+            android:id="@+id/username_display"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:id="@+id/saveButton"
+            android:textColor="@color/off_white"
+            android:layout_alignTop="@+id/fullname_display"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_display"
+        android:id="@+id/scrollView2"
+        android:layout_margin="12dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout"
+            android:paddingBottom="12dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name"
+                android:id="@+id/nameTextView" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_display"
+                android:weightSum="2"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/linearLayout2"
+                android:paddingBottom="12dp" >
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="textPersonName"
+                    android:hint="First Name"
+                    android:paddingRight="6dp"
+                    android:ems="10"
+                    android:id="@+id/firstNameEdit" />
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:hint="Last Name"
+                    android:ems="10"
+                    android:id="@+id/lastNameEdit"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/name_divider1"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/button_material_light"
+                android:layout_marginBottom="12dp"
+                android:layout_below="@+id/profile_display" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/emailAddress"
+                android:id="@+id/emailTextView"
+                android:layout_below="@+id/name_divider"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:paddingBottom="12dp" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:ems="10"
+                android:id="@+id/emailEditText"
+                android:text="Email@email.email"
+                android:enabled="false"
+                android:layout_below="@+id/emailTextView"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <View
+                android:id="@+id/name_divider2"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/button_material_light"
+                android:layout_marginBottom="12dp"
+                android:layout_below="@+id/profile_display" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone Number"
+                android:id="@+id/phoneNumberTextView" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/profile_display"
+                android:weightSum="2"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/linearLayout3"
+                android:paddingBottom="12dp" >
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:inputType="phone"
+                    android:hint="+1(XXX)XXX-XXXX"
+                    android:paddingRight="6dp"
+                    android:ems="10"
+                    android:id="@+id/phoneNumberEdit" />
+
+                <Button
+                    android:id="@+id/loginButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Verify"/>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/name_divider3"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/button_material_light"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/birthdate"
+                android:id="@+id/birthdayTextView"
+                android:paddingBottom="12dp" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:id="@+id/birthdayEditText"
+                android:text="MM/DD/YYYY"
+                android:enabled="true" />
+
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+</RelativeLayout>

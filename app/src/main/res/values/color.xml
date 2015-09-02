@@ -4,13 +4,38 @@
     <color name="ColorPrimary">#e62117</color>
     <color name="ColorPrimaryDark">#c31c13</color>
     <color name="tabsScrollColor">#8a140e</color>
--->
+
     <color name="ColorPrimary">#00e5ff</color>
     <color name="ColorPrimaryDark">#006064</color>
-    <color name="tabsScrollColor">#00b8d4</color>
+    -->
+    <color name="tabsScrollColor">@color/colorAccent</color>
+    <color name="attendeeItem">#0091EA</color>
+
+
+    <color name="ColorPrimaryDetail">#009688</color>
+    <color name="ColorPrimaryMessage">#F50057</color>
+
+    <color name="JoinButton">#448AFF</color>
+    <color name="LeaveButton">#FF5252</color>
+    <color name="HostRow">#448AFF</color>
 
     <color name="sinch_purple">#ff63029d</color>
     <color name="off_white">#fffafafa</color>
+    <!-- Create event buttons -->
+    <color name="buttonClick1">#BDBDBD</color>
+    <color name="buttonClick2">#E0E0E0</color>
+    <color name="buttonClick3">#EEEEEE</color>
+
+
     <color name="dark_gray">#ffb3b3b3</color>
     <color name="very_dark_gray">#636363</color>
+
+    <!-- Theme colors -->
+    <color name="colorPrimary">#2979FF</color>
+    <color name="colorPrimaryDark">#2962FF</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#E3F2FD</color>
+    <color name="windowBackground">#FFFFFF</color>
+    <color name="navigationBarColor">#000000</color>
+    <color name="colorAccent">#82B1FF</color>
 </resources>

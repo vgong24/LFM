@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:weightSum="100">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="45"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="1dp"
+            >
+
+            <FrameLayout xmlns:map="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/map2"
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+            </FrameLayout>
+
+            <ImageButton
+                android:layout_width="42dp"
+                android:layout_height="84dp"
+                android:background="@drawable/marker"
+                android:id="@+id/staticMarker"
+                android:layout_centerInParent="true"
+                android:maxWidth="20dp"
+                android:maxHeight="20dp"
+                android:scaleType="fitXY"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="45"
+        android:id="@+id/scrollView"
+        android:layout_margin="10dp">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal" >
+
+                <info.hoang8f.android.segmented.SegmentedGroup
+                    android:checkedButton="@+id/public_btn"
+                    android:id="@+id/privacySegment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    segmentedgroup:border_width="1dp"
+                    segmentedgroup:corner_radius="10dp"
+                    segmentedgroup:tint_color="@color/colorPrimary"
+                    segmentedgroup:checked_text_color="#FFFFFF"
+                    android:layout_margin="6dp">
+
+                    <RadioButton
+                        android:id="@+id/public_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/public_text"
+                        style="@style/RadioButton" />
+
+                    <RadioButton
+                        android:id="@+id/friend_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/friends_text"
+                        style="@style/RadioButton" />
+
+                    <RadioButton
+                        android:id="@+id/private_btn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/private_text"
+                        style="@style/RadioButton" />
+
+                </info.hoang8f.android.segmented.SegmentedGroup>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+                <!-- Category + Size -->
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_margin="6dp">
+
+                    <!--
+
+                    <TextView
+                        android:id="@+id/cTabCatView"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Category"
+                        android:textColor="#000"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                        -->
+
+                    <Spinner
+                        android:layout_weight="2"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/cTabCatSpin" />
+
+                    <TextView
+                        android:id="@+id/cTabMemberView"
+                        android:layout_weight="1.5"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:text="Group Size:"
+                        android:textColor="#000"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:paddingLeft="6dp" />
+
+                    <EditText
+                        android:id="@+id/cTabMemberEdit"
+                        android:layout_weight=".5"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:maxLength="2"
+                        android:hint="4"
+                        android:layout_marginLeft="6dp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:weightSum="2"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <android.support.v7.widget.CardView
+                        style="@style/MaterialButton"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        >
+
+                        <TextView
+                            android:id="@+id/cTabDateView"
+                            style="@style/MaterialButtonTextView"
+                            android:gravity="center"
+                            android:layout_width="fill_parent"
+                            android:background="@drawable/button_click_selector"
+                            android:hint="Date"
+                            android:textColor="#000"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+                    </android.support.v7.widget.CardView>
+
+                    <android.support.v7.widget.CardView
+                        style="@style/MaterialButton"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        >
+                        <TextView
+                            android:id="@+id/cTabTimeView"
+                            android:gravity="center"
+                            android:layout_width="fill_parent"
+                            style="@style/MaterialButtonTextView"
+                            android:background="@drawable/button_click_selector"
+                            android:hint="Time"
+                            android:textColor="#000"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    </android.support.v7.widget.CardView>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"
+                    android:background="@drawable/inputbox"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="16dp"
+                    android:layout_margin="6dp">
+
+                    <EditText
+                        android:id="@+id/cTabDescEdit"
+                        android:layout_weight="1"
+                        android:layout_width="0dip"
+                        android:layout_height="fill_parent"
+                        android:hint="Event Description"
+                        android:layout_marginLeft="8dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:layout_weight="10">
+        <Button
+            android:id="@+id/cTabCreateBtn"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textSize="@dimen/font_size"
+            android:text="Create Event"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

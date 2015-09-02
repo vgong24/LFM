@@ -7,7 +7,8 @@
     <ScrollView
         android:id="@+id/signup_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:measureAllChildren="false">
 
         <LinearLayout
             style="@style/LoginFormContainer"
@@ -15,77 +16,30 @@
 
             <EditText
                 android:id="@+id/username_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:hint="@string/prompt_username"
-                android:layout_marginTop="8dp"
                 android:inputType="textEmailAddress"
-                android:textSize="32sp"
-                android:padding="10dp"
-                android:textColor="@color/sinch_purple"
+                style="@style/LoginField"
                 android:background="@drawable/inputbox"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp">
+                >
                 <requestFocus/>
             </EditText>
 
             <EditText
                 android:id="@+id/password_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/LoginField"
                 android:hint="@string/prompt_password"
-                android:layout_marginTop="8dp"
                 android:inputType="textPassword"
-                android:textSize="32sp"
-                android:padding="10dp"
-                android:textColor="@color/sinch_purple"
                 android:background="@drawable/inputbox"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp">
+                >
             </EditText>
 
 
             <EditText
-                android:id="@+id/password_again_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/prompt_password_again"
-                android:layout_marginTop="8dp"
-                android:inputType="textPassword"
-                android:textSize="32sp"
-                android:padding="10dp"
-                android:textColor="@color/sinch_purple"
+                android:id="@+id/emailTxt"
+                style="@style/LoginField"
+                android:hint="@string/emailAddress"
+                android:inputType="textEmailAddress"
                 android:background="@drawable/inputbox"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:imeActionId="@+id/edittext_action_signup"
-                android:imeActionLabel="@string/signup"
-                android:imeOptions="actionUnspecified">
-            </EditText>
-
-
-            <EditText
-                android:id="@+id/name_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/prompt_name"
-                android:layout_marginTop="8dp"
-                android:inputType="text"
-                android:textSize="32sp"
-                android:padding="10dp"
-                android:textColor="@color/sinch_purple"
-                android:background="@drawable/inputbox"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp">
-                <requestFocus/>
-            </EditText>
-
-            <EditText
-                android:id="@+id/birthday_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/birthdate"
-                android:inputType="date"
                 android:maxLines="1"
                 android:singleLine="true" />
 
@@ -93,11 +47,8 @@
                 android:id="@+id/action_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginTop="16dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
-                android:text="@string/signup" />
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_signup" />
         </LinearLayout>
     </ScrollView>
 

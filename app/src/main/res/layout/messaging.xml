@@ -3,7 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/off_white"
     >
+
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@color/ColorPrimaryMessage"
+        />
 
     <ListView
         android:id="@+id/listMessages"
@@ -11,6 +20,7 @@
         android:layout_height="wrap_content"
         android:transcriptMode="alwaysScroll"
         android:layout_above="@+id/divider"
+        android:layout_below="@+id/tool_bar"
         android:padding="0dip"
         android:divider="@null"
         android:dividerHeight="0dp" android:stackFromBottom="true" tools:listitem="@layout/message_left"/>
