@@ -119,7 +119,7 @@ public class FriendsTab extends Fragment {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
-
+        //TODO: currentUser to currentUserObject
         new UpdateFriendList().execute(currentUser);
     }
 
@@ -234,11 +234,15 @@ public class FriendsTab extends Fragment {
 
     //send a friend requests using usernames rather than object ids
     //If username matches current user, dont send. duh~
+    //TODO:replace String with ParseUser
     public void sendRequest(String friendname){
         String currentUserName = ParseUser.getCurrentUser().getUsername();
         if(!friendname.equalsIgnoreCase(currentUserName)) {
+            //TODO: replace strings with pUsers
             FriendRequest.sendFriendRequest(currentUserName, friendname);
             Toast.makeText(context, "Friend Request Sent", Toast.LENGTH_SHORT).show();
+
+            //TODO: replace to currentUserObject
             new UpdateFriendList().execute(currentUser);
         }else{
             Toast.makeText(context, "That's you, idiot.", Toast.LENGTH_SHORT).show();
@@ -302,6 +306,7 @@ public class FriendsTab extends Fragment {
         //Check for friends that were sent requests by user if they approved it
         @Override
         protected Boolean doInBackground(String... params) {
+            //TODO:This will be the userobject
             String username = params[0];
             if(friendRequestList == null){
                 friendRequestList = new ArrayList<>();
@@ -314,6 +319,7 @@ public class FriendsTab extends Fragment {
             List<ParseQuery<FriendRequest>> queries = new ArrayList<>();
             //find rows where you sent request
             ParseQuery<FriendRequest> query1 = ParseQuery.getQuery("FriendRequest");
+            //TODO: will be user.getUsername()
             query1.whereEqualTo("reqFrom",username);
             //find rows where requests were sent to you ReqTo
             ParseQuery<FriendRequest> query2 = ParseQuery.getQuery("FriendRequest");
@@ -458,10 +464,12 @@ public class FriendsTab extends Fragment {
                         searchedFriend.setText("");
                         searchedFriend.setVisibility(View.GONE);
                         //Check to see if already exists in database
+                        //TODO: profileExists( parseuser friendObject)
                         if(profileExists(friendUserName) >= 0){
                             Toast.makeText(context, "Already added", Toast.LENGTH_SHORT).show();
                         }else{
                             //Send Friend request
+                            //TODO: user parseUser object
                             sendRequest(friendUserName);
                         }
                     }

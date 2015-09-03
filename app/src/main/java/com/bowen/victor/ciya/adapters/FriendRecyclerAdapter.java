@@ -95,6 +95,11 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         String statusBox = friendProfile.getStatus();
 
         if(holder.friendProfileImg != null){
+            /*TODO: check local db for the profile pic
+            if not there, grab the data and add it in
+            Replace ReqTo and ReqFrom to parseuser
+            */
+
             ParseQuery query = ParseQuery.getQuery("_User");
             query.whereEqualTo("username", fName);
             query.getFirstInBackground(new GetCallback() {
@@ -109,8 +114,6 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
             });
 
         }
-
-
         switch(statusBox){
             case "pending":
                 holder.friendStatusText.setText("Pending");

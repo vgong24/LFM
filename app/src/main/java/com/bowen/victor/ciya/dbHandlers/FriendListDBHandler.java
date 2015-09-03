@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class FriendListDBHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_NAME = "friendList",
     TABLE_FRIENDS = "friends",
     KEY_ID = "id",
@@ -25,7 +25,8 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
     KEY_REAL_NAME = "fRealName",
     KEY_NAME = "fname",
     KEY_FRIEND_ID = "fuserId",
-    KEY_STATUS = "Friendstatus";
+    KEY_STATUS = "Friendstatus",
+    KEY_IMAGE = "friendPic";
 
 
     public FriendListDBHandler(Context context) {
@@ -34,7 +35,7 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_FRIENDS + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_OBJECT_ID + " TEXT, " + KEY_FRIEND_ID + " TEXT, " + KEY_NAME + " TEXT, " + KEY_REAL_NAME + " TEXT, " + KEY_STATUS + " TEXT )");
+        db.execSQL("CREATE TABLE " + TABLE_FRIENDS + "(" + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + KEY_OBJECT_ID + " TEXT, " + KEY_FRIEND_ID + " TEXT, " + KEY_NAME + " TEXT, " + KEY_REAL_NAME + " TEXT, " + KEY_STATUS + " TEXT, " + KEY_IMAGE + "BLOB)");
     }
 
     @Override
@@ -64,6 +65,14 @@ public class FriendListDBHandler extends SQLiteOpenHelper {
         values.put(KEY_FRIEND_ID,friendId);
 
         db.insert(TABLE_FRIENDS, null, values);
+        db.close();
+    }
+
+    public void setFriendProfilePic(String friendObjId, byte[] image){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_IMAGE, image);
+        db.update(TABLE_FRIENDS, cv, KEY_OBJECT_ID + " = " + "'" + friendObjId + "'", null);
         db.close();
     }
 
