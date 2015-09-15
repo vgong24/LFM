@@ -24,7 +24,6 @@ public class FriendRequest extends ParseObject {
         friendReq.put("reqFrom", reqFrom);
         friendReq.put("reqTo", reqTo);
         friendReq.put("status", REQUEST);
-
         friendReq.saveInBackground();
 
     }
