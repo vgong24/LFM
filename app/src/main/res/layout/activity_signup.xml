@@ -18,6 +18,7 @@
                 android:id="@+id/username_edit_text"
                 android:hint="@string/prompt_username"
                 android:inputType="textEmailAddress"
+                android:maxLength="20"
                 style="@style/LoginField"
                 android:background="@drawable/inputbox"
                 >

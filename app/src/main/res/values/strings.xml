@@ -67,7 +67,8 @@
     <string name="private_text">PRIVATE</string>
 
     <string name="action_create_new">new event</string>
-    <string name="versionNumber">1.4.3</string>
+    <string name="versionNumber">1.4.5</string>
+
     <string name="rate_app_link">Rate this app.</string>
     <string name="license">Licenses</string>
     <string name="apache_license">Apache License, Version 2.0</string>

@@ -134,7 +134,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
 
         //Set onclicks
         holder.setClickListener(new ViewHolder.ClickListener() {
-
+        //http://stackoverflow.com/questions/28972049/single-selection-in-recyclerview
             @Override
             public void onClick(View v, int view_position, boolean isLongClick) {
                 if(last_clicked == null){
