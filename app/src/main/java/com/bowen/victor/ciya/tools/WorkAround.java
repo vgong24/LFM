@@ -26,6 +26,7 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SendCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -145,6 +146,39 @@ public class WorkAround {
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
         return output;
+    }
+
+    public static Bitmap byteToBitmap(byte[] data){
+        Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+        return bmp;
+    }
+
+    public static byte[] resizedBitmapToBytes(Bitmap bitmap, Context context){
+        double BITMAP_SCALE = 7.2;
+
+        if (bitmap != null) {
+            //Scale bitmaps based on Device width
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            Display display = wm.getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+
+            int width = size.x;
+            int height = size.y;
+            //Using ratio of 7.2 to get the correct size. 720 : 100
+            int bitmapScale = (int) (width / BITMAP_SCALE);
+            Log.v("Bitmap", "Bitmap width: " + width + " height: " + height);
+
+
+            Bitmap resizedbitmap = Bitmap.createScaledBitmap(bitmap, bitmapScale, bitmapScale, true);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            resizedbitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+            return byteArray;
+
+        }
+        return null;
+
     }
 
 }

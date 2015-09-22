@@ -29,6 +29,7 @@ import com.bowen.victor.ciya.structures.Events;
 import com.bowen.victor.ciya.structures.FriendProfile;
 import com.bowen.victor.ciya.structures.FriendRequest;
 import com.bowen.victor.ciya.structures._User;
+import com.bowen.victor.ciya.tools.WorkAround;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -94,24 +95,15 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         holder.friendName.setText(fName);
         String statusBox = friendProfile.getStatus();
 
+
         if(holder.friendProfileImg != null){
             /*TODO: check local db for the profile pic
             if not there, grab the data and add it in
             Replace ReqTo and ReqFrom to parseuser
             */
-
-            ParseQuery query = ParseQuery.getQuery("_User");
-            query.whereEqualTo("username", fName);
-            query.getFirstInBackground(new GetCallback() {
-                @Override
-                public void done(ParseObject parseObject, ParseException e) {
-                    if (e == null) {
-                        ParseUser user = (ParseUser) parseObject;
-                        //Toast.makeText(context, user.getUsername(), Toast.LENGTH_SHORT).show();
-                        new ImageDownloaderTask(holder.friendProfileImg).execute(user);
-                    }
-                }
-            });
+            byte[] data = friendProfile.getImageBytes();
+            Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+            holder.friendProfileImg.setImageBitmap(bmp);
 
         }
         switch(statusBox){
@@ -249,136 +241,6 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         public void onClick(View v) {
             clickListener.onClick(v, getPosition(), false);
         }
-
-    }
-
-    /*
-    @Override
-    public View getView(int position, View view, ViewGroup parent){
-
-
-        ViewHolder holder;
-
-        if(view == null) {
-            LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = li.inflate(resourcexml, parent, false);
-            holder = new ViewHolder();
-
-            holder.friendName = (TextView) view.findViewById(R.id.friend_username);
-            holder.friendStatusText = (TextView) view.findViewById(R.id.friend_status_text);
-            holder.friendStatusImg = (ImageView) view.findViewById(R.id.friend_status_img);
-            holder.friendStatusImg.setTag(position);
-            holder.friendStatusImg.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if (mClickListener != null)
-                        mClickListener.onBtnClick((Integer) v.getTag());
-                }
-            });
-
-
-            view.setTag(holder);
-
-        }else{
-            holder = (ViewHolder) view.getTag();
-        }
-        FriendProfile friendProfile = friendProfiles.get(position);
-        String fName = friendProfile.getUserName();
-        holder.friendName.setText(fName);
-        String statusBox = friendProfile.getStatus();
-
-
-        switch(statusBox){
-            case "pending":
-                holder.friendStatusText.setText("Pending");
-                break;
-            case "request": //if someone sent you a request, you can approve it
-                holder.friendStatusText.setText("Accept");
-                holder.friendStatusImg.setImageResource(R.drawable.greenplus);
-                break;
-            case "approve": //if you are already friends, you can choose to remove friend
-                holder.friendStatusText.setText("Remove");
-                holder.friendStatusImg.setImageResource(R.drawable.redx);
-                break;
-            default:
-                holder.friendStatusText.setVisibility(View.GONE);
-                break;
-        }
-
-        return view;
-    }
-    */
-
-    class ImageDownloaderTask extends AsyncTask<ParseUser, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewWeakReference;
-
-        public ImageDownloaderTask(ImageView imageView) {
-            imageViewWeakReference = new WeakReference<ImageView>(imageView);
-        }
-
-
-        @Override
-        protected Bitmap doInBackground(ParseUser... params) {
-
-            ParseFile thumbnail = null;
-
-            if ((thumbnail = params[0].getParseFile("profilePic")) == null) {
-                if((thumbnail = params[0].getParseFile("profilePicture")) == null){
-
-                }
-            }
-
-
-            return getResizedBitmap(thumbnail);
-        }
-
-        public Bitmap getResizedBitmap(ParseFile thumbnail){
-            try {
-                byte[] data = thumbnail.getData();
-                Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-                if (bmp != null) {
-                    //Scale bitmaps based on Device width
-                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-                    Display display = wm.getDefaultDisplay();
-                    Point size = new Point();
-                    display.getSize(size);
-
-                    int width = size.x;
-                    int height = size.y;
-                    //Using ratio of 7.2 to get the correct size. 720 : 100
-                    int bitmapScale = (int) (width / BITMAP_SCALE);
-                    Log.v("Bitmap", "Bitmap width: " + width + " height: "+ height);
-
-
-                    Bitmap resizedbitmap = Bitmap.createScaledBitmap(bmp, bitmapScale, bitmapScale, true);
-                    return resizedbitmap;
-                }
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (isCancelled()) {
-                bitmap = null;
-            }
-            if (imageViewWeakReference != null) {
-                ImageView imageView = imageViewWeakReference.get();
-                if (imageView != null) {
-                    if (bitmap != null) {
-                        imageView.setImageBitmap(bitmap);
-                    } else {
-                        Drawable placeholder = imageView.getContext().getResources().getDrawable(R.drawable.reload);
-                        imageView.setImageDrawable(placeholder);
-                        imageView.setPadding(10, 10, 10, 10);
-                    }
-                }
-            }
-        }
-
 
     }
 
