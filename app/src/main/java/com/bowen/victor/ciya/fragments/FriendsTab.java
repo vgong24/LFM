@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,8 +30,11 @@ import com.bowen.victor.ciya.structures.FriendRequest;
 import com.bowen.victor.ciya.R;
 import com.bowen.victor.ciya.adapters.FriendListAdapter;
 import com.bowen.victor.ciya.structures.FriendProfile;
+import com.bowen.victor.ciya.tools.WorkAround;
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -42,6 +46,12 @@ import java.util.List;
 
 /**
  * Created by Victor on 6/13/2015.
+ * FriendsTab contains information regarding friends that have been requested or waiting for approval.
+ * This class incorporates FriendRecyclerAdapter and FriendListDBHandler
+ *
+ * RecyclerAdapter: how information is displayed (image, name, onclick features)
+ * DBHandler gather information about each friend and store them in a local list to be used by Recycler
+ *
  */
 public class FriendsTab extends Fragment {
     View v;
@@ -119,7 +129,6 @@ public class FriendsTab extends Fragment {
         }catch (NullPointerException e){
             e.printStackTrace();
         }
-
         new UpdateFriendList().execute(currentUser);
     }
 
@@ -239,6 +248,7 @@ public class FriendsTab extends Fragment {
         if(!friendname.equalsIgnoreCase(currentUserName)) {
             FriendRequest.sendFriendRequest(currentUserName, friendname);
             Toast.makeText(context, "Friend Request Sent", Toast.LENGTH_SHORT).show();
+
             new UpdateFriendList().execute(currentUser);
         }else{
             Toast.makeText(context, "That's you, idiot.", Toast.LENGTH_SHORT).show();
@@ -246,46 +256,17 @@ public class FriendsTab extends Fragment {
 
     }
 
-
     //Onclick listeners for approve (remove), request(accept), and pending (pending)
     private final String REMOVE = "approve";
     private final String ACCEPT = "request";
     private final String PENDING = "pending";
     private int focus = -1;
 
-    public void onFriendClick(){
-        /*
-        friendlv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                for (int i = 0; i <= parent.getLastVisiblePosition(); i++) {
-                    if (i != position) {
-                        friendlv.getChildAt(i).findViewById(R.id.friend_status_text).setVisibility(View.INVISIBLE);
-                        friendlv.getChildAt(i).findViewById(R.id.friend_status_img).setVisibility(View.INVISIBLE);
-                    }
-                }
-                TextView friendStatusText = (TextView) view.findViewById(R.id.friend_status_text);
-                ImageView friendStatusImg = (ImageView) view.findViewById(R.id.friend_status_img);
-                if (friendStatusText.getVisibility() == View.INVISIBLE) {
-                    friendStatusText.setVisibility(View.VISIBLE);
-                    friendStatusImg.setVisibility(View.VISIBLE);
-                } else {
-                    friendStatusText.setVisibility(View.INVISIBLE);
-                    friendStatusImg.setVisibility(View.INVISIBLE);
-                }
-                //Toast.makeText(context, view + "/" + friendlv.getChildAt(0), Toast.LENGTH_SHORT).show();
-
-            }
-        });
-        */
-    }
 
     @Override
     public void onResume(){
         super.onResume();
         populateFriendList();
-        //initialize();
     }
 
 
@@ -384,9 +365,18 @@ public class FriendsTab extends Fragment {
                         query.whereEqualTo("username", friendName);
                         List<ParseUser> list = query.find();
                         for(ParseUser friendObject: list){
+                            byte[] pPick = null;
+                            if(friendObject.getParseFile("profilePic") != null){
+                                pPick = friendObject.getParseFile("profilePic").getData();
+                            }else{
+                                pPick = friendObject.getParseFile("profilePicture").getData();
 
-                            dbhandler.createFriend(fObjectId, friendObject.getObjectId(), reqType, "", fstatus);
-                            FriendProfile fp = new FriendProfile(fObjectId, friendObject.getObjectId(), reqType, "", fstatus);
+                            }
+                            Bitmap bmp = WorkAround.byteToBitmap(pPick);
+                            byte[] compressed = WorkAround.resizedBitmapToBytes(bmp, context);
+
+                            dbhandler.createFriend(fObjectId, friendObject.getObjectId(), reqType, "", fstatus, compressed);
+                            FriendProfile fp = new FriendProfile(fObjectId, friendObject.getObjectId(), reqType, "", fstatus, compressed);
                             Log.v("AddingFriend", "Adding friend");
                             friendNames.add(fp);
                         }
@@ -457,11 +447,10 @@ public class FriendsTab extends Fragment {
                     public void onClick(View v) {
                         searchedFriend.setText("");
                         searchedFriend.setVisibility(View.GONE);
-                        //Check to see if already exists in database
+
                         if(profileExists(friendUserName) >= 0){
                             Toast.makeText(context, "Already added", Toast.LENGTH_SHORT).show();
                         }else{
-                            //Send Friend request
                             sendRequest(friendUserName);
                         }
                     }

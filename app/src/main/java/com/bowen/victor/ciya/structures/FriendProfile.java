@@ -5,6 +5,7 @@ package com.bowen.victor.ciya.structures;
  */
 public class FriendProfile implements Comparable<FriendProfile>{
     private String friendRequestid, fusername, realName, status, userId;
+    private byte[] profilePic;
 
     public FriendProfile(String requestId,String userid, String username, String realName, String status){
         friendRequestid = requestId;
@@ -12,6 +13,14 @@ public class FriendProfile implements Comparable<FriendProfile>{
         fusername = username;
         this.realName = realName;
         this.status = status;
+    }
+    public FriendProfile(String requestId,String userid, String username, String realName, String status, byte[] imageBytes){
+        friendRequestid = requestId;
+        userId = userid;
+        fusername = username;
+        this.realName = realName;
+        this.status = status;
+        this.profilePic = imageBytes;
     }
 
     public String getFriendRequestId(){
@@ -31,6 +40,9 @@ public class FriendProfile implements Comparable<FriendProfile>{
     }
     public void setStatus(String status){
         this.status = status;
+    }
+    public byte[] getImageBytes(){
+        return profilePic;
     }
 
     /**
