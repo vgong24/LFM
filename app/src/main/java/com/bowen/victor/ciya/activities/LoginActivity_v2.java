@@ -55,7 +55,7 @@ public class LoginActivity_v2 extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                username = usernameField.getText().toString();
+                username = usernameField.getText().toString().trim();
                 password = passwordField.getText().toString();
 
                 ParseUser.logInInBackground(username, password, new LogInCallback() {

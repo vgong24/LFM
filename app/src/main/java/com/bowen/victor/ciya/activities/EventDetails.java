@@ -207,7 +207,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             getMenuInflater().inflate(R.menu.details_toolbar, menu);
         }
         MenuItem chatBtn = menu.findItem(R.id.action_switch_chat);
-        chatBtn.setVisible(false);
+        //chatBtn.setVisible(false);
         MenuItem settings = menu.findItem(R.id.action_settings);
         settings.setVisible(false);
         return true;
@@ -226,6 +226,16 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_switch_chat) {
             Toast.makeText(getApplicationContext(), "meep", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if(id == R.id.action_edit_event){
+            Toast.makeText(getApplicationContext(), "goto edit activity", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        if(id == R.id.action_delete_event){
+            cancelCurrentEventDialog(EventDetails.this, evnt);
             return true;
         }
 
@@ -253,7 +263,6 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                     }else{
                         joinEventAsAttendee(evnt);
                     }
-
                 }
             });
 
@@ -270,7 +279,6 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                         leaveEventAsAttendee(evnt, userAttendeeId);
                     } else {
                         Toast.makeText(getApplicationContext(), " Host Leaveing group (not implemented)", Toast.LENGTH_SHORT).show();
-
                     }
                 }
             });
@@ -327,7 +335,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                         public void done(ParseException e) {
                             Log.v("deleted", "deleted attendee");
                             //Finish MultiMessagingActivity if it is previous activity
-                            if(MultiMessagingActivity.mma != null)
+                            if (MultiMessagingActivity.mma != null)
                                 MultiMessagingActivity.mma.finish();
                             new SetUpBackground().execute(eventLeaving);
                         }
@@ -385,7 +393,46 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     }
 
     /**
-     * SEPARATE CLASS]
+     * Deletes the current viewed event as host
+     * @param context
+     * @param events
+     */
+    public void cancelCurrentEventDialog(final Context context,final Events events){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Communication with group will end. Delete Event?");
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                cancelCurrentEvent(events);
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+
+    }
+
+    public void cancelCurrentEvent(Events events){
+        events.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (MultiMessagingActivity.mma != null)
+                    MultiMessagingActivity.mma.finish();
+                finish();
+            }
+        });
+    }
+
+
+
+    /**
+     * SEPARATE CLASS
      * Finds attendee data from database and fills the viewlist in a background thread
      * Allows users to back out of the event details page without having to wait for the table to be filled
      * Also gives more freedom to change the Join Textview depending on whether or not user has already joined or wants to leave
@@ -448,8 +495,6 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
                         userAttendeeId = attend.getObjectId();
                     }
 
-
-
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -470,7 +515,6 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             initOnClicks(currentlyJoined);
         }
     }
-
 
 
 

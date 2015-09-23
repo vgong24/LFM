@@ -67,7 +67,7 @@
     <string name="private_text">PRIVATE</string>
 
     <string name="action_create_new">new event</string>
-    <string name="versionNumber">1.4.5</string>
+    <string name="versionNumber">1.4.6</string>
 
     <string name="rate_app_link">Rate this app.</string>
     <string name="license">Licenses</string>
@@ -76,6 +76,8 @@
     <string name="icon_credit2">Icon provided by icons8 as Creative Commons Attribution-NoDerivs 3.0 Unported</string>
     <string name="attributions">Attributions</string>
     <string name="slidingTabLicense">Sliding Tab Layout</string>
+    <string name="action_edit_event">Edit Event</string>
+    <string name="action_delete_event">Cancel Event</string>
 
 
 </resources>
