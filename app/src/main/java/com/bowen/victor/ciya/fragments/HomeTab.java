@@ -163,14 +163,14 @@ public class HomeTab extends Fragment {
 
         //Filter contents by gps coordinates
         if(tracker.canGetLocation()){
-            geoPoint = new ParseGeoPoint(tracker.getLatitude(), tracker.getLongitude());
+            if(geoPoint == null)
+                geoPoint = new ParseGeoPoint(tracker.getLatitude(), tracker.getLongitude());
         }else{
             tracker.showSettingsAlert();
             return;
         }
-        Events e = new Events();
         events.clear();
-        ParseQuery<Events> query = e.getQuery();
+        ParseQuery<Events> query = Events.getQuery();
         query.whereWithinKilometers("Location", geoPoint, 100);
         query.whereNotEqualTo("privacy", CreateTab.PRIVATE);
         query.addAscendingOrder("Date");
