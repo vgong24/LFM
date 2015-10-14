@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
     private final double BITMAP_SCALE = 9;
     Context context;
     private int lastPosition = -1;
+    Animation animation;
 
 
 
@@ -49,6 +51,8 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
     public EventRecyclerAdapter(Context context, List<Events> myDataset) {
         mDataset = myDataset;
         this.context = context;
+        animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+
     }
 
     // Create new views (invoked by the layout manager)
@@ -114,16 +118,32 @@ public class EventRecyclerAdapter extends RecyclerView.Adapter<EventRecyclerAdap
      */
     private void setAnimation(View viewToAnimate, int position){
         // If the bound view wasn't previously displayed on screen, it's animated
-        /*
+
         if (position > lastPosition)
         {
-            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
-            animation.setDuration(500);
-            viewToAnimate.startAnimation(animation);
+            //animation.setDuration(500);
+            //ViewCompat.animate(viewToAnimate).setDuration(1000);
+            //viewToAnimate.startAnimation(animation);
+
+            /**
+             * TODO: Play with animation, apparently fade-in the original way
+             * has a bug.
+             * refer to: http://toastdroid.com/2014/09/03/unlocking-recyclerview/
+             */
             lastPosition = position;
-        }*/
+        }
 
     }
+
+    /**
+     * http://stackoverflow.com/questions/26724964/how-to-animate-recyclerview-items-when-they-appear
+     * Issue with stuck animations. Override onViewDetaccchedFrom window
+     */
+    @Override
+    public void onViewDetachedFromWindow(ViewHolder viewHolder){
+        viewHolder.mView.clearAnimation();
+    }
+
 
     /** VIEW HOLDER
      * Provide a reference to the views for each data item

@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="45"
+        android:layout_weight="40"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -42,22 +42,20 @@
 
     </LinearLayout>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="45"
-        android:id="@+id/scrollView"
-        android:layout_margin="10dp">
+        android:layout_weight="50"
+        android:id="@+id/inputContainer"
+        android:isScrollContainer="false"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:orientation="vertical" >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal" >
 
                 <info.hoang8f.android.segmented.SegmentedGroup
@@ -104,14 +102,16 @@
 
             <LinearLayout
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent"
+                android:layout_height="fill_parent"
                 android:orientation="vertical" >
                 <!-- Category + Size -->
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_margin="6dp">
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginRight="6dp"
+                    >
 
                     <!--
 
@@ -203,30 +203,36 @@
 
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="fill_parent"
                     android:orientation="horizontal"
                     android:background="@drawable/inputbox"
+                    android:weightSum="100"
                     android:paddingBottom="8dp"
-                    android:paddingTop="16dp"
-                    android:layout_margin="6dp">
+                    android:paddingTop="2dp"
+                    android:gravity="center"
+                    >
 
                     <EditText
                         android:id="@+id/cTabDescEdit"
-                        android:layout_weight="1"
+                        android:layout_weight="95"
+                        android:gravity="top"
+                        android:maxLines="5"
                         android:layout_width="0dip"
                         android:layout_height="fill_parent"
                         android:hint="Event Description"
-                        android:layout_marginLeft="8dp" />
-                </LinearLayout>
+                        android:scrollbars="vertical"
 
+                        />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
         android:gravity="center"
         android:layout_weight="10">
         <Button
@@ -235,10 +241,10 @@
             android:layout_height="fill_parent"
             android:textSize="@dimen/font_size"
             android:text="Create Event"
-            android:nestedScrollingEnabled="false"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
+            />
 
     </LinearLayout>
+
+
 
 </LinearLayout>

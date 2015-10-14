@@ -469,7 +469,7 @@ MERGED from com.google.android.gms:play-services-base:7.0.0:21:9
 	android:name
 		ADDED from AndroidManifest.xml:154:20
 	android:value
-		ADDED from AndroidManifest.xml:155:13
+		ADDED from AndroidManifest.xml:155:9
 meta-data#com.google.android.geo.API_KEY
 ADDED from AndroidManifest.xml:157:9
 	android:name
