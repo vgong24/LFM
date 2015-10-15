@@ -117,7 +117,7 @@
         <activity android:name=".activities.MultiMessagingActivity"/>
         <activity android:name=".activities.CreateEvent"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:windowSoftInputMode=""
+            android:windowSoftInputMode="adjustPan|stateHidden"
             />
 
         <service android:name=".services.MessageServiceV2"></service>

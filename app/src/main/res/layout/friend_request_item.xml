@@ -29,6 +29,7 @@
             android:layout_weight=".20"
             android:id="@+id/friend_pro_pic"
             android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             />
 
         <LinearLayout
@@ -53,7 +54,7 @@
         <ImageView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight=".20"
+            android:layout_weight="0"
             android:id="@+id/friend_status_img"
             android:visibility="invisible"/>
         <TextView
@@ -62,7 +63,7 @@
             android:paddingTop="12dp"
             android:textAppearance="?android:attr/textAppearanceButton"
             android:text="Status"
-            android:layout_weight=".30"
+            android:layout_weight=".50"
             android:id="@+id/friend_status_text"
             android:visibility="invisible"/>
 

@@ -104,6 +104,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
             */
             byte[] data = friendProfile.getImageBytes();
             Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+            bmp = WorkAround.getRoundedCornerBitmap(bmp, 20);
             holder.friendProfileImg.setImageBitmap(bmp);
 
         }

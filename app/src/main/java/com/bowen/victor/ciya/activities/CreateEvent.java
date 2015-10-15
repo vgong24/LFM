@@ -56,6 +56,7 @@ public class CreateEvent extends ActionBarActivity implements GoogleApiClient.On
     ImageView cancelBtn;
     GPSTracker tracker;
     LatLngBounds latLngBounds;
+    private static boolean justCreated = false;
 
     protected GoogleApiClient mGoogleApiClient;
 

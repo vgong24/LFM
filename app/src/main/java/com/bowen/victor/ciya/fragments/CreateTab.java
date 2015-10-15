@@ -1,53 +1,48 @@
 package com.bowen.victor.ciya.fragments;
 
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.app.DialogFragment;
 
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Rect;
 import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bowen.victor.ciya.activities.CreateEvent;
 import com.bowen.victor.ciya.activities.EventDetails;
 import com.bowen.victor.ciya.tools.GPSTracker;
 import com.bowen.victor.ciya.activities.MainActivity_v2;
 import com.bowen.victor.ciya.structures.PlaceDetails;
 import com.bowen.victor.ciya.tools.PlacesAPI;
 import com.bowen.victor.ciya.R;
-import com.bowen.victor.ciya.adapters.GooglePlacesAutoCompleteAdapter;
 import com.bowen.victor.ciya.structures.Attendee;
 import com.bowen.victor.ciya.structures.Category;
 import com.bowen.victor.ciya.structures.Events;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -58,7 +53,6 @@ import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -92,7 +86,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
     Calendar cEventDateTime;
     LatLng centerOfMap;
     private final int ZOOM_DISTANCE = 13;
-
+    private static boolean justCreated = false;
     GPSTracker gpsTracker;
 
 
@@ -278,6 +272,27 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
     public void initField(){
         currentUserId = ParseUser.getCurrentUser().getObjectId();
+        /* Hide the map to make space for keyboard and when user wants to copy text
+        final LinearLayout activityRootView = (LinearLayout) view.findViewById(R.id.softLayout);
+        final View hideMapKeyboard = view.findViewById(R.id.softLayoutHide);
+        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                activityRootView.getWindowVisibleDisplayFrame(r);
+                int heightDiff = activityRootView.getRootView().getHeight() - (r.bottom - r.top);
+                if(heightDiff > 100){
+                    //TODO: Animate layout away
+                    hideMapKeyboard.setVisibility(View.GONE);
+                    //activityRootView.removeView(hideMapKeyboard);
+                }else{
+                    hideMapKeyboard.setVisibility(View.VISIBLE);
+                    //activityRootView.addView(hideMapKeyboard);
+                }
+
+            }
+        });
+        */
 
         timeView = (TextView) view.findViewById(R.id.cTabTimeView);
         cMembers = (EditText) view.findViewById(R.id.cTabMemberEdit);
@@ -365,7 +380,7 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
             @Override
             public void onClick(View v) {
                 createEvent(v);
-
+                justCreated = true;
             }
         });
 
@@ -410,6 +425,14 @@ public class CreateTab extends Fragment implements CustomMapFragment.OnMapReadyL
 
 
 
+    }
+
+    //Check and reset if event is created. Will determine whether or not eventlist should refresh
+    public static boolean isJustCreated(){
+        return justCreated;
+    }
+    public static void resetCreatedbool(){
+        justCreated = false;
     }
 
 

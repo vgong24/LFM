@@ -101,7 +101,11 @@ public class HomeTab extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        //fillEventList();
+        if(EventDetails.isDeleted()  || CreateTab.isJustCreated()) {
+            fillEventList();
+            EventDetails.resetDeleteStatus();
+            CreateTab.resetCreatedbool();
+        }
     }
 
     public void initField() {

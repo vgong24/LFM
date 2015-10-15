@@ -63,6 +63,7 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
     TextView event_description;
     String eventDescription;
     ProgressBar progressBar;
+    private static boolean justDeleted = false;
 
 
     ArrayList<Attendee> attendees;
@@ -424,9 +425,16 @@ public class EventDetails extends ActionBarActivity implements CustomMapFragment
             public void done(ParseException e) {
                 if (MultiMessagingActivity.mma != null)
                     MultiMessagingActivity.mma.finish();
+                justDeleted = true;
                 finish();
             }
         });
+    }
+    public static boolean isDeleted(){
+        return justDeleted;
+    }
+    public static void resetDeleteStatus(){
+        justDeleted = false;
     }
 
 

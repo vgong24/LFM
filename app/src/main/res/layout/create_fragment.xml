@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
+    android:id="@+id/softLayout"
     android:weightSum="100">
 
 
@@ -11,11 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="40"
+        android:id="@+id/softLayoutHide"
+        android:animateLayoutChanges="true"
         android:orientation="vertical" >
+
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="fill_parent"
             android:elevation="1dp"
             >
 
@@ -148,6 +152,7 @@
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
                         android:ems="10"
+                        android:longClickable="false"
                         android:inputType="number"
                         android:maxLength="2"
                         android:hint="4"
@@ -228,11 +233,12 @@
             </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
+
         android:gravity="center"
         android:layout_weight="10">
         <Button
@@ -243,7 +249,7 @@
             android:text="Create Event"
             />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
 

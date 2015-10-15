@@ -54,7 +54,7 @@ public class FriendListAdapter extends ArrayAdapter<FriendProfile> {
 
             holder.friendName = (TextView) view.findViewById(R.id.friend_username);
             holder.friendStatusText = (TextView) view.findViewById(R.id.friend_status_text);
-            holder.friendStatusImg = (ImageView) view.findViewById(R.id.friend_status_img);
+            //holder.friendStatusImg = (ImageView) view.findViewById(R.id.friend_status_img);
             holder.friendStatusImg.setTag(position);
             holder.friendStatusImg.setOnClickListener(new View.OnClickListener() {
 

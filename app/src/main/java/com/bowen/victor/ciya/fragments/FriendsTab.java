@@ -372,6 +372,7 @@ public class FriendsTab extends Fragment {
                                 pPick = friendObject.getParseFile("profilePicture").getData();
 
                             }
+                            //Image resize & round
                             Bitmap bmp = WorkAround.byteToBitmap(pPick);
                             byte[] compressed = WorkAround.resizedBitmapToBytes(bmp, context);
 
