@@ -10,6 +10,7 @@ import com.parse.LogInCallback;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
+import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +19,7 @@ import android.widget.Toast;
 
 public class LoginActivity_v2 extends Activity {
 
-    private Button signUpButton;
+    private TextView signUpButton;
     private Button loginButton;
     private EditText usernameField;
     private EditText passwordField;
@@ -46,8 +47,8 @@ public class LoginActivity_v2 extends Activity {
 
         setContentView(R.layout.activity_login_v2);
 
-        loginButton = (Button) findViewById(R.id.loginButton);
-        signUpButton = (Button) findViewById(R.id.signupButton);
+        loginButton = (AppCompatButton) findViewById(R.id.loginButton);
+        signUpButton = (TextView) findViewById(R.id.signupButton);
         usernameField = (EditText) findViewById(R.id.loginUsername);
         passwordField = (EditText) findViewById(R.id.loginPassword);
         passwordReset = (TextView) findViewById(R.id.passwordResetTextView);
