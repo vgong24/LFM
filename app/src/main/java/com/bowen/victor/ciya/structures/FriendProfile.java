@@ -6,6 +6,8 @@ package com.bowen.victor.ciya.structures;
 public class FriendProfile implements Comparable<FriendProfile>{
     private String friendRequestid, fusername, realName, status, userId;
     private byte[] profilePic;
+    boolean clicked;
+
 
     public FriendProfile(String requestId,String userid, String username, String realName, String status){
         friendRequestid = requestId;

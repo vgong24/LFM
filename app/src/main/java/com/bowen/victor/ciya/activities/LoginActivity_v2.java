@@ -83,9 +83,9 @@ public class LoginActivity_v2 extends Activity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(LoginActivity_v2.this, SignUpActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                Intent i = new Intent(getApplicationContext(), SignUpActivity.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
 
             }
         });
@@ -93,20 +93,13 @@ public class LoginActivity_v2 extends Activity {
         passwordReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity_v2.this, PasswordResetActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                Intent i = new Intent(getApplicationContext(), PasswordResetActivity.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
 
             }
         });
 
 
-    }
-
-    @Override
-    public void onDestroy() {
-
-        //stopService(new Intent(this, MessageService.class));
-        super.onDestroy();
     }
 }

@@ -44,6 +44,8 @@ import java.util.List;
 
 /**
  * Created by Victor on 6/30/2015.
+ * Adapter Class to display Friend list used in FriendsTab
+ * Shows friend profile pic, Name, and request Status
  */
 public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAdapter.ViewHolder> {
     Context context;
@@ -55,6 +57,7 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     private final double BITMAP_SCALE = 7.2;
     private static int current_position;
     private static ViewHolder last_clicked = null;
+    private static String last_requestId;
 
 
     public interface BtnClickListener {
@@ -92,16 +95,13 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         // - replace the contents of the view with that element
         holder.friendStatusImg.setTag(position);
         FriendProfile friendProfile = friendProfiles.get(position);
+        String fRequestId = friendProfile.getFriendRequestId();
         String fName = friendProfile.getUserName();
         holder.friendName.setText(fName);
         String statusBox = friendProfile.getStatus();
 
 
         if(holder.friendProfileImg != null){
-            /*TODO: check local db for the profile pic
-            if not there, grab the data and add it in
-            Replace ReqTo and ReqFrom to parseuser
-            */
             byte[] data = friendProfile.getImageBytes();
             Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
             bmp = WorkAround.getRoundedCornerBitmap(bmp, 20);
@@ -109,15 +109,18 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
 
         }
         switch(statusBox){
-            case "pending":
+            case PENDING:
                 holder.friendStatusText.setText("Pending");
+                holder.friendStatusText.setOnClickListener(clickListenerType(PENDING, fRequestId));
                 break;
-            case "request": //if someone sent you a request, you can approve it
+            case ACCEPT: //if someone sent you a request, you can approve it
                 holder.friendStatusText.setText("Accept");
+                holder.friendStatusText.setOnClickListener(clickListenerType(ACCEPT, fRequestId));
                 holder.friendStatusImg.setImageResource(R.drawable.greenplus);
                 break;
-            case "approve": //if you are already friends, you can choose to remove friend
+            case REMOVE: //if you are already friends, you can choose to remove friend
                 holder.friendStatusText.setText("Remove");
+                holder.friendStatusText.setOnClickListener(clickListenerType(REMOVE,fRequestId));
                 holder.friendStatusImg.setImageResource(R.drawable.redx);
                 break;
             default:
@@ -125,6 +128,11 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
                 break;
         }
 
+        //TODO: Display if not last clicked but share holder, set invisible
+        if(last_clicked == holder && !last_requestId.equalsIgnoreCase(fRequestId)){
+
+
+        }
 
         //Set onclicks
         holder.setClickListener(new ViewHolder.ClickListener() {
@@ -158,6 +166,8 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
             public void onClick(View v) {
                 if (mClickListener != null)
                     mClickListener.onBtnClick((Integer) v.getTag());
+                //Accept friend
+
             }
         });
 
@@ -177,6 +187,42 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         }else{
             return current_position;
         }
+    }
+
+    //Set Click Listener response type
+    public View.OnClickListener clickListenerType(String type, final String requestId){
+        View.OnClickListener clickListener = null;
+
+        switch (type){
+            case PENDING:
+                clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context, "Still waiting", Toast.LENGTH_SHORT).show();
+                    }
+                };
+                break;
+            case REMOVE:
+                clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context, "Friend Removed (ni)", Toast.LENGTH_SHORT).show();
+                    }
+                };
+                break;
+            case ACCEPT:
+                clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context, "Accepted Friend Request", Toast.LENGTH_SHORT).show();
+                        FriendRequest.approveFriendRequest(requestId);
+                    }
+                };
+                break;
+            default:
+                break;
+        }
+        return clickListener;
     }
 
     /**

@@ -39,12 +39,12 @@ import java.util.List;
 
 /**
  * Created by Victor on 4/6/2015.
+ * Displays Upcoming Events in a list under Events tab in MainActivity
  */
 public class HomeTab extends Fragment {
     View v;
     ArrayList<Events> events;
 
-    Activity activity;
     Context context;
     ParseGeoPoint geoPoint = null;
 
@@ -53,7 +53,6 @@ public class HomeTab extends Fragment {
     FriendListDBHandler db;
 
     ProgressBar dialog;
-    boolean _areEventsLoaded = false;
     TextView emptyMessage;
 
 
@@ -62,7 +61,8 @@ public class HomeTab extends Fragment {
      * @param context
      */
     //R.layout.event_list_view , R.layout.event_item_reddit
-    private final int itemList_xml = R.layout.event_item_reddit;
+    //Note: layout moved to EventRecyclerAdapter
+    //private final int itemList_xml = R.layout.event_item_reddit;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -111,7 +111,7 @@ public class HomeTab extends Fragment {
     public void initField() {
         emptyMessage = (TextView) v.findViewById(R.id.emptyEventsTxt);
         events = new ArrayList<Events>();
-        //eventListView = (ListView) v.findViewById(R.id.eventList);
+
         mRecyclerView = (RecyclerView) v.findViewById(R.id.event_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(context);

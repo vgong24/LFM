@@ -61,8 +61,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingTop="12dp"
+            android:clickable="true"
             android:textAppearance="?android:attr/textAppearanceButton"
             android:text="Status"
+            android:focusableInTouchMode="true"
             android:layout_weight=".50"
             android:id="@+id/friend_status_text"
             android:visibility="invisible"/>

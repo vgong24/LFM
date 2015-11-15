@@ -26,10 +26,8 @@ public class SignUpActivity extends Activity {
     // UI references.
     private EditText usernameEditText;
     private EditText passwordEditText;
-    private EditText passwordAgainEditText;
-    private EditText firstName;
-    private EditText bday;
     private EditText email;
+    private TextView loginPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,26 +37,16 @@ public class SignUpActivity extends Activity {
 
         // Set up the signup form.
         usernameEditText = (EditText) findViewById(R.id.username_edit_text);
-
         passwordEditText = (EditText) findViewById(R.id.password_edit_text);
-        /*
-        passwordAgainEditText = (EditText) findViewById(R.id.password_again_edit_text);
-        passwordAgainEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        email = (EditText) findViewById(R.id.emailTxt);
+        loginPage = (TextView) findViewById(R.id.link_login);
+
+        loginPage.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == R.id.edittext_action_signup ||
-                        actionId == EditorInfo.IME_ACTION_UNSPECIFIED) {
-                    signup();
-                    return true;
-                }
-                return false;
+            public void onClick(View v) {
+                finish();
             }
         });
-        firstName = (EditText) findViewById(R.id.name_edit_text);
-        bday = (EditText) findViewById(R.id.birthday_edit_text);
-        bday.setVisibility(View.GONE);
-        */
-        email = (EditText) findViewById(R.id.emailTxt);
 
         // Set up the submit button click handler
         Button mActionButton = (Button) findViewById(R.id.action_button);
@@ -131,7 +119,7 @@ public class SignUpActivity extends Activity {
                 dialog.dismiss();
                 if (e != null) {
                     // Show the error message
-                    Toast.makeText(SignUpActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
 
                     ParseInstallation parseInstallation = ParseInstallation.getCurrentInstallation();

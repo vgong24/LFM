@@ -134,6 +134,7 @@
                         android:layout_weight="2"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
+                        style="@android:style/Widget.Holo.Light.Spinner"
                         android:id="@+id/cTabCatSpin" />
 
                     <TextView
@@ -246,6 +247,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:textSize="@dimen/font_size"
+            android:textColor="@color/white"
             android:text="Create Event"
             />
 
