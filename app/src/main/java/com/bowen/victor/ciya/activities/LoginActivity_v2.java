@@ -69,6 +69,7 @@ public class LoginActivity_v2 extends Activity {
 
                             //startService(serviceIntent);
                             startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(getApplicationContext(),
                                     "Wrong username/password combo",

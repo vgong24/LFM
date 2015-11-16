@@ -67,7 +67,7 @@
     <string name="private_text">PRIVATE</string>
 
     <string name="action_create_new">new event</string>
-    <string name="versionNumber">1.5.0</string>
+    <string name="versionNumber">1.5.1</string>
 
     <string name="rate_app_link">Rate this app.</string>
     <string name="license">Licenses</string>
@@ -78,6 +78,9 @@
     <string name="slidingTabLicense">Sliding Tab Layout</string>
     <string name="action_edit_event">Edit Event</string>
     <string name="action_delete_event">Cancel Event</string>
+    <string name="remove">Remove</string>
+    <string name="pending">Pending</string>
+    <string name="accept">Accept</string>
 
 
 </resources>

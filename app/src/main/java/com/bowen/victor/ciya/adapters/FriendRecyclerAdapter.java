@@ -57,7 +57,8 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     private final double BITMAP_SCALE = 7.2;
     private static int current_position;
     private static ViewHolder last_clicked = null;
-    private static String last_requestId;
+    private static int last_clicked_pos;
+    private static boolean clicked;
 
 
     public interface BtnClickListener {
@@ -71,6 +72,8 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         friendProfiles = friendList;
         mClickListener = listener;
         mLayoutManager = layoutManager;
+        clicked = false;
+        last_clicked_pos = -1;
     }
 
     // Create new views (invoked by the layout manager)
@@ -88,13 +91,15 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
     private final String REMOVE = "approve";
     private final String ACCEPT = "request";
     private final String PENDING = "pending";
+
+
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.friendStatusImg.setTag(position);
-        FriendProfile friendProfile = friendProfiles.get(position);
+        final FriendProfile friendProfile = friendProfiles.get(position);
         String fRequestId = friendProfile.getFriendRequestId();
         String fName = friendProfile.getUserName();
         holder.friendName.setText(fName);
@@ -110,16 +115,16 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         }
         switch(statusBox){
             case PENDING:
-                holder.friendStatusText.setText("Pending");
+                holder.friendStatusText.setText(R.string.pending);
                 holder.friendStatusText.setOnClickListener(clickListenerType(PENDING, fRequestId));
                 break;
             case ACCEPT: //if someone sent you a request, you can approve it
-                holder.friendStatusText.setText("Accept");
+                holder.friendStatusText.setText(R.string.accept);
                 holder.friendStatusText.setOnClickListener(clickListenerType(ACCEPT, fRequestId));
                 holder.friendStatusImg.setImageResource(R.drawable.greenplus);
                 break;
             case REMOVE: //if you are already friends, you can choose to remove friend
-                holder.friendStatusText.setText("Remove");
+                holder.friendStatusText.setText(R.string.remove);
                 holder.friendStatusText.setOnClickListener(clickListenerType(REMOVE,fRequestId));
                 holder.friendStatusImg.setImageResource(R.drawable.redx);
                 break;
@@ -129,9 +134,17 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         }
 
         //TODO: Display if not last clicked but share holder, set invisible
-        if(last_clicked == holder && !last_requestId.equalsIgnoreCase(fRequestId)){
-
-
+        if(last_clicked != null || last_clicked_pos < 0){
+            if(last_clicked_pos != position){
+                holder.friendStatusText.setVisibility(View.INVISIBLE);
+            }else if(clicked
+                    //&& last_clicked == holder
+                    ) {
+                holder.friendStatusText.setVisibility(View.VISIBLE);
+                last_clicked = holder;
+            }else{
+                holder.friendStatusText.setVisibility(View.INVISIBLE);
+            }
         }
 
         //Set onclicks
@@ -139,24 +152,29 @@ public class FriendRecyclerAdapter extends RecyclerView.Adapter<FriendRecyclerAd
         //http://stackoverflow.com/questions/28972049/single-selection-in-recyclerview
             @Override
             public void onClick(View v, int view_position, boolean isLongClick) {
-                if(last_clicked == null){
+                if(last_clicked == null || last_clicked_pos < 0){
                     last_clicked = holder;
-                }else if(last_clicked != holder){
-                    last_clicked.friendStatusImg.setVisibility(View.INVISIBLE);
+                    last_clicked_pos = position;
+                    clicked = true;
+                    //last_clicked.friendStatusText.setVisibility(View.VISIBLE);
+                }else if(last_clicked != holder && last_clicked_pos != position){
                     last_clicked.friendStatusText.setVisibility(View.INVISIBLE);
+                    holder.friendStatusText.setVisibility(View.VISIBLE);
                     last_clicked = holder;
+                    last_clicked_pos = position;
+                    clicked = true;
+                }else if(last_clicked_pos == position){
+                    if (last_clicked.friendStatusText.getVisibility() == View.INVISIBLE) {
+                        last_clicked.friendStatusText.setVisibility(View.VISIBLE);
+                        clicked = true;
+
+                    } else {
+                        last_clicked.friendStatusText.setVisibility(View.INVISIBLE);
+                        clicked = false;
+                    }
                 }
 
-                //Selected view
-                TextView friendStatusText = (TextView) v.findViewById(R.id.friend_status_text);
-                ImageView friendStatusImg = (ImageView) v.findViewById(R.id.friend_status_img);
-                if (friendStatusText.getVisibility() == View.INVISIBLE) {
-                    friendStatusText.setVisibility(View.VISIBLE);
-                    friendStatusImg.setVisibility(View.VISIBLE);
-                } else {
-                    friendStatusText.setVisibility(View.INVISIBLE);
-                    friendStatusImg.setVisibility(View.INVISIBLE);
-                }
+
             }
 
         });
